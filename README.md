@@ -13,9 +13,9 @@ For Android builds, use `build-android.bat` (debug or release).
 
 ## Documentation
 
-Full project specification and development logs are available in the [`docs/`](../docs/) folder:
-- [`Debt_Destroyer_App_Specification.md`](../docs/Debt_Destroyer_App_Specification.md) - Complete app specification
-- [`React_Native_Dev_Environment_Setup_Windows.md`](../docs/React_Native_Dev_Environment_Setup_Windows.md) - Setup guide
+Full project specification and development logs are available in the [`docs/`](docs/) folder:
+- [`Debt_Destroyer_App_Specification.md`](docs/Debt_Destroyer_App_Specification.md) - Complete app specification
+- [`React_Native_Dev_Environment_Setup_Windows.md`](docs/React_Native_Dev_Environment_Setup_Windows.md) - Setup guide
 
 ## Current Status
 
