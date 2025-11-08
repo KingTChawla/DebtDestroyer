@@ -1,11 +1,14 @@
-# Debt Destroyer — End-to-End App Specification (Markdown)
+# Debt Destroyer — End-to-End App Specification
 
 A cross-platform React Native app (iOS + Android) that helps users **eliminate debt** using Dave Ramsey's **Debt Snowball** philosophy, enhanced with an **AI Financial Coach** and **Behavioral UX** inspired by *The Total Money Makeover* and *Duolingo's gamified motivation system*.
 
 The app acts as a **daily AI companion** that guides users through financial awareness, spending habits, and debt payoff strategies in a **chat-like, emotionally intelligent, and gamified experience**.
 
-**Monetization:** Subscription-based model with three tiers (Free / Pro / Lifetime).  
+**Architecture:** Simplified 4-screen framework designed to reduce cognitive load and enhance daily engagement.
+**Monetization:** Subscription-based model with three tiers (Free / Pro / Lifetime).
 **Core Principles:** Behavior > Math, smallest-to-largest payoff, no lending, privacy by design.
+
+> **Note:** This specification reflects an architectural revision made on 2025-11-05 (post DevLog 2) that simplified the original 5-tab navigation to a cognitive-optimized 4-screen framework.
 
 ---
 
@@ -35,71 +38,193 @@ The app acts as a **daily AI companion** that guides users through financial awa
 ## 1) Product Pillars (What We're Building)
 
 ### 1. Intelligent Onboarding — Build a Complete Financial Profile
-- Conversational AI-led onboarding process (voice or text) gathers:  
+- Conversational AI-led onboarding process (voice or text) gathers:
   Income, debts, monthly expenses, subscriptions, and savings.
 - Personalized **Financial Snapshot** dashboard generated instantly.
 - AI analyzes data to create a **Debt Destruction Roadmap** (snowball-style).
 - Includes emergency fund setup (target $1,000) before Snowball activation.
 
-### 2. Daily AI Companion (Voice/Text Expense Logging)
-- User can log any expense by **talking** or **typing**, e.g., “Spent $8 on lunch.”
+### 2. AI Companion — Daily Money Dialogue
+- User can log expenses by **talking** or **typing**, e.g., "Spent $8 on lunch."
 - AI parses input, categorizes spending, and updates the **daily expense summary**.
-- End-of-day: AI provides feedback, trends, and savings suggestions.
+- Provides feedback, trends, and savings suggestions through natural conversation.
+- AI persona is tunable (tone, focus level, difficulty) to match user preferences.
 
-### 3. Gamified Debt Destruction Loop
+### 3. Gamified Motivation — Behavioral Finance Reinvented
 - Duolingo-style **habit loop** with streaks, badges, confetti, and positive reinforcement.
-- Daily micro-actions (confirm expenses, avoid spending, cancel subs).
-- Reward system based on financial wins: “You skipped coffee and saved $5!”
+- User-defined goals ("Save $1,000 Emergency Fund") and system challenges ("No Coffee for 3 Days").
+- XP, levels, and visual rewards for every financial win.
+- Designed for **active play mode** — high emotional engagement and dopamine-driven habit formation.
 
-### 4. Companion Mode (Couples & Households)
+### 4. Simplicity & Clarity — Four-Screen UX Framework
+- **Dashboard (Home):** Passive review mode — instant awareness of debt, progress, and AI insights.
+- **Goals & Challenges:** Active play mode — gamified engagement with progress tracking.
+- **Expenses & Budgets:** Action mode — low-friction logging and budget management.
+- **Settings & Profile:** Control mode — personalization, integrations, and privacy settings.
+
+Each screen is cognitively optimized for a specific user mindset, reducing decision fatigue and enhancing usability.
+
+### 5. Companion Mode (Couples & Households) [Future Phase]
 - Link two profiles under one subscription.
 - Shared or separate finances, with optional visibility controls.
-- Shared progress dashboard and weekly “Money Stand-Up.”
+- Shared progress dashboard and weekly "Money Stand-Up."
 
-### 5. AI Debt Coach
-- Provides contextual suggestions for debt elimination, savings, and spending control.
-- Suggests next best actions daily: “Pay $37 more to close Card #1 by next week.”
-- Uses **Total Money Makeover-inspired sequencing** (smallest-to-largest debts).
 ---
 
-## 2) Core Features
+## 1A) Core Architectural Principles (Critical)
 
-### 2.1 AI-Powered Onboarding & Financial Profiling
+**These principles are NON-NEGOTIABLE and apply to ALL phases of development.**
+
+### 🔒 Privacy First
+1. **User Data Isolation:** All database queries MUST be scoped by `user_id` from JWT token
+2. **Row-Level Security:** Postgres RLS policies enforced on ALL tables
+3. **Encryption:** Data encrypted at rest (AES-256) and in transit (TLS 1.3)
+4. **Minimal Collection:** Only collect data necessary for debt elimination features
+5. **No Data Selling:** User financial data is NEVER sold to third parties
+6. **Household Opt-In:** Shared data requires explicit consent from both users
+
+### 🚧 Backend Gateway Pattern
+1. **Mobile → Backend → External APIs:** Mobile app NEVER calls external APIs directly
+2. **No API Keys in Frontend:** OpenAI, Plaid, Stripe keys stored in AWS Secrets Manager
+3. **Backend Proxy:** All external integrations (AI, Plaid, payments) proxied through NestJS backend
+4. **JWT Authentication:** Every API request authenticated with JWT (user_id extraction)
+5. **Rate Limiting:** Backend enforces per-user rate limits (prevent abuse)
+
+### 🤖 Ethical AI Usage
+1. **Scope Limitation:** AI only answers debt/budgeting questions (no general-purpose use)
+2. **Prompt Guardrails:** Backend enforces system prompt and filters off-topic requests
+3. **PII Sanitization:** AI never sees names, emails, SSNs, account numbers
+4. **Cost Monitoring:** Token usage logged; alerts on excessive use; daily cost cap per user
+5. **Rate Limits:** Free tier (10 AI requests/day), Pro tier (100 AI requests/day)
+
+**See Sections 5, 5A, and 5B for detailed implementation requirements.**
+
+---
+
+## 2) Core Features (Organized by 4-Screen Architecture)
+
+### 2.1 Dashboard (Home) — Passive Review Mode
+
+**Purpose:** Provide instant awareness and AI-driven financial insights.
+
+**Features:**
+- **Financial Snapshot:** Total debt, current progress, debt-free date projection.
+- **Debt Tackling Strategy:** AI-prioritized debts listed by snowball ranking (smallest-to-largest).
+- **AI Insights Panel:** Contextual analysis and recommendations.
+- **Quick Actions:** "Add Expense," "Log Goal Progress," "View Summary."
+- **Visual Design:** Minimal text, high contrast, cognitive chunking of information.
+
+**UX Goal:** User sees everything important at a glance without any input required.
+
+---
+
+### 2.2 Goals & Challenges — Active Play Mode
+
+**Purpose:** Reinforce positive financial habits through gamified engagement.
+
+**Features:**
+- **User-Defined Goals:** e.g., "Save $1,000 Emergency Fund," "Pay off Credit Card #1."
+- **System Challenges:**
+  - Daily: "No Coffee Today" (+10 XP)
+  - Weekly: "No-Spend Week" (+150 XP)
+  - Monthly: "Snowball Sprint — Pay Off 1 Debt" (+500 XP)
+- **Progress Tracking:** Visual progress bars, completion percentages.
+- **Gamified Feedback:**
+  - XP system (points for every win)
+  - Streak tracking (consecutive days of positive actions)
+  - Badges & achievements
+  - Confetti animations on milestones
+- **Leaderboard (optional):** Household or friends comparison (if enabled).
+
+**UX Goal:** High emotional engagement through color, icons, progress visualization, and dopamine-driven rewards.
+
+---
+
+### 2.3 Expenses & Budgets — Action Mode
+
+**Purpose:** Enable effortless financial logging and planning.
+
+**Features:**
+- **Income & Budget Setup:**
+  - Monthly income entry
+  - Budget category allocation (Housing, Food, Transport, etc.)
+  - Debt payment budget line item
+- **Conversational Expense Logging:**
+  - **AI + Voice/Text Input:** "I spent $10 on lunch" → AI parses and categorizes
+  - Manual form entry (category, amount, date, note)
+  - Voice input via microphone button
+- **Expense Analytics:**
+  - Daily/Weekly/Monthly spending summaries
+  - Budget vs. Spend visualization (bar charts, pie charts)
+  - Category breakdowns
+  - AI commentary on spending patterns
+- **Recurring Expense Detection:** AI identifies subscriptions and recurring charges.
+
+**UX Goal:** Low-friction data entry with minimal typing; combine planning and logging in one mental model.
+
+---
+
+### 2.4 Settings & Profile — Control Mode
+
+**Purpose:** Manage personalization, preferences, and integrations.
+
+**Features:**
+- **Profile Management:**
+  - User info, photo, email
+  - Household/Companion Mode setup
+- **AI Persona Tuning:**
+  - Tone (Supportive / Tough Love / Neutral)
+  - Focus Level (Beginner / Intermediate / Gazelle Intensity)
+  - Communication Frequency (Daily nudges / Weekly summaries / Minimal)
+- **App Preferences:**
+  - Notifications (push, email, in-app)
+  - Dark mode toggle
+  - Currency & locale settings
+- **Integrations:**
+  - Plaid bank connections (view, add, remove)
+  - Export data (CSV/JSON)
+- **Subscription Management:**
+  - Current tier (Normal / Pro / Lifetime)
+  - Upgrade/downgrade options
+  - Billing history
+- **Privacy & Security:**
+  - Two-factor authentication (optional)
+  - Data deletion request
+  - Privacy policy & terms
+
+**UX Goal:** Clear, text-based layout; minimal visual noise; easy to scan and modify.
+
+---
+
+### 2.5 AI-Powered Onboarding (Pre-App Entry)
+
+**Features:**
 - Conversational flow (chat UI with AI tone calibration).
-- Collects and validates financial data through prompts.
+- Collects and validates financial data through prompts:
+  - Income, debts, expenses, subscriptions, savings.
 - AI summary output:
-  - Total income, total debt, net balance, spending categories, subscription costs.
-  - “You currently spend 32% of income on discretionary categories.”
+  - Total income, total debt, net balance, spending categories.
+  - "You currently spend 32% of income on discretionary categories."
 - Generates a **Personalized Snowball Plan** immediately.
+- Emergency fund goal setup ($1,000 starter fund).
 
-### 2.2 Snowball Engine 2.0
-- Same principles as before, now augmented by AI insights.
+---
+
+### 2.6 Snowball Engine (Backend Logic)
+
+- Debt payoff order: Smallest-to-largest (Snowball) or highest-interest (Avalanche).
 - Auto-rollover payments when debts are closed.
-- Debt payoff order customizable (Snowball, Avalanche, or AI Hybrid).
+- AI-augmented recommendations based on spending patterns.
+- Monthly payoff schedule generation.
 
-### 2.3 Daily Habit Loop (Gamified Reinforcement)
-- Micro-sessions (under 90 seconds) to review expenses and log wins.
-- Rewards, streaks, XP, and emotional messaging.
-- “Skipping coffee saved $10 — you just fast-tracked your payoff by one day!”
-
-### 2.4 Conversational Expense Logging
-- Text or voice-based input directly from home screen.
-- AI automatically categorizes and tags entries.
-- Daily summary dashboard: visual spend overview + AI comments.
-
-### 2.5 AI Insights & Coaching
-- Machine learning model surfaces insights from daily spending.
-- Context-aware nudges (“You’re spending 20% above your average in dining”).
-- End-of-week reflection with coaching tone and suggestions.
-
-### 2.6 Companion Mode
-- Couples collaborate under one plan or two linked plans.
-- Weekly Money Stand-Up checklist & shared milestone tracking.
+---
 
 ### 2.7 Security, Privacy & Control
+
 - Read-only financial connections (Plaid).
 - Secure storage & encryption at rest and in transit.
 - AI operates locally where possible (edge compute for sensitive data).
+- GDPR-compliant data export and deletion.
 
 ---
 
@@ -169,20 +294,290 @@ The app acts as a **daily AI companion** that guides users through financial awa
 
 ## 5) Architecture Overview
 
+### High-Level Architecture (3-Layer Pattern)
+
+**Critical Principle:** Mobile app NEVER calls external APIs directly. All external integrations go through backend gateway.
+
 ```
-Mobile App (RN)
-  ↓ (TLS + JWT)
-API Gateway / NestJS
-  ├─ Auth (Auth0/Firebase/Cognito)
-  ├─ Entitlements (RevenueCat/Stripe webhooks → SQS → Worker)
-  ├─ Plaid (Link token exchange; webhooks → SQS → Worker)
-  ├─ Snowball Engine (domain service)
-  ├─ Gamification/Quests (config-driven)
-  ├─ Notifications (OneSignal/FCM)
-  ├─ Persistence (Postgres + Prisma) + Cache (Redis)
-  ├─ S3 (exports/artifacts) ← presigned URLs
-  └─ KMS/Secrets Manager (tokens & PII field encryption)
+┌─────────────────────────────────────────────────────────────────┐
+│                        MOBILE APP (React Native)                │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │  Dashboard   │  │ Goals/Chall. │  │  Expenses    │          │
+│  │   Screen     │  │    Screen    │  │   Screen     │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+│                                                                  │
+│  • No direct API calls to OpenAI, Plaid, Stripe, etc.          │
+│  • Only communicates with Backend Gateway                       │
+│  • JWT authentication on every request                          │
+└─────────────────────────────────────────────────────────────────┘
+                              ▼ (TLS 1.3 + JWT)
+┌─────────────────────────────────────────────────────────────────┐
+│                   BACKEND GATEWAY (NestJS)                      │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │              AUTHENTICATION & AUTHORIZATION             │    │
+│  │  • JWT validation on all requests                      │    │
+│  │  • User ID extraction from token                       │    │
+│  │  • Row-Level Security enforcement                      │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │                   BUSINESS LOGIC LAYER                  │    │
+│  │  ├─ AI Service (OpenAI proxy with prompt guardrails)   │    │
+│  │  ├─ Plaid Service (token exchange, webhook processing) │    │
+│  │  ├─ Snowball Engine (debt calculation logic)           │    │
+│  │  ├─ Gamification Service (XP, streaks, challenges)     │    │
+│  │  ├─ Payment Service (RevenueCat/Stripe webhook proxy)  │    │
+│  │  └─ Notification Service (OneSignal/FCM proxy)         │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │                   DATA ISOLATION LAYER                  │    │
+│  │  • All queries scoped by user_id from JWT              │    │
+│  │  • Postgres RLS policies enforced                      │    │
+│  │  • Household permissions checked before access         │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  Persistence: Postgres + Prisma ORM                             │
+│  Cache: Redis (user sessions, rate limits)                      │
+│  Secrets: AWS Secrets Manager + KMS encryption                  │
+└─────────────────────────────────────────────────────────────────┘
+                              ▼ (Server-to-Server)
+┌─────────────────────────────────────────────────────────────────┐
+│                      EXTERNAL APIS (Proxied)                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │   OpenAI     │  │    Plaid     │  │ RevenueCat/  │          │
+│  │     API      │  │     API      │  │   Stripe     │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+│                                                                  │
+│  • Backend makes ALL external API calls                         │
+│  • API keys stored in Secrets Manager (never in frontend)       │
+│  • Rate limiting enforced at backend layer                      │
+│  • User data NEVER sent to external APIs without sanitization   │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+### Key Architectural Decisions
+
+1. **Backend Gateway Pattern:** Mobile app → Backend → External APIs (NEVER direct)
+2. **Data Isolation:** All queries scoped by `user_id` from authenticated JWT token
+3. **AI Proxy:** Backend sanitizes prompts and enforces guardrails before calling OpenAI
+4. **Secrets Management:** All API keys in AWS Secrets Manager, rotated regularly
+5. **Privacy by Design:** User data encrypted at rest and in transit
+
+---
+
+## 5A) Privacy & Security Architecture
+
+### Privacy-First Principles
+
+**1. User Data Isolation**
+- Every database query MUST be scoped by `user_id` extracted from JWT
+- Postgres Row-Level Security (RLS) policies enforced on all tables
+- Users can ONLY access their own data (or household data if explicitly shared)
+- No user can query another user's expenses, debts, or financial data
+
+**2. Household Data Sharing (Opt-In Only)**
+- Household mode requires explicit consent from both users
+- `shared_visibility` column on sensitive tables (accounts, debts, expenses)
+- Default visibility: `private` (only owner can see)
+- Users can toggle visibility per account/debt: `private` | `shared`
+- Even in households, expenses are private by default unless user opts in
+
+**3. Data Encryption**
+- **At Rest:**
+  - Postgres RDS encryption enabled (AES-256)
+  - Field-level encryption for sensitive fields: `access_token`, `item_id`, `ssn` (if collected)
+  - AWS KMS key management with automatic rotation
+- **In Transit:**
+  - TLS 1.3 for all API traffic (mobile ↔ backend)
+  - Certificate pinning on mobile app (prevent MITM attacks)
+
+**4. Minimal Data Collection**
+- Only collect data necessary for debt elimination features
+- No selling of user data to third parties (explicit privacy policy)
+- No sharing financial data with advertisers or data brokers
+- Plaid connections are read-only (no write permissions)
+
+**5. Data Portability & Deletion**
+- Users can export all their data (JSON + CSV) at any time
+- GDPR-compliant right to deletion:
+  - Soft delete with 30-day grace period
+  - Hard delete after grace period (unrecoverable)
+  - Deletion cascades to all related data (debts, expenses, goals, etc.)
+
+### Backend Gateway Enforcement
+
+**Mobile App Restrictions:**
+- ❌ NEVER include API keys (OpenAI, Plaid, Stripe) in frontend code
+- ❌ NEVER make direct HTTP requests to external APIs
+- ❌ NEVER store sensitive tokens in AsyncStorage (only JWT refresh token in Keychain)
+- ✅ ALL external interactions proxied through backend
+
+**Backend Responsibilities:**
+- ✅ Validate JWT on every request
+- ✅ Extract `user_id` from JWT claims
+- ✅ Scope all database queries by `user_id`
+- ✅ Sanitize inputs before calling external APIs
+- ✅ Rate limit per user (prevent abuse)
+- ✅ Log all sensitive operations (audit trail)
+
+### Row-Level Security (Postgres)
+
+Example RLS policy for `expenses` table:
+
+```sql
+-- Users can only see their own expenses
+CREATE POLICY user_expense_isolation ON expenses
+  FOR SELECT
+  USING (user_id = current_setting('app.current_user_id')::uuid);
+
+-- Users can only insert their own expenses
+CREATE POLICY user_expense_insert ON expenses
+  FOR INSERT
+  WITH CHECK (user_id = current_setting('app.current_user_id')::uuid);
+```
+
+Backend sets `app.current_user_id` from JWT before every query.
+
+---
+
+## 5B) Ethical AI Usage Policy
+
+### AI Scope Limitation (Critical Security)
+
+**Problem:** Users could exploit AI chat feature for general-purpose tasks unrelated to the app (homework help, creative writing, etc.), costing the app money and violating terms.
+
+**Solution:** Backend enforces strict prompt guardrails and context boundaries.
+
+### AI Guardrails Implementation
+
+**1. System Prompt (Enforced by Backend)**
+
+Backend prepends this system prompt to EVERY AI request:
+
+```
+You are a financial coach AI assistant for the Debt Destroyer app.
+
+STRICT RULES:
+- You ONLY discuss debt elimination, budgeting, expenses, and financial planning.
+- You NEVER answer questions unrelated to personal finance.
+- You NEVER write code, essays, or creative content.
+- You NEVER provide investment advice (stocks, crypto, etc.).
+- If user asks off-topic questions, respond: "I can only help with debt elimination and budgeting. How can I assist with your financial goals?"
+
+USER CONTEXT (from database):
+- Total Debt: $X
+- Monthly Income: $Y
+- Current Goal: [goal name]
+- Recent Expenses: [last 5 expenses]
+
+Use this context to provide personalized, actionable financial advice.
+```
+
+**2. Prompt Filtering (Pre-API Call)**
+
+Backend analyzes user input BEFORE sending to OpenAI:
+
+```typescript
+// Backend AI Service
+async function sanitizeUserPrompt(userInput: string): Promise<string> {
+  // Block obvious off-topic patterns
+  const bannedPatterns = [
+    /write.*code/i,
+    /write.*essay/i,
+    /help.*homework/i,
+    /tell.*joke/i,
+    /creative.*story/i,
+    /what is.*meaning of life/i,
+  ];
+
+  for (const pattern of bannedPatterns) {
+    if (pattern.test(userInput)) {
+      throw new Error('AI_SCOPE_VIOLATION');
+    }
+  }
+
+  return userInput;
+}
+```
+
+**3. Response Validation (Post-API Call)**
+
+Backend checks OpenAI response for off-topic content:
+
+```typescript
+async function validateAIResponse(response: string): Promise<boolean> {
+  // If AI response contains code blocks, generic advice, etc., reject it
+  if (response.includes('```') || response.includes('function')) {
+    return false;
+  }
+  return true;
+}
+```
+
+**4. Rate Limiting Per User**
+
+- Free tier: 10 AI requests/day
+- Pro tier: 100 AI requests/day
+- Rate limits stored in Redis, enforced per `user_id`
+
+**5. Cost Monitoring**
+
+- Backend logs token usage per request
+- Alert if user exceeds average token usage (possible exploitation)
+- Daily cost cap per user (e.g., $1/day max)
+
+### AI Feature Boundaries
+
+**Allowed AI Use Cases:**
+- ✅ Parse expense input ("I spent $10 on lunch" → category, amount)
+- ✅ Generate debt payoff insights ("You're $37 away from payoff")
+- ✅ Provide motivational messages (aligned with Debt Snowball philosophy)
+- ✅ Answer budgeting questions ("How do I allocate my income?")
+- ✅ Suggest category for uncategorized expenses
+
+**Blocked AI Use Cases:**
+- ❌ General knowledge questions ("What is the capital of France?")
+- ❌ Code generation or debugging
+- ❌ Creative writing (essays, stories, poems)
+- ❌ Math/homework help unrelated to personal finance
+- ❌ Investment advice (stocks, bonds, crypto trading)
+- ❌ Legal or tax advice (beyond debt management)
+
+### AI Persona Constraints
+
+**User-Configurable AI Tone (Settings Screen):**
+- **Supportive:** "You're doing great! Let's tackle this together."
+- **Tough Love:** "You spent $50 on coffee this week. That's a debt payment."
+- **Neutral:** "Here's your spending summary for the week."
+
+Backend enforces tone via system prompt:
+
+```
+User has selected tone: [Supportive|Tough Love|Neutral]
+Adjust your language accordingly while staying focused on debt elimination.
+```
+
+### AI Data Privacy
+
+**What AI NEVER Sees:**
+- ❌ User's full name, email, or phone number
+- ❌ Bank account numbers or routing numbers
+- ❌ Social Security Numbers
+- ❌ Credit card numbers (only masked last 4 digits if needed)
+
+**What AI Receives (Sanitized):**
+- ✅ Total debt amount (aggregate, no account details)
+- ✅ Monthly income (number only)
+- ✅ Expense categories and amounts (no merchant names if sensitive)
+- ✅ Goal titles and progress
+
+### Compliance & Monitoring
+
+- **Audit Logs:** All AI requests logged with `user_id`, timestamp, prompt hash
+- **Abuse Detection:** Flag users with high rejection rate (multiple off-topic prompts)
+- **Terms of Service:** Explicitly state AI usage boundaries in ToS
+- **Model Updates:** Use GPT-4o-mini (cost-effective) with function calling for structured responses
 
 ---
 
@@ -247,6 +642,37 @@ API Gateway / NestJS
 - `input_method` (voice|text)
 - `created_at`
 
+### Goal (User-Defined Goals for 4-Screen Architecture)
+- `id`
+- `user_id`
+- `goal_type` (enum: emergency_fund|debt_payoff|savings|custom)
+- `title`
+- `target_amount`
+- `current_amount`
+- `deadline` (nullable)
+- `status` (enum: active|completed|abandoned)
+- `created_at`
+- `completed_at` (nullable)
+
+### Challenge (System Challenges for Gamification)
+- `id`
+- `challenge_type` (enum: daily|weekly|monthly)
+- `name`
+- `description`
+- `xp_reward`
+- `rules_json` (unlock conditions, completion criteria)
+- `icon`
+- `active` (boolean)
+
+### UserChallenge (User participation in challenges)
+- `id`
+- `user_id`
+- `challenge_id`
+- `progress`
+- `target`
+- `status` (enum: active|completed|failed)
+- `started_at`
+- `completed_at` (nullable)
 
 ---
 
@@ -327,15 +753,51 @@ API Gateway / NestJS
 - `POST /ai/expense` — log new expense (voice/text)
 - `GET /ai/daily-summary` — daily spending summary and nudges
 
+### Goals (User-Defined Goals)
+- `GET /goals` — list user's active and completed goals
+- `POST /goals` — create new goal
+- `GET /goals/:id` — get goal details
+- `PATCH /goals/:id` — update goal (progress, status)
+- `DELETE /goals/:id` — delete goal
+- `POST /goals/:id/complete` — mark goal as completed
+
+### Challenges (System Challenges & Gamification)
+- `GET /challenges` — list available challenges (unlocked for user)
+- `GET /challenges/active` — user's currently active challenges
+- `POST /challenges/:id/start` — user starts a challenge
+- `POST /challenges/:id/progress` — update challenge progress
+- `POST /challenges/:id/complete` — mark challenge as completed (award XP)
+- `GET /challenges/history` — user's completed challenge history
+
 ---
 
 ## 8) Subscription Tiers
 
-| Tier | Price | Features |
-|------|-------|----------|
-| **Normal** | Free | - Manual debts<br>- Basic Snowball plan<br>- Daily check-in (streaks/XP)<br>- 1 household member |
-| **Pro** | $9.99/mo or $99/yr | - Bank linking (Plaid)<br>- Companion Mode (2 members)<br>- Gamification (quests/badges)<br>- Round-ups & cancel-assist<br>- Advanced analytics<br>- Priority support |
+### MVP Tiers (Phases 1-8)
+
+| Tier | Price | MVP Features |
+|------|-------|--------------|
+| **Free** | Free | - Manual debt entry (unlimited)<br>- Basic Snowball plan<br>- Manual expense logging<br>- Basic AI insights (10 requests/day)<br>- Daily check-in (streaks/XP)<br>- Basic goals & challenges |
+| **Pro** | $9.99/mo or $99/yr | - Everything in Free<br>- Advanced AI insights (100 requests/day)<br>- AI expense parsing (voice + text)<br>- Advanced gamification (quests/badges)<br>- Budget analytics & charts<br>- Data export (CSV/JSON)<br>- Priority support |
 | **Lifetime** | $299 one-time | - All Pro features<br>- Forever<br>- No recurring fees |
+
+### Post-MVP Tier Additions (Phases 9-10)
+
+After MVP launch, the following features will be added to Pro/Lifetime tiers:
+
+**Phase 9 (Companion Mode):**
+- Companion Mode (2 household members)
+- Shared dashboard view
+- Weekly Money Stand-Up
+
+**Phase 10 (Bank Linking):**
+- Bank linking (Plaid integration)
+- Auto debt/transaction import
+- Recurring expense detection
+- Round-up suggestions
+
+**Updated Pro Tier (Post-MVP):**
+All MVP features + Companion Mode + Bank Linking
 
 ---
 
@@ -440,178 +902,485 @@ Tone progression adapts to user engagement — encouraging, empathetic, motivati
 
 ## 12) Phase-by-Phase Build Plan
 
-### Phase 1 — **UX System & Conversational Onboarding (4 weeks)**
-- Chat-based onboarding UI with AI prompts.
-- Voice/text expense input prototypes.
-- Design system (light/dark themes, empathy colors, micro-animations).
-- Mock AI analysis & summary dashboards.
+> **Architecture Revision Note (2025-11-05):**
+> After DevLog 2, the app architecture was revised from a 5-tab design to a **cognitive-optimized 4-screen framework**. The phases below reflect this updated approach while preserving completed work from DevLogs 1-2.
+
+> **MVP Scope (2025-11-08):**
+> **Plaid/Bank integration is OUT OF SCOPE for MVP.** The MVP will use manual entry only (debts, income, expenses). This allows us to validate core functionality and user experience before adding complex external integrations. Phase 10 (Bank Linking) is now the FINAL phase after MVP launch.
+
+---
+
+### Phase 1 — **Core UX System & 4-Screen Framework (4 weeks)**
+
+**Objective:** Establish design system, component library, and 4-screen navigation structure.
 
 **Status:** 🔄 **IN PROGRESS** (~45% Complete)
 
 **Completed:**
 - ✅ Project initialization (React Native 0.76.6 with TypeScript)
-- ✅ Organized folder structure (src/screens, components, theme, etc.)
-- ✅ Design tokens (colors, typography, spacing, shadows)
+- ✅ Organized folder structure (src/screens, components, theme, navigation)
+- ✅ Complete design system (colors, typography, spacing, shadows)
 - ✅ Constants module (app configuration, feature flags)
-- ✅ Utility functions (formatCurrency, formatDate, etc.)
+- ✅ Utility functions (formatCurrency, formatDate, validators)
 - ✅ Type definitions (User, Debt, navigation types)
 - ✅ Build automation (build-android.bat for debug/release APKs)
 - ✅ Component library (Button, Card, Input)
 - ✅ Navigation setup (React Navigation v7 - Root, Onboarding, Main Tabs)
 - ✅ WelcomeScreen implementation
 - ✅ OnboardingIntroScreen (fully implemented)
-- ✅ Screen structure (11 screens: 1 Welcome + 5 Onboarding + 5 Main)
 
-**In Progress:**
-- Remaining onboarding screens (Debts, Income, Emergency Fund, Complete)
-- Dashboard content implementation
-- Form validation and state management
-- Additional components (Charts, Progress indicators, Badges)
+**In Progress (Adjusted for 4-Screen Model):**
+- Update MainTabNavigator from 5 tabs → 4 tabs:
+  1. Dashboard (merge overview + debt list + plan)
+  2. Goals & Challenges (new gamification hub)
+  3. Expenses & Budgets (new AI-powered logging)
+  4. Settings & Profile
+- Complete remaining onboarding screens
+- Build AI conversational input component (voice + text)
+- Additional UI components (ProgressBar, Badge, Chart, GoalCard)
 
-**Deliverables**
-- Design tokens (colors, spacing, typography)
-- Component library (Buttons, Cards, Inputs, Charts, etc.)
-- Screen flows:
-  - Onboarding (manual debt entry)
-  - Emergency Fund progress
-  - Snowball Plan view
-  - Daily Habit Loop
-  - Companion Mode (household setup)
-  - Paywall
-  - Settings
+**Deliverables:**
+- Complete 4-screen navigation structure
+- Conversational onboarding flow (Intro → Debts → Income → Emergency Fund → Complete)
+- Base screen templates for Dashboard, Goals, Expenses, Settings
+- Reusable component library
+- Dark mode + accessibility support
 
-**Acceptance**
-- Full navigation with mocked data
-- Dark mode + A11y (font scaling, contrast)
-- Component library reusable across screens
-
----
-
-### Phase 2 — Domain Logic + Local Snowball Engine (1-2 weeks)
-
-- Offline prototype of debt plan generation.
-- Daily check-in logic with gamified rewards.
-
-**Deliverables**
-- TypeScript Snowball module
-- Local persistence (AsyncStorage) for prototype
-- Daily loop state (streak/XP/levels/quests)
-
-**Acceptance**
-- Input debts → generate plan → mark debt paid → roll-down works
-- Daily check-in increments streak/XP; quests unlock per rules
+**Acceptance Criteria:**
+- All 4 main screens navigable with placeholder content
+- Onboarding flow complete with mocked data
+- Component library covers 80% of UI needs
+- Dark mode works across all screens
+- No TypeScript errors or console warnings
 
 ---
 
-### Phase 3 — **AI Core & Coaching Layer (4 weeks)**
-- AI profile generation & contextual prompts.
-- NLP for expense recognition.
-- Behavioral tracking (skip spends, streaks, emotional feedback).
+### Phase 2 — **Dashboard & AI Insights (3 weeks) [MVP]**
 
-### Phase 4 — Backend Skeleton + Auth + Entitlements (2-3 weeks)
+**Objective:** Build the Dashboard (Home) screen with AI-powered insights and debt overview.
 
-**Deliverables**
-- NestJS + Prisma, Postgres, Redis
-- Auth (Auth0/Firebase/Cognito) + JWT/refresh flow
-- RevenueCat (mobile) + Stripe (web) webhooks → entitlements
-- REST scaffold: `/auth`, `/debts`, `/plan`, `/daily`, `/entitlements`
+**MVP Scope:** Manual debt entry only (no Plaid). Users add debts via forms.
 
-**Acceptance**
-- Login/logout; Normal tier by default
-- Sandbox purchase → Pro/Lifetime applied within <30s
-- Paywall gates correctly
+**Deliverables:**
+- Financial snapshot component (total debt, progress, debt-free date)
+- **Manual debt entry form:**
+  - Debt name, type (credit card, loan, etc.)
+  - Principal amount, APR, minimum payment
+  - Due day of month
+- Debt tackling strategy view (snowball-prioritized list)
+- AI insights panel (analysis, recommendations, contextual nudges)
+- Quick action buttons (Add Expense, Log Goal, View Summary)
+- Snowball calculation engine (TypeScript module)
+- Local persistence (AsyncStorage) for offline support
 
----
-
-### Phase 5 — Bank Linking & Transactions (Plaid) (4-6 weeks)
-
-**Deliverables**
-- Plaid Link + token exchange; access_token stored encrypted
-- Ingest accounts, liabilities, transactions; webhook→SQS→worker
-- Confirm to log UI uses real proposals
-- Recurring detection v1 (heuristics)
-- Merge manual + auto debts (dedupe)
-
-**Acceptance**
-- Link bank; see debts/cards imported
-- Daily screen shows yesterday's transactions to confirm
-- Webhook-driven updates keep balances in sync
+**Acceptance Criteria:**
+- Dashboard displays all key metrics at a glance
+- **Users can manually add/edit/delete debts**
+- Debt list shows smallest-to-largest ordering (Snowball)
+- Snowball calculations accurate (debt payoff dates, rollover logic)
+- Quick actions navigate to correct screens
+- Data persists locally between app sessions
+- **No Plaid integration required for MVP**
 
 ---
 
-### Phase 6 — Gamification Engine (3-4 weeks)
+### Phase 3 — **Goals & Challenges (Gamification Hub) (3 weeks) [MVP]**
 
-**Deliverables**
-- Streaks, XP, levels, badges; weekly stats
-- Quest engine (server configs) + unlock rules
-- Contextual nudges ("+$X kills on [date]")
-- Push via OneSignal/FCM (quiet hours)
+**Objective:** Build the Goals & Challenges screen with gamified engagement mechanics.
 
-**Acceptance**
-- Daily loop < 90s; streak persists across devices
-- XP/levels/badges correct; quests award on completion
-- Notifications respect preferences
+**Deliverables:**
+- User-defined goals system (create, track, complete)
+- System challenges engine (daily/weekly/monthly)
+- XP & leveling system
+- Streak tracking (consecutive days)
+- Badges & achievements
+- Confetti animations on milestones
+- Visual progress components (progress bars, percentage rings)
+- Leaderboard (optional, household/friends comparison)
+
+**Acceptance Criteria:**
+- Users can create and track custom goals
+- Challenges unlock based on user state
+- XP awards correctly for all actions
+- Streaks increment/reset properly
+- Confetti triggers on milestone completions
+- Gamification feels rewarding and motivating
 
 ---
-### Phase 7 — **Security Hardening & Compliance (2 weeks)**
-- MFA, data encryption, privacy workflows, SOC 2 preparation.
-**Deliverables**
-- MFA (email/TOTP/SMS)
-- Field-level encryption + key rotation runbook
-- WAF, rate limits, audit logs, admin RBAC
-- Data export/delete self-service; retention policy
-- Pen test + SOC 2 readiness checklist
 
-**Acceptance**
-- No High/Critical findings
-- DSR (export/delete) within SLA
-- Monitoring dashboards active; on-call runbooks tested
+### Phase 4 — **Expenses & Budgets (AI-Powered Logging) (3 weeks) [MVP]**
 
-### Phase 8 — Companion Mode (Couples) (3-5 weeks)
+**Objective:** Build the Expenses & Budgets screen with conversational AI input.
 
-**Deliverables**
+**MVP Scope:** Manual expense entry + AI parsing (no Plaid auto-import).
+
+**Deliverables:**
+- Income & budget setup flow (manual entry)
+- **AI conversational input component:**
+  - Voice input (speech-to-text via mobile APIs)
+  - Text input ("I spent $10 on lunch")
+  - Natural language parsing via backend AI service → {category, amount, date}
+- Manual expense entry form (always available as fallback)
+- Expense analytics dashboard:
+  - Daily/Weekly/Monthly summaries
+  - Budget vs. Spend charts (bar/pie charts)
+  - Category breakdowns
+- Expense history list (editable)
+- Export functionality (CSV)
+
+**Acceptance Criteria:**
+- Voice input transcribes and parses correctly (>85% accuracy)
+- AI categorizes expenses with >85% accuracy
+- Budget tracking works with visual indicators
+- Analytics provide actionable insights
+- Manual entry always available as fallback
+- **No Plaid/bank integration required for MVP**
+- Users can manually log all expenses
+
+---
+
+### Phase 5 — **Settings & Profile + AI Persona Tuning (2 weeks) [MVP]**
+
+**Objective:** Complete Settings & Profile screen with personalization options.
+
+**Deliverables:**
+- Profile management (user info, photo, email)
+- AI persona tuning:
+  - Tone selection (Supportive / Tough Love / Neutral)
+  - Focus level (Beginner / Intermediate / Gazelle Intensity)
+  - Communication frequency settings
+- App preferences (notifications, dark mode, currency, locale)
+- Integration management:
+  - **Plaid section (grayed out with "Coming Soon" badge for MVP)**
+  - Future: Plaid toggle will be enabled in Phase 10
+- Subscription management (tier display, upgrade CTA)
+- Privacy controls (data export, deletion request)
+
+**Acceptance Criteria:**
+- All settings functional and persist correctly
+- AI persona changes affect tone in Dashboard/Goals
+- Dark mode toggle works instantly
+- Subscription tier displayed correctly
+- **Plaid integration placeholder visible but disabled**
+- Data export works (JSON + CSV)
+
+---
+
+### Phase 6 — **Backend Skeleton + Auth + Entitlements (2-3 weeks) [MVP]**
+
+**Objective:** Build backend infrastructure with privacy-first architecture and backend gateway pattern.
+
+**MVP Scope:** No Plaid endpoints. Focus on Auth, Debts, Goals, Expenses, AI proxy.
+
+**Deliverables:**
+- **NestJS Backend Gateway:**
+  - REST API scaffold (no direct external API calls from mobile)
+  - JWT middleware (validates token, extracts `user_id`)
+  - Backend services layer (AI, Plaid, RevenueCat proxies)
+- **Database Layer:**
+  - PostgreSQL + Prisma ORM
+  - **Postgres Row-Level Security (RLS) policies on ALL tables**
+  - User data isolation enforced at database level
+- **Authentication:**
+  - Auth0/Firebase/Cognito integration
+  - JWT access token (15 min) + refresh token (30 days)
+  - Token rotation on refresh
+- **API Endpoints:**
+  - `/auth` (register, login, refresh, logout)
+  - `/users/me` (profile)
+  - `/debts` (CRUD - scoped by user_id)
+  - `/goals` (CRUD - scoped by user_id)
+  - `/expenses` (CRUD - scoped by user_id)
+  - `/entitlements` (tier management)
+- **Privacy Architecture (Section 5A):**
+  - All queries MUST scope by `user_id` from JWT
+  - Household sharing requires explicit consent
+  - `shared_visibility` column enforced
+- **Secrets Management:**
+  - AWS Secrets Manager for API keys (OpenAI, Plaid, Stripe)
+  - KMS encryption for sensitive fields
+  - NO API keys in frontend code
+- **Caching & Rate Limiting:**
+  - Redis for sessions and rate limits
+  - Per-user rate limits (prevent abuse)
+- **Mobile Integration:**
+  - React Native app calls ONLY backend (never external APIs)
+  - JWT sent with every request
+
+**Acceptance Criteria:**
+- ✅ User registration/login works
+- ✅ JWT authentication enforced on all protected routes
+- ✅ **RLS policies prevent cross-user data access**
+- ✅ **All queries scoped by user_id from JWT**
+- ✅ Data syncs between devices
+- ✅ Sandbox IAP purchase updates entitlement
+- ✅ Mobile app cannot directly call OpenAI/Plaid/Stripe
+- ✅ Rate limiting works (e.g., 10 requests/min per user)
+
+---
+
+### Phase 7 — **AI Core & NLP (4 weeks) [MVP]**
+
+**Objective:** Build AI expense parsing and insight generation with ethical guardrails.
+
+**Critical Requirement:** ALL AI calls MUST go through backend (see Section 5B: Ethical AI Usage Policy).
+
+**Deliverables:**
+- **Backend AI Service (NestJS):**
+  - OpenAI API proxy (mobile never calls OpenAI directly)
+  - System prompt injection (financial coach boundaries)
+  - Prompt filtering (block off-topic requests)
+  - Response validation (ensure on-topic answers)
+  - Rate limiting per user (Free: 10/day, Pro: 100/day)
+  - Token usage logging and cost monitoring
+- **AI Guardrails (Section 5B):**
+  - Enforce scope limitation (debt/budgeting ONLY)
+  - Block general-purpose use (homework, code, creative writing)
+  - Sanitize user data (remove PII before sending to OpenAI)
+  - Daily cost cap per user ($1/day max)
+- **Expense Parsing (NLP):**
+  - Parse "I spent $10 on lunch" → {amount: 10, category: "food", date: today}
+  - OpenAI function calling for structured extraction
+  - Fallback to manual entry on parse failure
+- **AI Insight Generation:**
+  - Debt payoff recommendations ("You're $37 away from payoff")
+  - Spending pattern analysis ("You spent $50 on coffee this week")
+  - Motivational messages (aligned with user's AI persona)
+- **AI Persona Implementation:**
+  - System prompt adjusts based on user settings:
+    - Supportive: "You're doing great!"
+    - Tough Love: "That $50 could've been a debt payment."
+    - Neutral: "Here's your spending summary."
+- **Weekly Summary Generation:**
+  - AI-generated weekly financial recap
+  - Highlight wins, suggest improvements
+  - Contextual to user's goals and debt plan
+- **Data Privacy (Section 5B):**
+  - AI NEVER sees: name, email, SSN, account numbers
+  - AI receives: aggregated debt, income, expense categories only
+
+**Acceptance Criteria:**
+- ✅ Expense parsing >85% accuracy
+- ✅ **AI requests blocked if off-topic (per guardrails)**
+- ✅ **System prompt enforced on every AI call**
+- ✅ **User cannot exploit AI for non-financial tasks**
+- ✅ Rate limiting prevents abuse (10/day Free, 100/day Pro)
+- ✅ AI insights relevant and actionable
+- ✅ Persona changes affect AI communication style
+- ✅ Weekly summaries provide value
+- ✅ PII sanitized before sending to OpenAI
+- ✅ Token usage logged; alerts trigger on excessive usage
+
+---
+
+### Phase 8 — **Polish, Testing & MVP Launch Prep (3-4 weeks) [MVP LAUNCH]**
+
+**Objective:** Final refinements, security hardening, and MVP launch readiness.
+
+**MVP Scope:** This phase concludes the MVP. Phases 9-10 are post-MVP enhancements.
+
+**Deliverables:**
+- **Security Audit:**
+  - OWASP Top 10 remediation
+  - Penetration testing (focus on API authentication, data isolation)
+  - No High/Critical security findings
+- **Performance Optimization:**
+  - P95 API response < 300ms
+  - Mobile app cold start < 2s
+  - Optimize bundle size
+- **Testing:**
+  - E2E tests (Detox) for critical flows:
+    - Onboarding → Add Debt → View Dashboard → Log Expense → Complete Goal
+  - Unit tests for Snowball engine, gamification logic
+  - API integration tests
+- **App Store Prep:**
+  - Screenshots (iOS + Android)
+  - App descriptions, keywords
+  - Privacy policy & Terms of Service
+  - App icons (all sizes)
+- **Beta Testing:**
+  - TestFlight (iOS) + Google Play Internal Testing
+  - 20-50 beta testers
+  - Bug fixes from beta feedback
+- **Analytics & Monitoring:**
+  - Amplitude/Mixpanel integration
+  - Crash reporting (Sentry)
+  - Performance monitoring
+  - User flow tracking
+- **Launch Checklist:**
+  - Backend deployed to production (AWS)
+  - Database migrations tested
+  - Environment variables configured
+  - Rate limits configured
+  - AI guardrails tested
+  - Subscription tiers configured (RevenueCat)
+
+**Acceptance Criteria:**
+- ✅ No High/Critical security findings from audit
+- ✅ P95 API response < 300ms
+- ✅ Crash-free rate ≥ 99.7% in beta
+- ✅ App Store submission approved (iOS + Android)
+- ✅ Analytics tracking works
+- ✅ All critical user flows tested (E2E)
+- ✅ Privacy policy and ToS published
+- ✅ Beta testers report positive experience
+
+**MVP Feature Set Complete:**
+- ✅ 4-screen navigation (Dashboard, Goals, Expenses, Settings)
+- ✅ Manual debt entry and tracking
+- ✅ Snowball debt payoff plan
+- ✅ AI-powered expense logging
+- ✅ Goals & Challenges (gamification)
+- ✅ Subscription tiers (Free / Pro / Lifetime)
+- ✅ User authentication & data privacy
+
+---
+
+## Post-MVP Phases (Optional Enhancements)
+
+### Phase 9 — **Companion Mode (Couples & Households) (3-5 weeks) [Post-MVP]**
+
+**Objective:** Enable shared financial tracking for couples.
+
+**Note:** This phase is AFTER MVP launch. Requires separate product validation.
+
+**Deliverables:**
 - Household entity (up to 2 members)
-- Entitlement sharing under one subscription
-- Combined/Uncombined toggle; consented visibility per account/debt
-- Shared Dashboard + Weekly Money Stand-Up checklist
-- Private comments on milestones
+- Invite/join flow
+- Entitlement sharing (one subscription covers both)
+- Combined/Uncombined finance modes
+- Shared dashboard view
+- Privacy controls (account visibility)
+- Weekly Money Stand-Up checklist
 
-**Acceptance**
-- Invite code → join household; roles set (Owner/Member)
-- Entitlements shared instantly
-- Combined/Uncombined behaviors & privacy rules enforced
-
--
-
-### Phase 9 — Payment Accelerators ("Ammo") (3-4 weeks)
-
-**Deliverables**
-- Round-ups to debt via ACH rails: Dwolla/Sila/Modern Treasury (or simulate redirects if rails deferred)
-- Subscription Radar with cancel-assist deep links
-- One-click overpay prompts around paydays
-
-**Acceptance**
-- Weekly sweep to smallest debt (or approved redirect)
-- Live recurring charges + merchant deep links
-- Overpay prompts trigger when close to payoff
+**Acceptance Criteria:**
+- Invite code flow works
+- Both users get Pro features from one subscription
+- Privacy settings respected (per Section 5A)
+- Shared dashboard accurate
+- Users can opt-out of sharing anytime
 
 ---
+
+### Phase 10 — **Bank Linking & Transactions (Plaid) (4-6 weeks) [Post-MVP]**
+
+**Objective:** Integrate Plaid for automatic debt tracking (AFTER MVP validates manual entry approach).
+
+**Critical Requirement:** ALL Plaid API calls go through backend (mobile never calls Plaid directly).
+
+**Why Post-MVP:**
+- Plaid integration is complex (webhooks, workers, deduplication)
+- Plaid has ongoing costs (per user per month)
+- Requires additional security compliance
+- MVP validates product-market fit first with manual entry
+- Manual entry is sufficient for early adopters
+
+**Deliverables:**
+- **Backend Plaid Service:**
+  - `/plaid/link-token` endpoint (backend creates link token)
+  - `/plaid/exchange` endpoint (backend exchanges public_token for access_token)
+  - Access tokens stored encrypted (KMS) in database
+  - Mobile app NEVER stores or handles Plaid access tokens
+- **Plaid Link SDK (Mobile):**
+  - User initiates link flow in Settings → Integrations
+  - App receives link token from backend
+  - User connects bank via Plaid UI
+  - Public token sent to backend for exchange
+- **Privacy & Security:**
+  - Access tokens encrypted with KMS (field-level encryption)
+  - Read-only Plaid permissions (Transactions + Liabilities)
+  - NO write access to user bank accounts
+  - User can revoke connection anytime (soft delete)
+  - Plaid connections visible in Settings with last sync time
+- **Data Ingestion:**
+  - Account & liability import (scoped by user_id)
+  - Transaction ingestion via Plaid webhooks → SQS → worker
+  - Worker updates database (transactions, balances)
+  - All data scoped by user_id (RLS enforced)
+- **Recurring Transaction Detection:**
+  - Backend analyzes transaction patterns
+  - Flag likely subscriptions/recurring charges
+  - Suggest cancellations in Expenses screen
+- **Deduplication:**
+  - Detect if manually-entered debt matches Plaid debt
+  - Prompt user: "Is this the same as [manual debt]?"
+  - User confirms merge (prevents duplicate tracking)
+  - Preserve historical data from manual entries
+- **Manual Override:**
+  - User can still manually add debts/expenses even with Plaid connected
+  - Manual entries take precedence over auto-imported data
+  - User can edit/delete auto-imported transactions
+
+**Acceptance Criteria:**
+- ✅ Users can link bank accounts securely via Plaid Link
+- ✅ **Backend performs token exchange (mobile never handles access tokens)**
+- ✅ **Access tokens encrypted in database (KMS)**
+- ✅ Debts auto-populate from connected accounts
+- ✅ Transactions appear in Expenses screen within 24 hours
+- ✅ Webhooks keep data in sync (SQS → worker)
+- ✅ User can revoke Plaid connection (deletes access token immediately)
+- ✅ All Plaid data scoped by user_id (privacy enforced)
+- ✅ Deduplication prevents double-counting debts
+- ✅ Manual entries still work alongside auto-import
+- ✅ Recurring transaction detection >80% accuracy
+
+**Subscription Tier Update:**
+After this phase, add "Bank Linking (Plaid)" to Pro tier features.
+
 ---
 
-## 13) UI/UX Deliverables (Atomic)
+## 13) UI/UX Deliverables & Cognitive Design Framework
 
-- **Design tokens JSON:** brand, neutral, semantic colors; spacing scale; font sizes/weights; radii/shadows
-- **Component stories (Storybook):** Buttons, Inputs, Selects, Toggles, Avatars, Badges, Progress, Cards, Charts
-- **Screen flows (IDs + navigation graph):** Onboarding → EF → Debts → Plan → Daily → Paywall → Settings → Companion
-- **Micro-interactions:** confetti on payoff, haptics on level-up, progress bar ticks per confirmed transaction
+### Design System
+- **Design tokens (complete):**
+  - Colors: brand, semantic, light/dark mode
+  - Typography: font families, sizes (xs-5xl), weights, line heights, predefined styles
+  - Spacing: 4px-based scale (xs-4xl), use-case specific tokens
+  - Shadows: 5 elevation levels with cross-platform support
+  - Border radius: sm to full (pills)
 
-## 13A) UX & Behavioral Psychology Principles
+### Component Library
+- **Core components:** Button (4 variants, 3 sizes), Card (3 variants), Input (with label/error)
+- **Progress components:** ProgressBar, CircularProgress, PercentageRing
+- **Gamification components:** Badge, XP Counter, Streak Indicator, Confetti Animation
+- **Data visualization:** Bar Chart, Pie Chart, Line Chart (Victory Native)
+- **AI components:** ConversationalInput (voice + text), AIInsightCard, NudgeNotification
+
+### Screen Flows (4-Screen Architecture)
+
+**Onboarding:**
+Welcome → Intro → Debts → Income → Emergency Fund → Complete
+
+**Main App (4 Tabs):**
+1. **Dashboard** (Passive Review) — Snapshot → Debt List → AI Insights → Quick Actions
+2. **Goals & Challenges** (Active Play) — Goal List → Challenge Cards → XP/Streak Display → Leaderboard
+3. **Expenses & Budgets** (Action) — Income Setup → Budget Allocation → Expense Logging → Analytics
+4. **Settings & Profile** (Control) — Profile → AI Persona → Preferences → Integrations → Subscription
+
+### Micro-Interactions
+- **Confetti animation** on debt payoff and milestone completions
+- **Haptic feedback** on level-up and achievement unlock
+- **Progress bar ticks** per confirmed transaction
+- **Slide-in animations** for AI nudges and contextual prompts
+- **Spring animations** for card interactions (Reanimated 2)
+
+### Cognitive Design Mapping
+
+| Screen             | User Mode      | Cognitive Focus            | Design Strategy                                      |
+| ------------------ | -------------- | -------------------------- | ---------------------------------------------------- |
+| Dashboard          | Passive Review | Awareness & Motivation     | Minimal text, high visual contrast, cognitive chunks |
+| Goals & Challenges | Active Play    | Engagement & Reward        | Color-heavy, icon-driven, dopamine-focused           |
+| Expenses & Budgets | Action         | Data Entry & Planning      | Low-friction forms, conversational AI, analytics     |
+| Settings/Profile   | Control        | Personalization & Security | Clean text layout, minimal noise, clear hierarchy    |
+
+### UX & Behavioral Psychology Principles
 
 - **Positive Reinforcement:** Reward micro-wins (skipped purchase, subscription canceled).
-- **Cognitive Load Reduction:** Chat-style input simplifies data entry.
+- **Cognitive Load Reduction:** Simplified 4-screen navigation reduces decision fatigue.
 - **Habit Formation:** Inspired by Tiny Habits and Atomic Habits frameworks.
-- **AI Empathy Layer:** Tone adapts to user mood (coach vs motivator mode).
-- **Gamified Motivation:** Uses streaks, confetti, and debt ladder visuals for progress gratification.
+- **AI Empathy Layer:** Tone adapts to user preferences (supportive, tough love, neutral).
+- **Gamified Motivation:** Streaks, XP, confetti, and debt ladder visuals for progress gratification.
+- **Progressive Disclosure:** Information revealed as needed, avoiding overwhelming users.
 
 
 ---
@@ -771,16 +1540,29 @@ Feature: Daily loop streak
 
 ---
 
-## 20) Build Order (One-Pager)
+## 20) Build Order (High-Level Summary)
 
-1. UI/UX system & screens (mocked)
-2. Local Snowball + daily loop logic
-3. Auth + Entitlements (RevenueCat/Stripe)
-4. Plaid linking + transactions + confirm flow
-5. Gamification (streaks/XP/quests/nudges)
-6. Companion Mode (Household, permissions, shared dashboard)
-7. Payment accelerators (round-ups, cancel-assist)
-8. Security/compliance hardening
+**MVP-First Approach (Phases 1-8):**
+
+**MVP Phases (Manual Entry):**
+1. **Phase 1:** Core UX System & 4-Screen Framework (navigation, design system, components) [MVP]
+2. **Phase 2:** Dashboard & AI Insights (manual debt entry, snowball engine) [MVP]
+3. **Phase 3:** Goals & Challenges (gamification hub, XP, streaks, badges) [MVP]
+4. **Phase 4:** Expenses & Budgets (AI parsing, manual logging, budget tracking) [MVP]
+5. **Phase 5:** Settings & Profile (AI persona tuning, preferences, Plaid placeholder) [MVP]
+6. **Phase 6:** Backend Skeleton (Auth, API, entitlements, data privacy) [MVP]
+7. **Phase 7:** AI Core & NLP (expense parsing, insight generation, guardrails) [MVP]
+8. **Phase 8:** Polish, Testing & MVP Launch (security audit, App Store submission) [MVP LAUNCH]
+
+**Post-MVP Enhancements:**
+9. **Phase 9:** Companion Mode (couples, household entity, shared dashboard) [Post-MVP]
+10. **Phase 10:** Bank Linking & Transactions (Plaid integration, auto debt tracking) [Post-MVP]
+
+**Key Decisions:**
+- **MVP uses manual entry only** (no Plaid). Validates product-market fit before complex integrations.
+- **Front-load UI/UX** before backend complexity. Users test locally with mocked data.
+- **Plaid integration last** (Phase 10) after MVP proves manual entry is valuable.
+- Architecture supports Plaid scaling (backend gateway pattern already designed).
 
 ---
 
