@@ -1,6 +1,6 @@
 /**
  * Main Tab Navigator
- * Bottom tab navigation for main app sections
+ * 4-Screen Architecture: Dashboard, Goals, Expenses, Settings
  */
 
 import React from 'react';
@@ -8,9 +8,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {MainTabParamList} from '../types';
 import {
   DashboardScreen,
-  DebtsScreen,
-  PlanScreen,
-  DailyScreen,
+  GoalsScreen,
+  ExpensesScreen,
   SettingsScreen,
 } from '../screens';
 import {colors} from '../theme';
@@ -54,27 +53,19 @@ export const MainTabNavigator: React.FC = () => {
         }}
       />
       <Tab.Screen
-        name="Debts"
-        component={DebtsScreen}
+        name="Goals"
+        component={GoalsScreen}
         options={{
-          tabBarLabel: 'Debts',
-          headerTitle: 'My Debts',
+          tabBarLabel: 'Goals',
+          headerTitle: 'Goals & Challenges',
         }}
       />
       <Tab.Screen
-        name="Plan"
-        component={PlanScreen}
+        name="Expenses"
+        component={ExpensesScreen}
         options={{
-          tabBarLabel: 'Plan',
-          headerTitle: 'Snowball Plan',
-        }}
-      />
-      <Tab.Screen
-        name="Daily"
-        component={DailyScreen}
-        options={{
-          tabBarLabel: 'Daily',
-          headerTitle: 'Daily Check-In',
+          tabBarLabel: 'Expenses',
+          headerTitle: 'Expenses & Budgets',
         }}
       />
       <Tab.Screen
@@ -82,7 +73,7 @@ export const MainTabNavigator: React.FC = () => {
         component={SettingsScreen}
         options={{
           tabBarLabel: 'Settings',
-          headerTitle: 'Settings',
+          headerTitle: 'Settings & Profile',
         }}
       />
     </Tab.Navigator>

@@ -61,3 +61,19 @@ export const daysBetween = (date1: Date, date2: Date): number => {
 
   return Math.floor((utc2 - utc1) / msPerDay);
 };
+
+/**
+ * Get debt type label
+ * @param type - Debt type identifier
+ */
+export const getDebtTypeLabel = (type: string): string => {
+  const labels: {[key: string]: string} = {
+    'credit-card': 'Credit Card',
+    'personal': 'Personal Loan',
+    'auto': 'Auto Loan',
+    'student': 'Student Loan',
+    'medical': 'Medical Debt',
+    'bnpl': 'Buy Now Pay Later',
+  };
+  return labels[type] || type;
+};

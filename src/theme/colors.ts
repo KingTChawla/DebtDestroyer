@@ -28,6 +28,10 @@ export const colors = {
       dark: '#B0B0B0',
     },
   },
+  border: {
+    light: '#E0E0E0',
+    dark: '#333333',
+  },
 
   // Semantic colors
   success: '#43A047',
