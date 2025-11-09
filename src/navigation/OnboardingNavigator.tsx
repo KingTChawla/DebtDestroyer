@@ -13,7 +13,7 @@ import {
   OnboardingEmergencyFundScreen,
   OnboardingCompleteScreen,
 } from '../screens';
-import {colors} from '../theme';
+import {colors, typography} from '../theme';
 import {useColorScheme} from 'react-native';
 
 const Stack = createStackNavigator<OnboardingStackParamList>();
@@ -34,7 +34,10 @@ export const OnboardingNavigator: React.FC = () => {
           ? colors.text.primary.dark
           : colors.text.primary.light,
         headerTitleStyle: {
-          fontWeight: '600',
+          fontFamily: typography.fontFamily.bold,
+          fontSize: typography.fontSize.headline,
+          fontWeight: typography.fontWeight.bold,
+          letterSpacing: 0,
         },
       }}>
       <Stack.Screen

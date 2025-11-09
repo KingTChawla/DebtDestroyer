@@ -182,11 +182,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.fontSize['2xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.sm,
     marginTop: spacing.md,
   },
   subtitle: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.lg,
     lineHeight: typography.lineHeight.relaxed * typography.fontSize.base,
   },
@@ -200,10 +202,12 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
   },
   infoText: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     lineHeight: typography.lineHeight.normal * typography.fontSize.sm,
   },
   actions: {

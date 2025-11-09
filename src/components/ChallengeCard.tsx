@@ -8,6 +8,7 @@ import {View, Text, StyleSheet, TouchableOpacity, useColorScheme} from 'react-na
 import {UserChallenge, ChallengeStatus} from '../types';
 import {colors, spacing, typography, shadows} from '../theme';
 import {ProgressBar} from './ProgressBar';
+import {StarIcon, CheckCircleIcon, XCircleIcon} from 'react-native-heroicons/solid';
 
 interface ChallengeCardProps {
   userChallenge: UserChallenge;
@@ -107,25 +108,32 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
 
       <View style={styles.footer}>
         <View style={styles.xpBadge}>
-          <Text style={styles.xpText}>⭐ +{challenge.xpReward} XP</Text>
+          <StarIcon size={16} color={colors.accent} />
+          <Text style={styles.xpText}>+{challenge.xpReward} XP</Text>
         </View>
         {status === 'completed' && userChallenge.completedAt && (
-          <Text
-            style={[
-              styles.completedText,
-              {color: colors.success},
-            ]}>
-            ✓ Completed
-          </Text>
+          <View style={styles.statusContainer}>
+            <CheckCircleIcon size={16} color={colors.success} />
+            <Text
+              style={[
+                styles.completedText,
+                {color: colors.success},
+              ]}>
+              Completed
+            </Text>
+          </View>
         )}
         {status === 'failed' && (
-          <Text
-            style={[
-              styles.failedText,
-              {color: colors.error},
-            ]}>
-            ✗ Failed
-          </Text>
+          <View style={styles.statusContainer}>
+            <XCircleIcon size={16} color={colors.error} />
+            <Text
+              style={[
+                styles.failedText,
+                {color: colors.error},
+              ]}>
+              Failed
+            </Text>
+          </View>
         )}
       </View>
     </Container>
@@ -154,6 +162,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 28,
+    fontFamily: typography.fontFamily.regular,
   },
   headerContent: {
     flex: 1,
@@ -168,6 +177,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
   },
   typeBadge: {
     paddingHorizontal: spacing.sm,
@@ -178,11 +188,13 @@ const styles = StyleSheet.create({
   typeText: {
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   description: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     lineHeight: typography.lineHeight.normal * typography.fontSize.sm,
   },
   progressSection: {
@@ -198,18 +210,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderRadius: spacing.radius.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs / 2,
   },
   xpText: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     color: colors.accent,
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs / 2,
   },
   completedText: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
   },
   failedText: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
   },
 });

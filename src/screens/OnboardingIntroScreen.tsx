@@ -172,11 +172,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.fontSize['3xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.md,
     marginTop: spacing.lg,
   },
   subtitle: {
     fontSize: typography.fontSize.lg,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.xl,
     lineHeight: typography.lineHeight.relaxed * typography.fontSize.lg,
   },
@@ -186,6 +188,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.md,
   },
   stepsList: {
@@ -208,6 +211,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
   },
   stepContent: {
     flex: 1,
@@ -215,19 +219,23 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
   },
   stepDescription: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     lineHeight: typography.lineHeight.normal * typography.fontSize.sm,
   },
   tipTitle: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.sm,
   },
   tipText: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     lineHeight: typography.lineHeight.relaxed * typography.fontSize.base,
   },
   button: {

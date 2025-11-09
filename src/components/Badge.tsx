@@ -86,10 +86,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     textAlign: 'center',
+    fontFamily: typography.fontFamily.regular,
   },
   label: {
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
     color: colors.text.primary.light,
     textAlign: 'center',
   },

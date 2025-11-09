@@ -11,13 +11,13 @@ export type RootStackParamList = {
   Welcome: undefined;
   Onboarding: undefined;
   Main: undefined;
+  Settings: undefined;
 };
 
 export type MainTabParamList = {
   Dashboard: undefined;
   Goals: undefined;
   Expenses: undefined;
-  Settings: undefined;
 };
 
 export type OnboardingStackParamList = {

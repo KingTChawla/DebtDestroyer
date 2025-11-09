@@ -13,6 +13,7 @@ import {
   mockUserProgress,
   mockBadges,
 } from '../services/mockData';
+import {FireIcon} from 'react-native-heroicons/solid';
 
 export const GoalsScreen: React.FC = () => {
   const colorScheme = useColorScheme();
@@ -81,9 +82,12 @@ export const GoalsScreen: React.FC = () => {
             </View>
           </View>
           <View style={styles.streakContainer}>
-            <Text style={styles.streakText}>
-              🔥 {mockUserProgress.currentStreak} Day Streak
-            </Text>
+            <View style={styles.streakRow}>
+              <FireIcon size={20} color={colors.warning} />
+              <Text style={styles.streakText}>
+                {mockUserProgress.currentStreak} Day Streak
+              </Text>
+            </View>
             <Text
               style={[
                 styles.streakSubtext,
@@ -282,6 +286,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.md,
   },
 
@@ -305,17 +310,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
   },
   xpInfo: {
     flex: 1,
   },
   xpLabel: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.xs / 2,
   },
   xpValue: {
     fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
   },
   xpBarContainer: {
     marginBottom: spacing.md,
@@ -339,13 +347,20 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border.light,
   },
+  streakRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs / 2,
+  },
   streakText: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     color: colors.warning,
   },
   streakSubtext: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
   },
 
   // Badges
@@ -354,6 +369,7 @@ const styles = StyleSheet.create({
   },
   badgesSubtitle: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.md,
   },
   badgesGrid: {
@@ -370,6 +386,7 @@ const styles = StyleSheet.create({
   statsTitle: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.md,
     textAlign: 'center',
   },
@@ -383,10 +400,12 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: typography.fontSize['3xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.xs,
   },
   statLabel: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     textAlign: 'center',
   },
   bottomPadding: {

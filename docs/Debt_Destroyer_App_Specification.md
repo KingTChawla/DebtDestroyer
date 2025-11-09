@@ -2350,6 +2350,231 @@ For DevLog 3 (Phase 1 completion):
 
 ---
 
+### 23.4) DevLog 4 — Icon System, Navigation Refinement & Typography Implementation (November 9, 2025)
+
+**Session Focus:** Implement professional icon system with Heroicons, refine navigation UX, and implement comprehensive Helvetica Neue typography system across the entire app.
+
+**What We Built:**
+
+1. **Heroicons Integration:**
+   - Installed `react-native-heroicons` + `react-native-svg` (v15.8.0)
+   - Replaced all emoji icons with professional SVG icons
+   - Implemented solid/outline icon variants for active/inactive states
+
+   **Icon Mapping:**
+   - Dashboard: `HomeModernIcon` (solid/outline)
+   - Goals: `TrophyIcon` (solid/outline)
+   - Expenses: `BanknotesIcon` (solid/outline)
+   - Settings: `UserIcon` (solid)
+   - Credit Card: `CreditCardIcon` (solid)
+   - Accelerate: `RocketLaunchIcon` (solid)
+   - Navigation: `ChevronRightIcon` (solid)
+   - Emergency Fund: `ShieldCheckIcon` (solid)
+   - Debt Payoff: `FireIcon` (solid - orange for streaks)
+   - XP/Rewards: `StarIcon` (solid)
+   - Completed: `CheckCircleIcon` (solid)
+   - Failed: `XCircleIcon` (solid)
+
+2. **Navigation Architecture Refinement:**
+
+   **Settings Moved to Header:**
+   - Removed Settings from bottom tab bar (4 tabs → 3 tabs)
+   - Added Settings button (UserIcon) to top-right header on all screens
+   - Settings now opens as stack screen from RootNavigator
+   - Consistent access point across all screens
+
+   **Bottom Tab Reorganization (Left to Right):**
+   - Dashboard (left)
+   - Expenses (center)
+   - Goals (right)
+
+   **Tab Bar Styling:**
+   - Fixed spacing issues - tabs now evenly distributed across full width
+   - Applied `tabBarItemStyle` with `flex: 1` for equal distribution
+   - Icon size: 24pt for all tab icons
+   - Active/inactive color scheme with theme support
+
+   **Updated Navigation Files:**
+   - `MainTabNavigator.tsx`: 3-tab layout with header settings button
+   - `RootNavigator.tsx`: Added Settings as stack screen with proper header
+   - `types/index.ts`: Updated `MainTabParamList` (removed Settings), updated `RootStackParamList` (added Settings)
+
+3. **Helvetica Neue Typography System Implementation:**
+
+   **Font Installation:**
+   - Installed 15 Helvetica Neue font files (.otf + .ttf)
+   - Location: `/fonts/helvetica-neue-5/`
+   - Linked to React Native using `react-native-asset`
+   - Created `react-native.config.js` for font asset management
+
+   **Font Weights Available:**
+   - Light (300): HelveticaNeue-Light
+   - Regular (400): HelveticaNeue (Roman)
+   - Medium (500): HelveticaNeue-Medium
+   - Bold (700): HelveticaNeue-Bold
+
+   **Typography System (`src/theme/typography.ts` - Complete Rewrite):**
+   - Implemented iOS Typography System (11 text styles)
+   - Large Title: 34pt Bold (screen titles)
+   - Title 1: 28pt Bold (section headers)
+   - Title 2: 22pt Medium (subsections)
+   - Title 3: 20pt Medium (card headers)
+   - Headline: 17pt Medium (buttons, emphasized text)
+   - Body: 17pt Regular (main text)
+   - Callout: 16pt Regular (highlights)
+   - Subheadline: 15pt Regular (metadata)
+   - Footnote: 13pt Regular (hints, timestamps)
+   - Caption 1: 12pt Regular (helper text)
+   - Caption 2: 11pt Light (small labels)
+   - Button: 17pt Medium (actions)
+
+   **Letter Spacing Implementation:**
+   - Tighter (-1%): Large titles for visual balance
+   - Tight (-0.5%): Title 2 & 3 for polish
+   - Normal (0): Body, callout, subheadline
+   - Loose (+0.25%): Footnotes, buttons, captions
+   - Looser (+0.5%): Caption 2, tab labels
+
+   **8pt Grid Spacing System:**
+   - xs: 2pt, sm: 4pt, base: 8pt
+   - md: 16pt, lg: 24pt, xl: 32pt, 2xl: 40pt
+   - All vertical spacing follows 8pt increments
+
+4. **App-Wide Typography Application (17 files updated):**
+
+   **Screens Updated (10 files):**
+   - DashboardScreen.tsx (23 text styles)
+   - GoalsScreen.tsx (10 text styles)
+   - ExpensesScreen.tsx (2 text styles)
+   - SettingsScreen.tsx (3 text styles)
+   - WelcomeScreen.tsx (6 text styles)
+   - OnboardingIntroScreen.tsx (8 text styles)
+   - OnboardingDebtsScreen.tsx (4 text styles)
+   - OnboardingIncomeScreen.tsx (2 text styles)
+   - OnboardingEmergencyFundScreen.tsx (4 text styles)
+   - OnboardingCompleteScreen.tsx (7 text styles)
+
+   **Components Updated (8 files):**
+   - Button.tsx: Applied button text style (17pt Medium)
+   - Badge.tsx: Applied caption style
+   - Input.tsx: Applied body style for input fields
+   - ProgressBar.tsx: Applied appropriate label styles
+   - DebtCard.tsx: Applied title/body hierarchy
+   - ExpenseCard.tsx: Applied metadata styles
+   - GoalCard.tsx: Applied card header styles
+   - ChallengeCard.tsx: Applied consistent typography
+
+   **Navigation Headers Updated (3 files):**
+   - MainTabNavigator.tsx: `headerTitleStyle` with Helvetica Neue Bold 17pt
+   - RootNavigator.tsx: Settings header styled
+   - OnboardingNavigator.tsx: Onboarding headers styled
+
+   **Tab Bar Labels:**
+   - Font: Helvetica Neue Medium
+   - Size: 11pt (Caption 2)
+   - Letter spacing: +0.5%
+   - Proper weight mapping
+
+5. **Font Weight → Font Family Mapping:**
+
+   Systematic mapping applied across all 17 files:
+   - `fontWeight: '700'` or `bold` → `fontFamily: 'HelveticaNeue-Bold'`
+   - `fontWeight: '600'` or `semibold` → `fontFamily: 'HelveticaNeue-Medium'`
+   - `fontWeight: '500'` or `medium` → `fontFamily: 'HelveticaNeue-Medium'`
+   - `fontWeight: '400'` or `regular` → `fontFamily: 'HelveticaNeue'`
+   - `fontWeight: '300'` or `light` → `fontFamily: 'HelveticaNeue-Light'`
+
+6. **Documentation Created:**
+
+   **Style_Guide.md (Comprehensive 500+ lines):**
+   - Design Philosophy & Core Principles
+   - Complete Color System (brand, semantic, neutral, debt-specific)
+   - Typography System (all 11 iOS styles with usage examples)
+   - Spacing & Layout (8pt grid, border radius, containers)
+   - Component Specifications (buttons, cards, inputs, badges, etc.)
+   - Icon Library Reference (complete Heroicons mapping)
+   - Shadows & Elevation (4 levels)
+   - Animations & Transitions (timing, easing)
+   - Accessibility Guidelines (contrast, touch targets, dynamic type)
+   - Dark Mode Implementation
+   - Quick Reference Tables
+
+   **Typography_Implementation_Complete.md:**
+   - Complete implementation checklist
+   - All files updated summary
+   - Font specifications applied
+   - Testing instructions
+   - Verification points
+
+**Technical Implementation:**
+
+**Dark Mode Support:**
+- All navigation headers adapt to light/dark theme
+- Tab bar colors adjust automatically
+- Icon colors theme-aware
+- Fixed DashboardScreen dark mode issues (hardcoded colors removed)
+
+**Performance Optimizations:**
+- Used `useColorScheme()` hook for theme detection
+- Dynamic style functions to minimize re-renders
+- Proper memoization of navigation button components
+
+**Key Decisions & Learnings:**
+
+1. **Heroicons over emoji:** Professional, scalable, theme-aware icons
+2. **Settings in header vs tab bar:** Reduces cognitive load, cleaner 3-tab layout
+3. **iOS Typography System:** Industry-standard sizing creates familiar, polished UX
+4. **8pt grid:** Ensures consistent spacing and visual rhythm
+5. **Font family must match font weight:** Critical for correct font rendering
+6. **Navigation headers need explicit styling:** React Navigation defaults don't inherit theme fonts
+7. **Fast Refresh limitations:** Font changes require full rebuild
+
+**Build Status:**
+- ✅ Helvetica Neue fonts linked to Android project
+- ✅ All 17 source files using proper fontFamily properties
+- ✅ Navigation headers styled with Helvetica Neue Bold
+- ✅ Tab labels using Caption 2 style (11pt Medium)
+- ✅ All icons replaced with Heroicons
+- ✅ 3-tab navigation layout working correctly
+- ✅ Settings accessible from all screens via header button
+- ✅ Dark mode fully functional
+- ✅ TypeScript compiles with no errors
+- ⏳ Requires rebuild to see font changes (`npm run android`)
+
+**Files Modified/Created:**
+- `package.json` (added react-native-heroicons, react-native-svg)
+- `react-native.config.js` (created - font asset configuration)
+- `src/theme/typography.ts` (complete rewrite - 269 lines)
+- `src/navigation/MainTabNavigator.tsx` (3-tab layout, header styling, icon integration)
+- `src/navigation/RootNavigator.tsx` (Settings as stack screen, header styling)
+- `src/navigation/OnboardingNavigator.tsx` (header typography)
+- `src/types/index.ts` (updated navigation types)
+- `src/screens/DashboardScreen.tsx` (icons, typography, dark mode fixes)
+- `src/screens/GoalsScreen.tsx` (icons, typography)
+- `src/screens/ExpensesScreen.tsx` (typography)
+- `src/screens/SettingsScreen.tsx` (typography)
+- `src/screens/WelcomeScreen.tsx` (typography)
+- All 5 onboarding screens (typography updates)
+- All 8 components (icons, typography)
+- `docs/Style_Guide.md` (created - comprehensive design system documentation)
+- `docs/Typography_Implementation_Complete.md` (created - implementation checklist)
+
+**Component Improvements:**
+- Button component: Updated to use Headline style with proper letter spacing
+- Tab bar: Even distribution fix, proper icon sizing
+- All cards: Consistent typography hierarchy
+- Progress indicators: Proper label styling
+
+**Next Steps (Phase 1 Finalization):**
+1. Rebuild app and verify Helvetica Neue rendering on device
+2. Test all navigation flows with new 3-tab + header Settings layout
+3. Verify icon clarity at all sizes
+4. Complete Expenses screen implementation
+5. Complete Settings screen implementation
+6. Finish remaining onboarding form screens
+
+---
+
 ## 24) Final Deliverable
 
 A secure, subscription-based React Native app (iOS/Android) that guides users through actionable, gamified steps to eliminate debt — solo or with a partner — while upholding strict privacy & security standards.

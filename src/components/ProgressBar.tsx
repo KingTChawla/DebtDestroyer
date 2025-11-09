@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
     color: colors.text.primary.light,
   },
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
   percentage: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     color: colors.text.secondary.light,
     minWidth: 40,
     textAlign: 'right',

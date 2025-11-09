@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   },
   categoryIcon: {
     fontSize: 20,
+    fontFamily: typography.fontFamily.regular,
   },
   details: {
     flex: 1,
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs / 2,
   },
   meta: {
@@ -141,10 +143,12 @@ const styles = StyleSheet.create({
   },
   category: {
     fontSize: typography.fontSize.xs,
+    fontFamily: typography.fontFamily.regular,
     letterSpacing: 0.5,
   },
   date: {
     fontSize: typography.fontSize.xs,
+    fontFamily: typography.fontFamily.regular,
   },
   right: {
     alignItems: 'flex-end',
@@ -152,10 +156,12 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.xs / 2,
   },
   methodBadge: {
     fontSize: 14,
+    fontFamily: typography.fontFamily.regular,
   },
   recurringBadge: {
     marginTop: spacing.sm,
@@ -167,5 +173,6 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.xs,
     color: colors.primary,
     fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
   },
 });

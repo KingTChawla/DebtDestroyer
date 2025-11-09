@@ -4,7 +4,7 @@
  */
 
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, useColorScheme} from 'react-native';
 import {colors, spacing, typography, shadows} from '../theme';
 import {formatCurrency, getDebtTypeLabel} from '../utils';
 import {
@@ -13,8 +13,11 @@ import {
   getMonthsUntilDebtFree,
   getNextDebtToPayOff,
 } from '../services/mockData';
+import {CreditCardIcon, RocketLaunchIcon, ChevronRightIcon} from 'react-native-heroicons/solid';
 
 export const DashboardScreen: React.FC = () => {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   const [selectedTab, setSelectedTab] = useState<'Daily' | 'Weekly' | 'Monthly' | 'Yearly'>('Daily');
 
   const totalDebt = getTotalDebt();
@@ -33,6 +36,8 @@ export const DashboardScreen: React.FC = () => {
   const priorityDebtProgress = nextDebt
     ? Math.round((priorityDebtPaid / nextDebt.principal) * 100)
     : 0;
+
+  const styles = getStyles(isDark);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -84,7 +89,7 @@ export const DashboardScreen: React.FC = () => {
           <TouchableOpacity style={styles.priorityDebtCard}>
             <View style={styles.priorityDebtHeader}>
               <View style={styles.debtIconContainer}>
-                <Text style={styles.debtIcon}>💳</Text>
+                <CreditCardIcon size={28} color="#FFFFFF" />
               </View>
               <View style={styles.priorityDebtInfo}>
                 <Text style={styles.priorityDebtName}>{nextDebt.name}</Text>
@@ -106,8 +111,8 @@ export const DashboardScreen: React.FC = () => {
               </View>
 
               <TouchableOpacity style={styles.accelerateButton}>
-                <Text style={styles.rocketIcon}>🚀</Text>
-                <Text style={styles.accelerateText}>Accelerate Payment</Text>
+                <RocketLaunchIcon size={28} color="#FFFFFF" />
+                <Text style={styles.accelerateText}>Accelerate</Text>
               </TouchableOpacity>
             </View>
 
@@ -153,7 +158,7 @@ export const DashboardScreen: React.FC = () => {
                     Balance: {formatCurrency(debt.currentBalance)}
                   </Text>
                 </View>
-                <Text style={styles.chevron}>›</Text>
+                <ChevronRightIcon size={24} color="#5B7FBF" />
               </View>
             </TouchableOpacity>
           ))}
@@ -204,10 +209,10 @@ export const DashboardScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1A1F2E', // Dark blue-gray background
+    backgroundColor: isDark ? '#1A1F2E' : colors.background.light,
   },
   section: {
     paddingHorizontal: spacing.screenPadding,
@@ -225,7 +230,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.bold,
-    color: '#FFFFFF',
+    fontFamily: typography.fontFamily.bold,
+    color: isDark ? colors.text.primary.dark : colors.text.primary.light,
   },
   snowballBadge: {
     backgroundColor: 'rgba(67, 160, 71, 0.2)',
@@ -237,6 +243,7 @@ const styles = StyleSheet.create({
     color: '#43A047',
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     letterSpacing: 1,
   },
 
@@ -259,6 +266,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
     letterSpacing: 0.5,
   },
@@ -266,6 +274,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 42,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     lineHeight: 48,
   },
   totalDebtRight: {
@@ -275,6 +284,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs / 2,
     letterSpacing: 0.5,
   },
@@ -282,11 +292,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 48,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     lineHeight: 48,
   },
   debtFreeUnit: {
     color: 'rgba(255, 255, 255, 0.9)',
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
   },
   progressBarContainer: {
     marginBottom: spacing.sm,
@@ -305,6 +317,7 @@ const styles = StyleSheet.create({
   progressText: {
     color: 'rgba(255, 255, 255, 0.9)',
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     textAlign: 'right',
   },
 
@@ -329,9 +342,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: spacing.md,
   },
-  debtIcon: {
-    fontSize: 24,
-  },
   priorityDebtInfo: {
     flex: 1,
   },
@@ -339,11 +349,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.xs / 2,
   },
   priorityDebtType: {
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: typography.fontSize.xs,
+    fontFamily: typography.fontFamily.regular,
     letterSpacing: 0.5,
   },
   orderBadge: {
@@ -358,6 +370,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
   },
   priorityDebtBody: {
     flexDirection: 'row',
@@ -369,30 +382,30 @@ const styles = StyleSheet.create({
   balanceLabel: {
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.xs / 2,
   },
   balanceAmount: {
     color: '#FFFFFF',
     fontSize: typography.fontSize['3xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
   },
   accelerateButton: {
     backgroundColor: '#FB8C00',
     borderRadius: spacing.radius.full,
-    width: 56,
-    height: 56,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: spacing.xs,
     ...shadows.md,
-  },
-  rocketIcon: {
-    fontSize: 24,
   },
   accelerateText: {
     color: '#FFFFFF',
-    fontSize: 8,
+    fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.semibold,
-    marginTop: 2,
+    fontFamily: typography.fontFamily.medium,
   },
   debtProgressContainer: {
     flexDirection: 'row',
@@ -416,6 +429,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     textAlign: 'right',
     lineHeight: 14,
   },
@@ -426,11 +440,12 @@ const styles = StyleSheet.create({
   footerText: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
   },
 
   // Other Debts
   otherDebtCard: {
-    backgroundColor: '#2A3242',
+    backgroundColor: isDark ? '#2A3242' : colors.surface.light,
     borderRadius: 12,
     padding: spacing.md,
     marginBottom: spacing.sm,
@@ -441,30 +456,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   otherDebtName: {
-    color: '#FFFFFF',
+    color: isDark ? colors.text.primary.dark : colors.text.primary.light,
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs / 2,
   },
   otherDebtBalance: {
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: isDark ? 'rgba(255, 255, 255, 0.6)' : colors.text.secondary.light,
     fontSize: typography.fontSize.sm,
-  },
-  chevron: {
-    color: '#5B7FBF',
-    fontSize: 32,
-    fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.regular,
   },
 
   // Analytics Section
   analyticsCard: {
-    backgroundColor: '#2A3242',
+    backgroundColor: isDark ? '#2A3242' : colors.surface.light,
     borderRadius: 20,
     padding: spacing.lg,
   },
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.05)',
     borderRadius: 12,
     padding: 4,
     marginBottom: spacing.lg,
@@ -479,29 +491,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#5B7FBF',
   },
   tabText: {
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: isDark ? 'rgba(255, 255, 255, 0.5)' : colors.text.secondary.light,
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
   },
   tabTextActive: {
     color: '#FFFFFF',
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
   },
   chartPlaceholder: {
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: isDark ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.03)',
     marginBottom: spacing.md,
   },
   chartPlaceholderText: {
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: isDark ? 'rgba(255, 255, 255, 0.4)' : colors.text.secondary.light,
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
   },
   analyticsSubtitle: {
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: isDark ? 'rgba(255, 255, 255, 0.5)' : colors.text.secondary.light,
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     textAlign: 'center',
   },
 

@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
   },
   inputContainer: {
@@ -120,14 +121,17 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     paddingVertical: spacing.md - 4,
   },
   affix: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     marginHorizontal: spacing.xs,
   },
   error: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     color: colors.error,
     marginTop: spacing.xs,
   },

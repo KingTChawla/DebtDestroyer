@@ -169,10 +169,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs / 2,
   },
   type: {
     fontSize: typography.fontSize.xs,
+    fontFamily: typography.fontFamily.regular,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -188,6 +190,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
   },
   amounts: {
     flexDirection: 'row',
@@ -199,11 +202,13 @@ const styles = StyleSheet.create({
   },
   amountLabel: {
     fontSize: typography.fontSize.xs,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.xs / 2,
   },
   amountValue: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
   },
   progressSection: {
     marginTop: spacing.sm,

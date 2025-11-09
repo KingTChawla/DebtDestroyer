@@ -9,6 +9,12 @@ import {Goal} from '../types';
 import {colors, spacing, typography, shadows} from '../theme';
 import {formatCurrency, formatDate} from '../utils';
 import {ProgressBar} from './ProgressBar';
+import {
+  ShieldCheckIcon,
+  BanknotesIcon,
+  TrophyIcon,
+  FireIcon,
+} from 'react-native-heroicons/solid';
 
 interface GoalCardProps {
   goal: Goal;
@@ -19,14 +25,20 @@ export const GoalCard: React.FC<GoalCardProps> = ({goal, onPress}) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const getGoalIcon = (type: string): string => {
-    const icons: {[key: string]: string} = {
-      emergency_fund: '🛡️',
-      debt_payoff: '💪',
-      savings: '💰',
-      custom: '🎯',
-    };
-    return icons[type] || '🎯';
+  const GoalIcon = ({type}: {type: string}) => {
+    const iconColor = colors.primary;
+    const iconSize = 28;
+
+    switch (type) {
+      case 'emergency_fund':
+        return <ShieldCheckIcon size={iconSize} color={iconColor} />;
+      case 'debt_payoff':
+        return <FireIcon size={iconSize} color={iconColor} />;
+      case 'savings':
+        return <BanknotesIcon size={iconSize} color={iconColor} />;
+      default:
+        return <TrophyIcon size={iconSize} color={iconColor} />;
+    }
   };
 
   const getStatusColor = (status: string): string => {
@@ -49,7 +61,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({goal, onPress}) => {
       activeOpacity={onPress ? 0.7 : 1}>
       <View style={styles.header}>
         <View style={styles.iconContainer}>
-          <Text style={styles.icon}>{getGoalIcon(goal.type)}</Text>
+          <GoalIcon type={goal.type} />
         </View>
         <View style={styles.headerContent}>
           <Text
@@ -137,19 +149,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: spacing.md,
   },
-  icon: {
-    fontSize: 24,
-  },
   headerContent: {
     flex: 1,
   },
   title: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs / 2,
   },
   description: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
     lineHeight: typography.lineHeight.normal * typography.fontSize.sm,
   },
   progressSection: {
@@ -169,9 +180,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     letterSpacing: 0.5,
   },
   deadline: {
     fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
   },
 });

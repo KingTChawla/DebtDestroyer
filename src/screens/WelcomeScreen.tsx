@@ -149,12 +149,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 42,
     fontWeight: '700',
+    fontFamily: 'HelveticaNeue-Bold',
     marginBottom: 12,
     textAlign: 'center',
   },
   tagline: {
     fontSize: 18,
     fontWeight: '400',
+    fontFamily: 'HelveticaNeue',
     marginBottom: 48,
     textAlign: 'center',
   },
@@ -178,11 +180,13 @@ const styles = StyleSheet.create({
   },
   featureEmoji: {
     fontSize: 28,
+    fontFamily: 'HelveticaNeue',
     marginRight: 16,
   },
   featureText: {
     fontSize: 16,
     fontWeight: '500',
+    fontFamily: 'HelveticaNeue-Medium',
   },
   statusContainer: {
     alignItems: 'center',
@@ -191,10 +195,12 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
+    fontFamily: 'HelveticaNeue',
     marginBottom: 8,
   },
   statusBadge: {
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'HelveticaNeue-Medium',
   },
 });

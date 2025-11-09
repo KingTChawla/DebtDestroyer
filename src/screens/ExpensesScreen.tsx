@@ -61,10 +61,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.fontSize['3xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.md,
   },
   subtitle: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     textAlign: 'center',
   },
 });

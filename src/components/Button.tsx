@@ -121,35 +121,37 @@ const styles = StyleSheet.create({
 
   // Text styles
   text: {
-    fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
+    fontWeight: typography.fontWeight.medium,
     textAlign: 'center',
+    letterSpacing: typography.letterSpacing.loose,
   },
   primaryText: {
     color: '#FFFFFF',
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.headline,
   },
   secondaryText: {
     color: '#FFFFFF',
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.headline,
   },
   textText: {
     color: colors.primary,
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.headline,
   },
   dangerText: {
     color: '#FFFFFF',
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.headline,
   },
 
   // Size text styles
   smallText: {
-    fontSize: typography.fontSize.sm,
+    fontSize: typography.fontSize.subheadline,
   },
   mediumText: {
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.headline,
   },
   largeText: {
-    fontSize: typography.fontSize.lg,
+    fontSize: typography.fontSize.title3,
   },
 
   // States

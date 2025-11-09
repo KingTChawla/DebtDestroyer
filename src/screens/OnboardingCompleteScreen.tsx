@@ -160,17 +160,20 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 64,
+    fontFamily: typography.fontFamily.regular,
     textAlign: 'center',
     marginBottom: spacing.lg,
   },
   title: {
     fontSize: typography.fontSize['3xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
   subtitle: {
     fontSize: typography.fontSize.lg,
+    fontFamily: typography.fontFamily.regular,
     textAlign: 'center',
     marginBottom: spacing.xl,
   },
@@ -180,6 +183,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.md,
   },
   stepsList: {
@@ -192,17 +196,20 @@ const styles = StyleSheet.create({
   },
   stepEmoji: {
     fontSize: 24,
+    fontFamily: typography.fontFamily.regular,
     marginRight: spacing.md,
   },
   stepText: {
     flex: 1,
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
   },
   motivationCard: {
     marginBottom: spacing.lg,
   },
   motivationText: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     color: '#FFFFFF',
     fontStyle: 'italic',
     lineHeight: typography.lineHeight.relaxed * typography.fontSize.base,
@@ -212,6 +219,7 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.sm,
     color: '#FFFFFF',
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     textAlign: 'right',
   },
 });

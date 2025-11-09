@@ -125,11 +125,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.fontSize['2xl'],
     fontWeight: typography.fontWeight.bold,
+    fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.sm,
     marginTop: spacing.md,
   },
   subtitle: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     marginBottom: spacing.lg,
     lineHeight: typography.lineHeight.relaxed * typography.fontSize.base,
   },
@@ -139,10 +141,12 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
+    fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.sm,
   },
   cardText: {
     fontSize: typography.fontSize.base,
+    fontFamily: typography.fontFamily.regular,
     lineHeight: typography.lineHeight.normal * typography.fontSize.base,
   },
   button: {
