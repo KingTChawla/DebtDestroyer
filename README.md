@@ -1,49 +1,49 @@
-# Debt Destroyer
+This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-A React Native mobile application (iOS + Android) that helps users eliminate debt using Dave Ramsey's **Debt Snowball** philosophy, enhanced with gamification and AI-powered coaching.
+# Getting Started
 
-## Quick Start
+>**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+
+## Step 1: Start the Metro Server
+
+First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+
+To start Metro, run the following command from the _root_ of your React Native project:
 
 ```bash
-npm install
+# using npm
 npm start
+
+# OR using Yarn
+yarn start
 ```
 
-For Android builds, use `build-android.bat` (debug or release).
+## Step 2: Start your Application
 
-## Documentation
+Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-Full project specification and development logs are available in the [`docs/`](docs/) folder:
-- [`Debt_Destroyer_App_Specification.md`](docs/Debt_Destroyer_App_Specification.md) - Complete app specification
-- [`React_Native_Dev_Environment_Setup_Windows.md`](docs/React_Native_Dev_Environment_Setup_Windows.md) - Setup guide
+### For Android
 
-## Current Status
+```bash
+# using npm
+npm run android
 
-**Phase 1: UX System & Conversational Onboarding** - ~65% Complete
+# OR using Yarn
+yarn android
+```
 
-- ✅ React Native 0.76.6 with TypeScript
-- ✅ Theme system (colors, typography, spacing, shadows)
-- ✅ Component library (9 components: Button, Card, Input, Badge, ProgressBar, DebtCard, GoalCard, ExpenseCard, ChallengeCard)
-- ✅ Navigation architecture (React Navigation v7 - 3-tab layout with header Settings)
-- ✅ Professional icon system (Heroicons integration)
-- ✅ Helvetica Neue typography system (11 iOS text styles)
-- ✅ 11 screens structured (Welcome, 5 Onboarding, 3 Main + Settings)
-- ✅ Dashboard screen with pixel-perfect implementation
-- ✅ Goals & Expenses screens
-- ✅ Mock data service with realistic financial data
+### For iOS
 
-See DevLog 1-4 in the app specification for detailed progress.
+```bash
+# using npm
+npm run ios
 
-## Tech Stack
+# OR using Yarn
+yarn ios
+```
 
-- React Native 0.76.6 (TypeScript)
-- React Navigation v7
-- Helvetica Neue typography system
-- Heroicons (react-native-heroicons)
-- Custom design system (colors, spacing, shadows)
-- Android build automation
-- Mock data service for development
+If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
----
+This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
 **Repository:** [https://github.com/KingTChawla/DebtDestroyer.git](https://github.com/KingTChawla/DebtDestroyer.git)

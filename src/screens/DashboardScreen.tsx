@@ -4,8 +4,8 @@
  */
 
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, useColorScheme} from 'react-native';
-import {colors, spacing, typography, shadows} from '../theme';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {colors, spacing, typography, shadows, forestFade, sapphireNight, getColor} from '../theme';
 import {formatCurrency, getDebtTypeLabel} from '../utils';
 import {
   mockDebts,
@@ -14,10 +14,11 @@ import {
   getNextDebtToPayOff,
 } from '../services/mockData';
 import {CreditCardIcon, RocketLaunchIcon, ChevronRightIcon} from 'react-native-heroicons/solid';
+import {GradientCard, ScrollAwareHeader} from '../components';
+import {useTheme} from '../contexts';
 
 export const DashboardScreen: React.FC = () => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const {isDark} = useTheme();
   const [selectedTab, setSelectedTab] = useState<'Daily' | 'Weekly' | 'Monthly' | 'Yearly'>('Daily');
 
   const totalDebt = getTotalDebt();
@@ -40,12 +41,20 @@ export const DashboardScreen: React.FC = () => {
   const styles = getStyles(isDark);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header - shown by navigation, we just need content */}
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      onScroll={(event) => {
+        // Handle scroll events if needed
+        // Note: Header shadow is handled by the navigation system
+      }}
+      scrollEventThrottle={16} // Throttle scroll events
+    >
+        {/* Header - shown by navigation, we just need content */}
 
       {/* Total Debt Countdown Card */}
       <View style={styles.section}>
-        <View style={styles.totalDebtCard}>
+        <GradientCard baseColor={getColor(forestFade, isDark)} style={styles.totalDebtCard}>
           <View style={styles.totalDebtHeader}>
             <View style={styles.totalDebtLeft}>
               <Text style={styles.totalDebtLabel}>TOTAL DEBT{'\n'}COUNTDOWN</Text>
@@ -73,7 +82,7 @@ export const DashboardScreen: React.FC = () => {
           <Text style={styles.progressText}>
             {percentCrushed}% of total debt crushed!
           </Text>
-        </View>
+        </GradientCard>
       </View>
 
       {/* Priority Debt Section */}
@@ -86,7 +95,8 @@ export const DashboardScreen: React.FC = () => {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.priorityDebtCard}>
+          <TouchableOpacity onPress={() => console.log('Priority debt pressed')} activeOpacity={0.8}>
+          <GradientCard baseColor={getColor(sapphireNight, isDark)} style={styles.priorityDebtCard}>
             <View style={styles.priorityDebtHeader}>
               <View style={styles.debtIconContainer}>
                 <CreditCardIcon size={28} color="#FFFFFF" />
@@ -135,7 +145,8 @@ export const DashboardScreen: React.FC = () => {
               </Text>
               <Text style={styles.footerText}>APR: {nextDebt.apr.toFixed(2)}%</Text>
             </View>
-          </TouchableOpacity>
+          </GradientCard>
+        </TouchableOpacity>
         </View>
       )}
 
@@ -205,7 +216,7 @@ export const DashboardScreen: React.FC = () => {
       </View>
 
       <View style={styles.bottomPadding} />
-    </ScrollView>
+      </ScrollView>
   );
 };
 
@@ -247,12 +258,9 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
     letterSpacing: 1,
   },
 
-  // Total Debt Card (Purple Gradient)
+  // Total Debt Card (Forest Fade Gradient)
   totalDebtCard: {
-    backgroundColor: '#A855F7', // Purple
-    borderRadius: 20,
-    padding: spacing.lg,
-    ...shadows.md,
+    // Padding handled by GradientCard component
   },
   totalDebtHeader: {
     flexDirection: 'row',
@@ -321,12 +329,9 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
     textAlign: 'right',
   },
 
-  // Priority Debt Card (Blue)
+  // Priority Debt Card (Sapphire Night Gradient)
   priorityDebtCard: {
-    backgroundColor: '#5B7FBF', // Medium blue
-    borderRadius: 20,
-    padding: spacing.lg,
-    ...shadows.md,
+    // Padding handled by GradientCard component
   },
   priorityDebtHeader: {
     flexDirection: 'row',

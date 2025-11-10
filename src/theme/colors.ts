@@ -1,48 +1,50 @@
 /**
  * Design Tokens - Colors
- * Following the Debt Destroyer brand identity
+ * Enhanced color system with comprehensive palette
  */
 
-export const colors = {
-  // Brand colors
-  primary: '#1E88E5', // Blue - trust, stability
-  secondary: '#43A047', // Green - success, growth
-  accent: '#FFB300', // Gold - achievement, rewards
+import { getColor, getBackgroundColor } from './colorsLibrary';
 
-  // Neutral colors
+export const colors = {
+  // Brand colors - using our palette
+  primary: '#275E59', // Forest Fade light as primary
+  secondary: '#0A4A8B', // Sapphire Night light as secondary
+  accent: '#B42352', // Velvet Rose light as accent
+
+  // Background colors - using your custom backgrounds
   background: {
-    light: '#FFFFFF',
-    dark: '#121212',
+    light: '#F9F3E6', // soft, creamy yellow-white (like parchment or sunlight on ivory)
+    dark: '#142850',   // Obsidian Blue (deep navy with subtle teal undertone)
   },
   surface: {
-    light: '#F5F5F5',
-    dark: '#1E1E1E',
+    light: '#FFFFFF', // Clean white for surfaces
+    dark: '#1A2B3A', // Slightly lighter than background for cards
   },
   text: {
     primary: {
-      light: '#212121',
+      light: '#1A1A1A',
       dark: '#FFFFFF',
     },
     secondary: {
-      light: '#757575',
-      dark: '#B0B0B0',
+      light: '#666666',
+      dark: '#B8B8B8',
     },
   },
   border: {
-    light: '#E0E0E0',
-    dark: '#333333',
+    light: '#E5D5C1', // Complementary to cream background
+    dark: '#2A3B4A', // Subtle border for dark theme
   },
 
   // Semantic colors
-  success: '#43A047',
-  warning: '#FB8C00',
-  error: '#E53935',
-  info: '#1E88E5',
+  success: '#0E7A72', // Emerald Shadow light
+  warning: '#9B4C14', // Copper Ember light
+  error: '#B42352', // Velvet Rose light
+  info: '#0A5BAA', // Deep Azure light
 
-  // Debt-specific
-  debtRed: '#D32F2F', // Debt balance indicator
-  payoffGreen: '#388E3C', // Payoff success
-  snowballBlue: '#1976D2', // Snowball plan highlight
+  // Debt-specific - using our palette
+  debtRed: '#B42352', // Velvet Rose - debt indicator
+  payoffGreen: '#0E7A72', // Emerald Shadow - success
+  snowballBlue: '#0A4A8B', // Sapphire Night - snowball plan
 };
 
 export type ColorScheme = 'light' | 'dark';

@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import {View, Text, StyleSheet, useColorScheme, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {colors, spacing, typography, shadows} from '../theme';
-import {Card, GoalCard, ChallengeCard, Badge, Button} from '../components';
+import {Card, GoalCard, ChallengeCard, Badge, Button, ScrollAwareHeader} from '../components';
 import {
   mockGoals,
   mockUserChallenges,
@@ -14,10 +14,10 @@ import {
   mockBadges,
 } from '../services/mockData';
 import {FireIcon} from 'react-native-heroicons/solid';
+import {useTheme} from '../contexts';
 
 export const GoalsScreen: React.FC = () => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const {isDark} = useTheme();
 
   const activeGoals = mockGoals.filter(g => g.status === 'active');
   const activeChallenges = mockUserChallenges.filter(c => c.status === 'active');
@@ -33,7 +33,13 @@ export const GoalsScreen: React.FC = () => {
             ? colors.background.dark
             : colors.background.light,
         },
-      ]}>
+      ]}
+      onScroll={(event) => {
+        // Handle scroll events here if needed
+        // Note: Header shadow is handled by the navigation system
+      }}
+      scrollEventThrottle={16} // Throttle scroll events
+    >
       {/* XP & Level Card */}
       <View style={styles.section}>
         <Card style={styles.xpCard} variant="elevated">
@@ -261,7 +267,7 @@ export const GoalsScreen: React.FC = () => {
         </Card>
       </View>
 
-      <View style={styles.bottomPadding} />
+          <View style={styles.bottomPadding} />
     </ScrollView>
   );
 };

@@ -4,13 +4,18 @@
  */
 
 import React from 'react';
-import {View, Text, StyleSheet, useColorScheme, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {colors, spacing, typography} from '../theme';
-import {Card} from '../components';
+import {Card, Button} from '../components';
+import {useTheme} from '../contexts';
+import {
+  SunIcon,
+  MoonIcon,
+  ComputerDesktopIcon,
+} from 'react-native-heroicons/outline';
 
 export const SettingsScreen: React.FC = () => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const {theme, isDark, setTheme, toggleTheme} = useTheme();
 
   return (
     <ScrollView
@@ -35,6 +40,124 @@ export const SettingsScreen: React.FC = () => {
           Settings
         </Text>
       </View>
+
+      {/* Theme Toggle Section */}
+      <Card style={styles.card}>
+        <View style={styles.settingHeader}>
+          <Text
+            style={[
+              styles.cardText,
+              {
+                color: isDark
+                  ? colors.text.primary.dark
+                  : colors.text.primary.light,
+              },
+            ]}>
+            Appearance
+          </Text>
+        </View>
+
+        <Text
+          style={[
+            styles.cardSubtext,
+            {
+              color: isDark
+                ? colors.text.secondary.dark
+                : colors.text.secondary.light,
+            },
+          ]}>
+          Choose your preferred theme
+        </Text>
+
+        <View style={styles.themeOptions}>
+          <TouchableOpacity
+            style={[
+              styles.themeOption,
+              theme === 'light' && styles.themeOptionActive,
+              {
+                backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
+                borderColor: theme === 'light' ? colors.primary : colors.border.light,
+              },
+            ]}
+            onPress={() => setTheme('light')}>
+            <SunIcon
+              size={20}
+              color={theme === 'light' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light)}
+            />
+            <Text
+              style={[
+                styles.themeOptionText,
+                {
+                  color: theme === 'light' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light),
+                },
+              ]}>
+              Light
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.themeOption,
+              theme === 'dark' && styles.themeOptionActive,
+              {
+                backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
+                borderColor: theme === 'dark' ? colors.primary : colors.border.light,
+              },
+            ]}
+            onPress={() => setTheme('dark')}>
+            <MoonIcon
+              size={20}
+              color={theme === 'dark' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light)}
+            />
+            <Text
+              style={[
+                styles.themeOptionText,
+                {
+                  color: theme === 'dark' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light),
+                },
+              ]}>
+              Dark
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.themeOption,
+              theme === 'system' && styles.themeOptionActive,
+              {
+                backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
+                borderColor: theme === 'system' ? colors.primary : colors.border.light,
+              },
+            ]}
+            onPress={() => setTheme('system')}>
+            <ComputerDesktopIcon
+              size={20}
+              color={theme === 'system' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light)}
+            />
+            <Text
+              style={[
+                styles.themeOptionText,
+                {
+                  color: theme === 'system' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light),
+                },
+              ]}>
+              System
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text
+          style={[
+            styles.currentThemeText,
+            {
+              color: isDark
+                ? colors.text.secondary.dark
+                : colors.text.secondary.light,
+            },
+          ]}>
+          Current: {theme === 'system' ? `System (${isDark ? 'Dark' : 'Light'})` : theme.charAt(0).toUpperCase() + theme.slice(1)} mode
+        </Text>
+      </Card>
 
       <Card style={styles.card}>
         <Text
@@ -131,6 +254,9 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.screenPadding,
     marginBottom: spacing.md,
   },
+  settingHeader: {
+    marginBottom: spacing.sm,
+  },
   cardText: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
@@ -140,5 +266,36 @@ const styles = StyleSheet.create({
   cardSubtext: {
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.regular,
+    marginBottom: spacing.md,
+  },
+  themeOptions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  themeOption: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.md,
+    borderRadius: spacing.radius.md,
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  themeOptionActive: {
+    backgroundColor: colors.primary + '15',
+  },
+  themeOptionText: {
+    fontSize: typography.fontSize.sm,
+    fontWeight: typography.fontWeight.medium,
+    fontFamily: typography.fontFamily.medium,
+    marginTop: spacing.xs,
+  },
+  currentThemeText: {
+    fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.regular,
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
 });

@@ -4,20 +4,20 @@
  */
 
 import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {RootStackParamList} from '../types';
 import {WelcomeScreen, SettingsScreen} from '../screens';
 import {MainTabNavigator} from './MainTabNavigator';
 import {OnboardingNavigator} from './OnboardingNavigator';
 import {colors, typography} from '../theme';
-import {useColorScheme} from 'react-native';
+import {useTheme} from '../contexts';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: React.FC = () => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const {isDark} = useTheme();
 
   return (
     <NavigationContainer>
@@ -26,20 +26,24 @@ export const RootNavigator: React.FC = () => {
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
+          // Apply consistent styling when headers are shown
           headerStyle: {
-            backgroundColor: isDark
-              ? colors.surface.dark
-              : colors.surface.light,
+            backgroundColor: isDark ? '#142850' : '#F9F3E6', // Custom backgrounds
+            borderBottomWidth: 0, // Remove border to blend with background
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0, // No shadow by default
           },
           headerTitleStyle: {
-            fontFamily: typography.fontFamily.bold,
-            fontSize: typography.fontSize.headline,
-            fontWeight: typography.fontWeight.bold,
-            letterSpacing: 0,
+            fontFamily: 'HelveticaNeue-Bold',
+            fontSize: 20, // Increased from 17 to 20 (between Title 2 and Title 3)
+            fontWeight: '700',
+            letterSpacing: -0.1, // -0.5% for larger text
+            color: isDark ? '#FFFFFF' : '#1A1A1A',
           },
-          headerTintColor: isDark
-            ? colors.text.primary.dark
-            : colors.text.primary.light,
+          headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',
         }}>
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
@@ -47,11 +51,49 @@ export const RootNavigator: React.FC = () => {
         <Stack.Screen
           name="Settings"
           component={SettingsScreen}
-          options={{
+          options={({ navigation }) => ({
             headerShown: true,
             title: 'Settings & Profile',
-            presentation: 'card',
-          }}
+            presentation: 'card' as const,
+            headerStyle: {
+              backgroundColor: isDark ? '#142850' : '#F9F3E6', // Use our custom background colors
+              borderBottomWidth: 0, // Remove border to blend with background
+              shadowColor: 'transparent',
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0,
+              shadowRadius: 0,
+              elevation: 0, // No shadow by default
+            },
+            headerTitleStyle: {
+              fontFamily: 'HelveticaNeue-Bold',
+              fontSize: 20, // Increased from 17 to 20 (between Title 2 and Title 3)
+              fontWeight: '700',
+              letterSpacing: -0.1, // -0.5% for larger text
+              color: isDark ? '#FFFFFF' : '#1A1A1A',
+            },
+            headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',
+            headerLeft: () => null,
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{
+                  marginRight: 16,
+                  padding: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'HelveticaNeue-Medium',
+                    fontSize: 17,
+                    fontWeight: '500',
+                    color: colors.primary, // Forest Fade
+                  }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

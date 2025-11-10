@@ -14,7 +14,7 @@ import {
   ExpensesScreen,
 } from '../screens';
 import {colors, typography} from '../theme';
-import {useColorScheme} from 'react-native';
+import {useTheme} from '../contexts';
 import {
   HomeModernIcon,
   TrophyIcon,
@@ -30,8 +30,7 @@ import {
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export const MainTabNavigator: React.FC = () => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const {isDark} = useTheme();
 
   // Settings button component for header
   const SettingsButton = () => {
@@ -39,8 +38,13 @@ export const MainTabNavigator: React.FC = () => {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('Settings' as never)}
-        style={{marginRight: 16}}>
-        <UserIcon size={24} color={isDark ? colors.text.primary.dark : colors.text.primary.light} />
+        style={{
+          marginRight: 16,
+          padding: 8,
+          borderRadius: 20,
+          backgroundColor: isDark ? 'rgba(39, 94, 89, 0.2)' : 'rgba(39, 94, 89, 0.1)', // Forest Fade tint
+        }}>
+        <UserIcon size={24} color={colors.primary} />
       </TouchableOpacity>
     );
   };
@@ -53,38 +57,47 @@ export const MainTabNavigator: React.FC = () => {
           ? colors.text.secondary.dark
           : colors.text.secondary.light,
         tabBarStyle: {
-          backgroundColor: isDark
-            ? colors.surface.dark
-            : colors.surface.light,
-          borderTopColor: isDark ? '#333' : '#E0E0E0',
+          backgroundColor: isDark ? '#142850' : '#F9F3E6', // Use our custom backgrounds
+          borderTopColor: isDark ? '#2A3B4A' : '#E5D5C1', // Complementary borders
           paddingHorizontal: 0,
+          paddingBottom: 8,
+          height: 80,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 8,
         },
         tabBarItemStyle: {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+          paddingTop: 8,
         },
         tabBarLabelStyle: {
-          fontFamily: typography.fontFamily.medium,
-          fontSize: typography.fontSize.caption2,
-          fontWeight: typography.fontWeight.medium,
-          letterSpacing: typography.letterSpacing.looser,
+          fontFamily: 'HelveticaNeue-Medium',
+          fontSize: 11, // Caption 2 size
+          fontWeight: '500',
+          letterSpacing: 0.085, // +0.5%
+          marginTop: 4,
         },
         headerStyle: {
-          backgroundColor: isDark
-            ? colors.surface.dark
-            : colors.surface.light,
-          borderBottomColor: isDark ? '#333' : '#E0E0E0',
+          backgroundColor: isDark ? '#142850' : '#F9F3E6', // Custom backgrounds
+          borderBottomWidth: 0, // Remove border to blend better
+          shadowColor: 'transparent',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0, // No shadow by default
         },
         headerTitleStyle: {
-          fontFamily: typography.fontFamily.bold,
-          fontSize: typography.fontSize.headline,
-          fontWeight: typography.fontWeight.bold,
-          letterSpacing: 0,
+          fontFamily: 'HelveticaNeue-Bold',
+          fontSize: 20, // Increased from 17 to 20 (between Title 2 and Title 3)
+          fontWeight: '700',
+          letterSpacing: -0.1, // -0.5% for larger text
+          color: isDark ? '#FFFFFF' : '#1A1A1A',
         },
-        headerTintColor: isDark
-          ? colors.text.primary.dark
-          : colors.text.primary.light,
+        headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',
         headerRight: () => <SettingsButton />,
       }}>
       <Tab.Screen

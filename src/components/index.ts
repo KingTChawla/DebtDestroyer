@@ -6,6 +6,8 @@
 export * from './Button';
 export * from './Card';
 export * from './Input';
+export * from './GradientCard';
+export * from './ScrollAwareHeader';
 
 // Progress & status components
 export * from './ProgressBar';

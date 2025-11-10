@@ -5,9 +5,14 @@
 
 import React from 'react';
 import {RootNavigator} from './navigation';
+import {ThemeProvider} from './contexts';
 
 function App(): React.JSX.Element {
-  return <RootNavigator />;
+  return (
+    <ThemeProvider>
+      <RootNavigator />
+    </ThemeProvider>
+  );
 }
 
 export default App;
