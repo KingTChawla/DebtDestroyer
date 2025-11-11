@@ -6,7 +6,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {colors, spacing, typography, shadows} from '../theme';
-import {Card, GoalCard, ChallengeCard, Badge, Button, ScrollAwareHeader} from '../components';
+import {GradientCard, GoalCard, ChallengeCard, Badge, Button, ScrollAwareHeader} from '../components';
 import {
   mockGoals,
   mockUserChallenges,
@@ -15,6 +15,12 @@ import {
 } from '../services/mockData';
 import {FireIcon} from 'react-native-heroicons/solid';
 import {useTheme} from '../contexts';
+
+// Background colors for subtle gradient cards
+const cardBaseColors = {
+  light: '#F9F3E6', // Same as light background
+  dark: '#1A1F2E',  // Same as dark background
+};
 
 export const GoalsScreen: React.FC = () => {
   const {isDark} = useTheme();
@@ -29,9 +35,7 @@ export const GoalsScreen: React.FC = () => {
       style={[
         styles.container,
         {
-          backgroundColor: isDark
-            ? colors.background.dark
-            : colors.background.light,
+          backgroundColor: isDark ? '#1A1F2E' : colors.background.light,
         },
       ]}
       onScroll={(event) => {
@@ -42,7 +46,10 @@ export const GoalsScreen: React.FC = () => {
     >
       {/* XP & Level Card */}
       <View style={styles.section}>
-        <Card style={styles.xpCard} variant="elevated">
+        <GradientCard
+          baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+          useGradient={false}
+          style={styles.xpCard}>
           <View style={styles.xpHeader}>
             <View style={styles.levelBadge}>
               <Text style={styles.levelText}>Level {mockUserProgress.level}</Text>
@@ -106,7 +113,7 @@ export const GoalsScreen: React.FC = () => {
               Best: {mockUserProgress.longestStreak} days
             </Text>
           </View>
-        </Card>
+        </GradientCard>
       </View>
 
       {/* Active Goals */}
@@ -131,11 +138,16 @@ export const GoalsScreen: React.FC = () => {
           />
         </View>
         {activeGoals.map(goal => (
-          <GoalCard
+          <GradientCard
             key={goal.id}
-            goal={goal}
-            onPress={() => console.log('Goal pressed:', goal.id)}
-          />
+            baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+            useGradient={false}
+            style={styles.itemCard}>
+            <GoalCard
+              goal={goal}
+              onPress={() => console.log('Goal pressed:', goal.id)}
+            />
+          </GradientCard>
         ))}
       </View>
 
@@ -153,11 +165,16 @@ export const GoalsScreen: React.FC = () => {
           Active Challenges ({activeChallenges.length})
         </Text>
         {activeChallenges.map(challenge => (
-          <ChallengeCard
+          <GradientCard
             key={challenge.id}
-            userChallenge={challenge}
-            onPress={() => console.log('Challenge pressed:', challenge.id)}
-          />
+            baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+            useGradient={false}
+            style={styles.itemCard}>
+            <ChallengeCard
+              userChallenge={challenge}
+              onPress={() => console.log('Challenge pressed:', challenge.id)}
+            />
+          </GradientCard>
         ))}
       </View>
 
@@ -174,7 +191,10 @@ export const GoalsScreen: React.FC = () => {
           ]}>
           Achievements
         </Text>
-        <Card style={styles.badgesCard}>
+        <GradientCard
+          baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+          useGradient={false}
+          style={styles.badgesCard}>
           <Text
             style={[
               styles.badgesSubtitle,
@@ -197,12 +217,15 @@ export const GoalsScreen: React.FC = () => {
               />
             ))}
           </View>
-        </Card>
+        </GradientCard>
       </View>
 
       {/* Stats Card */}
       <View style={[styles.section, styles.lastSection]}>
-        <Card style={styles.statsCard}>
+        <GradientCard
+          baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+          useGradient={false}
+          style={styles.statsCard}>
           <Text
             style={[
               styles.statsTitle,
@@ -264,7 +287,7 @@ export const GoalsScreen: React.FC = () => {
               </Text>
             </View>
           </View>
-        </Card>
+        </GradientCard>
       </View>
 
           <View style={styles.bottomPadding} />
@@ -383,6 +406,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: spacing.md,
     justifyContent: 'space-around',
+  },
+
+  // Item Cards (Goals, Challenges)
+  itemCard: {
+    marginBottom: spacing.sm,
+    padding: 0, // GradientCard handles padding
   },
 
   // Stats

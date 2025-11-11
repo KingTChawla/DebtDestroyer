@@ -6,13 +6,19 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {colors, spacing, typography} from '../theme';
-import {Card, Button} from '../components';
+import {GradientCard, Button} from '../components';
 import {useTheme} from '../contexts';
+
+// Background colors for subtle gradient cards
+const cardBaseColors = {
+  light: '#F9F3E6', // Same as light background
+  dark: '#1A1F2E',  // Same as dark background
+};
 import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
-} from 'react-native-heroicons/outline';
+} from 'react-native-heroicons/solid';
 
 export const SettingsScreen: React.FC = () => {
   const {theme, isDark, setTheme, toggleTheme} = useTheme();
@@ -22,9 +28,7 @@ export const SettingsScreen: React.FC = () => {
       style={[
         styles.container,
         {
-          backgroundColor: isDark
-            ? colors.background.dark
-            : colors.background.light,
+          backgroundColor: isDark ? '#1A1F2E' : colors.background.light,
         },
       ]}>
       <View style={styles.header}>
@@ -42,7 +46,10 @@ export const SettingsScreen: React.FC = () => {
       </View>
 
       {/* Theme Toggle Section */}
-      <Card style={styles.card}>
+      <GradientCard
+        baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+        useGradient={false}
+        style={styles.card}>
         <View style={styles.settingHeader}>
           <Text
             style={[
@@ -73,16 +80,17 @@ export const SettingsScreen: React.FC = () => {
           <TouchableOpacity
             style={[
               styles.themeOption,
-              theme === 'light' && styles.themeOptionActive,
               {
-                backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
-                borderColor: theme === 'light' ? colors.primary : colors.border.light,
+                backgroundColor: isDark ? cardBaseColors.dark : cardBaseColors.light,
+                borderColor: theme === 'light'
+                  ? colors.primary
+                  : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
               },
             ]}
             onPress={() => setTheme('light')}>
             <SunIcon
-              size={20}
-              color={theme === 'light' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light)}
+              size={24}
+              color={theme === 'light' ? colors.primary : (isDark ? colors.text.secondary.dark : colors.text.secondary.light)}
             />
             <Text
               style={[
@@ -98,16 +106,17 @@ export const SettingsScreen: React.FC = () => {
           <TouchableOpacity
             style={[
               styles.themeOption,
-              theme === 'dark' && styles.themeOptionActive,
               {
-                backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
-                borderColor: theme === 'dark' ? colors.primary : colors.border.light,
+                backgroundColor: isDark ? cardBaseColors.dark : cardBaseColors.light,
+                borderColor: theme === 'dark'
+                  ? colors.primary
+                  : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
               },
             ]}
             onPress={() => setTheme('dark')}>
             <MoonIcon
-              size={20}
-              color={theme === 'dark' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light)}
+              size={24}
+              color={theme === 'dark' ? colors.primary : (isDark ? colors.text.secondary.dark : colors.text.secondary.light)}
             />
             <Text
               style={[
@@ -123,16 +132,17 @@ export const SettingsScreen: React.FC = () => {
           <TouchableOpacity
             style={[
               styles.themeOption,
-              theme === 'system' && styles.themeOptionActive,
               {
-                backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
-                borderColor: theme === 'system' ? colors.primary : colors.border.light,
+                backgroundColor: isDark ? cardBaseColors.dark : cardBaseColors.light,
+                borderColor: theme === 'system'
+                  ? colors.primary
+                  : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
               },
             ]}
             onPress={() => setTheme('system')}>
             <ComputerDesktopIcon
-              size={20}
-              color={theme === 'system' ? colors.primary : (isDark ? colors.text.primary.dark : colors.text.primary.light)}
+              size={24}
+              color={theme === 'system' ? colors.primary : (isDark ? colors.text.secondary.dark : colors.text.secondary.light)}
             />
             <Text
               style={[
@@ -157,9 +167,12 @@ export const SettingsScreen: React.FC = () => {
           ]}>
           Current: {theme === 'system' ? `System (${isDark ? 'Dark' : 'Light'})` : theme.charAt(0).toUpperCase() + theme.slice(1)} mode
         </Text>
-      </Card>
+      </GradientCard>
 
-      <Card style={styles.card}>
+      <GradientCard
+        baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+        useGradient={false}
+        style={styles.card}>
         <Text
           style={[
             styles.cardText,
@@ -182,9 +195,12 @@ export const SettingsScreen: React.FC = () => {
           ]}>
           Manage your profile and preferences
         </Text>
-      </Card>
+      </GradientCard>
 
-      <Card style={styles.card}>
+      <GradientCard
+        baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+        useGradient={false}
+        style={styles.card}>
         <Text
           style={[
             styles.cardText,
@@ -207,9 +223,12 @@ export const SettingsScreen: React.FC = () => {
           ]}>
           Control your notification preferences
         </Text>
-      </Card>
+      </GradientCard>
 
-      <Card style={styles.card}>
+      <GradientCard
+        baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+        useGradient={false}
+        style={styles.card}>
         <Text
           style={[
             styles.cardText,
@@ -232,7 +251,7 @@ export const SettingsScreen: React.FC = () => {
           ]}>
           Manage your data and security settings
         </Text>
-      </Card>
+      </GradientCard>
     </ScrollView>
   );
 };
@@ -280,11 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: spacing.md,
     borderRadius: spacing.radius.md,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-  },
-  themeOptionActive: {
-    backgroundColor: colors.primary + '15',
+    borderWidth: 2,
   },
   themeOptionText: {
     fontSize: typography.fontSize.sm,

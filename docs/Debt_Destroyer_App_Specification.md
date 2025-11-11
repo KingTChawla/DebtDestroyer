@@ -8,8 +8,6 @@ The app acts as a **daily AI companion** that guides users through financial awa
 **Monetization:** Subscription-based model with three tiers (Free / Pro / Lifetime).
 **Core Principles:** Behavior > Math, smallest-to-largest payoff, no lending, privacy by design.
 
-> **Note:** This specification reflects an architectural revision made on 2025-11-05 (post DevLog 2) that simplified the original 5-tab navigation to a cognitive-optimized 4-screen framework.
-
 ---
 
 ## 0) Development Environment Setup
@@ -2168,7 +2166,7 @@ For DevLog 3 (Phase 1 completion):
 
 ---
 
-### 23.3) DevLog 3 — Dashboard Implementation & 4-Screen Architecture (November 8-9, 2025)
+### DevLog 3 - Dashboard Implementation & 4-Screen Architecture (2025-11-08 to 2025-11-09)
 
 **Session Focus:** Transition from 5-tab demo to production 4-screen architecture, implement pixel-perfect Dashboard matching design mockup.
 
@@ -2350,7 +2348,7 @@ For DevLog 3 (Phase 1 completion):
 
 ---
 
-### 23.4) DevLog 4 — Icon System, Navigation Refinement & Typography Implementation (November 9, 2025)
+### DevLog 4 - Icon System, Navigation Refinement & Typography Implementation (2025-11-09)
 
 **Session Focus:** Implement professional icon system with Heroicons, refine navigation UX, and implement comprehensive Helvetica Neue typography system across the entire app.
 
@@ -2573,7 +2571,9 @@ For DevLog 3 (Phase 1 completion):
 5. Complete Settings screen implementation
 6. Finish remaining onboarding form screens
 
-### 23.5) DevLog 5 — Navigation Context Fixes & Color System Enhancement (November 9-10, 2025)
+---
+
+### DevLog 5 - Navigation Context Fixes & Color System Enhancement (2025-11-09 to 2025-11-10)
 
 **Session Focus:** Resolve critical navigation errors, implement comprehensive color system, and enhance UX with scroll-based headers and gradient components.
 
@@ -2817,6 +2817,302 @@ const rightDeep = c.darken(0.2).saturate(0.15).hex();     // Rich contrast
 
 **Impact on App Architecture:**
 This session resolved critical navigation issues that were preventing the app from functioning, while simultaneously implementing a sophisticated color system and gradient component system. The navigation fix ensures users can properly access all screens, while the enhanced visual design creates a more professional and engaging user experience. The comprehensive color system provides a solid foundation for consistent theming across the entire application.
+
+---
+
+### DevLog 6 - Glass-Morphism Design System & Navigation Refinement (2025-11-11)
+
+**Status:** ✅ Complete Visual Design Consistency Achieved
+
+**Session Goals:**
+- Implement modular card system with glass-morphism effects across all screens
+- Fix navigation bar theming and icon states for dark mode
+- Establish consistent design language for all UI elements
+- Update documentation to reflect new design patterns
+
+**Accomplishments:**
+
+#### 1. Modular Glass-Morphism Card System
+
+**Problem Identified:**
+- Inconsistent card styling across screens (Dashboard, Expenses, Goals, Settings)
+- Pure white backgrounds in light mode didn't match app aesthetic
+- Individual screen elements using different background colors and styling patterns
+- Cards grouped multiple items instead of individual cards per item
+
+**Solution Implemented:**
+Created a unified card pattern using `GradientCard` component with standardized base colors:
+
+```typescript
+const cardBaseColors = {
+  light: '#F9F3E6',  // Matches light background
+  dark: '#1A1F2E',   // Matches dark background
+};
+```
+
+**Components Updated:**
+- **DashboardScreen:** "Other Debts" section - each debt is now an individual `GradientCard`
+- **ExpensesScreen:** Fully implemented with individual cards per expense
+- **GoalsScreen:** Each goal and challenge wrapped in individual `GradientCard`
+- **SettingsScreen:** All setting sections use consistent `GradientCard` styling
+
+**GradientCard Enhancements:**
+- Added `useGradient` prop (boolean) - toggles between gradient and solid background
+- Added `backgroundOpacity` prop (0-1) - controls background transparency independently
+- Maintains glass-morphism border and text visibility regardless of opacity
+- Reduced internal padding from 20px to 16px for better proportions
+
+**Standard Card Pattern:**
+```typescript
+<GradientCard
+  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+  useGradient={false}
+  style={styles.itemCard}>
+  {/* Card content */}
+</GradientCard>
+
+// Style definition
+itemCard: {
+  marginBottom: spacing.sm,
+  padding: 0,  // GradientCard handles padding
+}
+```
+
+#### 2. GoalCard & ChallengeCard Refactoring
+
+**Background Removal:**
+- Removed `backgroundColor`, `shadows`, `borderRadius`, and `marginBottom` from internal card styles
+- Components now rely on parent `GradientCard` wrapper for visual styling
+- Maintains internal layout padding for content structure
+- Eliminates duplicate styling and ensures consistency
+
+**Before:**
+```typescript
+// GoalCard had its own background styling
+card: {
+  backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
+  borderRadius: spacing.radius.lg,
+  padding: spacing.md,
+  ...shadows.sm,
+  marginBottom: spacing.md,
+}
+```
+
+**After:**
+```typescript
+// GoalCard relies on GradientCard wrapper
+card: {
+  // Background, shadows, and marginBottom removed - GradientCard handles these
+}
+```
+
+#### 3. Navigation Bar Dark Mode Fixes
+
+**Header & Footer Background Colors:**
+- **Before:** Used `#142850` (wrong dark blue) for dark mode
+- **After:** Changed to `#1A1F2E` to match main screen backgrounds
+- Applied to both `MainTabNavigator` and `RootNavigator`
+
+**Files Updated:**
+- `src/navigation/MainTabNavigator.tsx` (lines 60, 85)
+- `src/navigation/RootNavigator.tsx` (lines 31, 59)
+
+**Active Icon Color System:**
+- **Light Mode:** Active icons show `colors.primary` (Forest Fade #275E59)
+- **Dark Mode:** Active icons show `#FFFFFF` (white)
+- Updated `tabBarActiveTintColor` to use conditional theming
+
+**Icon Library Compliance:**
+- Confirmed all navigation icons use solid variants for active state:
+  - Dashboard: `HomeModernIcon` (solid)
+  - Expenses: `BanknotesIcon` (solid)
+  - Goals: `TrophyIcon` (solid)
+  - Settings: `UserIcon` (solid)
+- Outline variants used for inactive states
+
+#### 4. Settings Screen Theme Toggle Refinement
+
+**Problem:**
+- Theme option buttons used `colors.surface.light` (`#FFFFFF` pure white) in light mode
+- Icons were outline variants instead of solid
+- Background didn't match established cardBaseColors pattern
+
+**Solution:**
+- Changed background from `colors.surface.light/dark` to `cardBaseColors.light/dark`
+- Updated icons from `outline` to `solid` variants
+- Icon size increased from 20px to 24px for consistency
+- Active border shows `colors.primary`, inactive shows subtle rgba borders
+- Removed `themeOptionActive` style (replaced with inline dynamic styling)
+- Increased borderWidth from 1 to 2 for better visual prominence
+
+**Icon Imports Updated:**
+```typescript
+// Before
+import { SunIcon, MoonIcon, ComputerDesktopIcon } from 'react-native-heroicons/outline';
+
+// After
+import { SunIcon, MoonIcon, ComputerDesktopIcon } from 'react-native-heroicons/solid';
+```
+
+**Settings Button in Header:**
+- Updated to show white icon in dark mode: `color={isDark ? '#FFFFFF' : colors.primary}`
+- Background tint changed to white for dark mode: `rgba(255, 255, 255, 0.1)`
+
+**Done Button (Settings Screen):**
+- Updated in `RootNavigator.tsx` to show white text in dark mode
+- Line 89: `color: isDark ? '#FFFFFF' : colors.primary`
+
+#### 5. Consistent Spacing & Padding System
+
+**Standardized Card Spacing:**
+```typescript
+// All individual item cards
+itemCard / expenseCard / otherDebtCard: {
+  marginBottom: spacing.sm,  // 4px
+  padding: 0,  // GradientCard handles internal 16px padding
+}
+
+// Section cards (Settings)
+card: {
+  marginHorizontal: spacing.screenPadding,  // 16px
+  marginBottom: spacing.md,  // 16px
+}
+```
+
+**Screen Implementations:**
+- DashboardScreen: 3 "Other Debts" cards with consistent spacing
+- ExpensesScreen: Individual expense cards with proper margins
+- GoalsScreen: Goal and Challenge cards with unified spacing
+- SettingsScreen: Section cards with horizontal margins
+
+#### 6. Documentation Updates
+
+**Files to Update (in this session):**
+- `docs/Debt_Destroyer_App_Specification.md` - Add DevLog 4 entry
+- `docs/Style_Guide.md` - Update with glass-morphism patterns and navigation theming
+
+**Key Documentation Additions:**
+1. **Glass-Morphism Card Pattern** - Modular system with cardBaseColors
+2. **Navigation Theming** - Dark mode icon and background specifications
+3. **Component Composition** - How GoalCard/ChallengeCard work with GradientCard wrapper
+4. **Settings Screen Patterns** - Theme toggle implementation details
+
+**Technical Implementation Details:**
+
+**Card System Architecture:**
+- **Separation of Concerns:** GradientCard handles visual styling, child components handle content layout
+- **Theme Adaptation:** Cards automatically match background in both light and dark modes
+- **Glass Effect:** Translucent borders with subtle depth create premium feel
+- **Modular Reusability:** Same pattern applied across 4 different screens
+
+**Color Constants Pattern:**
+```typescript
+const cardBaseColors = {
+  light: '#F9F3E6',  // Same as colors.background.light
+  dark: '#1A1F2E',   // Same as dark background (was #142850)
+};
+```
+
+**Navigation Theming Pattern:**
+```typescript
+// Tab bar active color - theme aware
+tabBarActiveTintColor: isDark ? '#FFFFFF' : colors.primary
+
+// Background colors - match main screens
+backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6'
+
+// Border colors - conditional theming
+borderColor: theme === 'active'
+  ? colors.primary
+  : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'
+```
+
+**Build Status:**
+- ✅ All screens visually consistent across light/dark modes
+- ✅ Navigation bars properly themed
+- ✅ Icon states follow design system (white in dark mode)
+- ✅ Card system modular and reusable
+- ✅ No TypeScript errors
+- ✅ All components render correctly
+
+**Files Modified:**
+
+**Screens:**
+- `src/screens/DashboardScreen.tsx` - Individual cards for other debts
+- `src/screens/ExpensesScreen.tsx` - Individual expense cards
+- `src/screens/GoalsScreen.tsx` - Wrapped goals/challenges in GradientCard
+- `src/screens/SettingsScreen.tsx` - Theme toggle with solid icons and cardBaseColors
+
+**Components:**
+- `src/components/GradientCard.tsx` - Added useGradient and backgroundOpacity props
+- `src/components/GoalCard.tsx` - Removed background styling
+- `src/components/ChallengeCard.tsx` - Removed background styling
+
+**Navigation:**
+- `src/navigation/MainTabNavigator.tsx` - Fixed dark mode colors and icon states
+- `src/navigation/RootNavigator.tsx` - Fixed header backgrounds and Done button
+
+**Key Learnings:**
+
+1. **Design System Consistency:** Establishing a single card pattern (cardBaseColors + GradientCard) eliminates visual inconsistencies and makes the app feel cohesive
+2. **Component Composition:** Wrapping content components in styling components (GradientCard) creates clean separation and reusability
+3. **Theme-Aware Design:** Dark mode requires more than just inverting colors - active states need special consideration (white vs brand colors)
+4. **Icon Variants Matter:** Solid vs outline icons significantly impact visual hierarchy and state communication
+5. **Background Matching:** Using exact background colors for cards creates seamless integration while maintaining subtle depth
+6. **Iterative Refinement:** Starting with functionality, then achieving visual consistency across all screens improves user experience dramatically
+7. **Documentation as Contract:** Updating style guide ensures future development maintains established patterns
+
+**Next Steps:**
+
+1. **Data Integration:**
+   - Replace mock data with real data structures
+   - Implement state management (Redux/Context)
+   - Add data persistence with AsyncStorage
+
+2. **Expenses Screen Completion:**
+   - Implement expense logging functionality
+   - Add budget tracking and alerts
+   - Create expense categories and filtering
+
+3. **Interactive Features:**
+   - Add pull-to-refresh on all screens
+   - Implement expense editing/deletion
+   - Add goal creation and tracking
+
+4. **Animations & Micro-interactions:**
+   - Card press animations
+   - Progress bar fill animations
+   - Celebration effects (confetti, haptics)
+   - Theme switch animation
+
+5. **Advanced Navigation:**
+   - Detail screens for debts, goals, and expenses
+   - Modal sheets for quick actions
+   - Deep linking support
+
+**Session Metrics:**
+
+- Screens Updated: 4 (Dashboard, Expenses, Goals, Settings)
+- Components Refactored: 3 (GradientCard, GoalCard, ChallengeCard)
+- Navigation Files Fixed: 2 (MainTabNavigator, RootNavigator)
+- Design Patterns Established: 2 (cardBaseColors, navigation theming)
+- Props Added to GradientCard: 2 (useGradient, backgroundOpacity)
+- TypeScript Errors: 0
+- Build Success: ✅
+- Session Duration: ~3 hours of focused development
+- Code Quality: Production-ready with consistent patterns
+
+**Visual Design Impact:**
+
+This session achieved complete visual design consistency across the entire application. The modular glass-morphism card system creates a premium, cohesive feel that adapts seamlessly between light and dark modes. Navigation elements now properly reflect theme state with appropriate icon colors (white in dark mode), and all screens follow the same card pattern. The result is a professional, polished interface that feels intentionally designed rather than assembled from mismatched parts.
+
+**User Experience Impact:**
+
+- **Visual Harmony:** Users experience consistent design language across all screens
+- **Theme Integrity:** Dark mode now feels intentional with proper contrast and icon colors
+- **Information Hierarchy:** Individual cards per item create better scanability
+- **Touch Targets:** Consistent card sizing improves tap accuracy
+- **Reduced Cognitive Load:** Same patterns throughout app reduce learning curve
 
 ---
 

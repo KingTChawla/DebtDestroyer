@@ -17,6 +17,12 @@ import {CreditCardIcon, RocketLaunchIcon, ChevronRightIcon} from 'react-native-h
 import {GradientCard, ScrollAwareHeader} from '../components';
 import {useTheme} from '../contexts';
 
+// Background colors for subtle gradient cards
+const cardBaseColors = {
+  light: '#F9F3E6', // Same as light background
+  dark: '#1A1F2E',  // Same as dark background
+};
+
 export const DashboardScreen: React.FC = () => {
   const {isDark} = useTheme();
   const [selectedTab, setSelectedTab] = useState<'Daily' | 'Weekly' | 'Monthly' | 'Yearly'>('Daily');
@@ -161,17 +167,21 @@ export const DashboardScreen: React.FC = () => {
           </View>
 
           {otherDebts.map(debt => (
-            <TouchableOpacity key={debt.id} style={styles.otherDebtCard}>
-              <View style={styles.otherDebtContent}>
+            <GradientCard
+              key={debt.id}
+              baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+              useGradient={false}
+              style={styles.otherDebtCard}>
+              <TouchableOpacity style={styles.otherDebtContent} activeOpacity={0.7}>
                 <View>
                   <Text style={styles.otherDebtName}>{debt.name}</Text>
                   <Text style={styles.otherDebtBalance}>
                     Balance: {formatCurrency(debt.currentBalance)}
                   </Text>
                 </View>
-                <ChevronRightIcon size={24} color="#5B7FBF" />
-              </View>
-            </TouchableOpacity>
+                <ChevronRightIcon size={24} color={isDark ? '#7B9FDF' : '#5B7FBF'} />
+              </TouchableOpacity>
+            </GradientCard>
           ))}
         </View>
       )}
@@ -180,7 +190,7 @@ export const DashboardScreen: React.FC = () => {
       <View style={[styles.section, styles.lastSection]}>
         <Text style={styles.sectionTitle}>Your Progress Analytics</Text>
 
-        <View style={styles.analyticsCard}>
+        <GradientCard baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light} useGradient={false}>
           {/* Tab Navigation */}
           <View style={styles.tabContainer}>
             {(['Daily', 'Weekly', 'Monthly', 'Yearly'] as const).map(tab => (
@@ -212,7 +222,7 @@ export const DashboardScreen: React.FC = () => {
           <Text style={styles.analyticsSubtitle}>
             Visualizing your debt payoff journey.
           </Text>
-        </View>
+        </GradientCard>
       </View>
 
       <View style={styles.bottomPadding} />
@@ -450,10 +460,8 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
 
   // Other Debts
   otherDebtCard: {
-    backgroundColor: isDark ? '#2A3242' : colors.surface.light,
-    borderRadius: 12,
-    padding: spacing.md,
     marginBottom: spacing.sm,
+    padding: 0, // GradientCard handles padding
   },
   otherDebtContent: {
     flexDirection: 'row',
@@ -474,11 +482,6 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
   },
 
   // Analytics Section
-  analyticsCard: {
-    backgroundColor: isDark ? '#2A3242' : colors.surface.light,
-    borderRadius: 20,
-    padding: spacing.lg,
-  },
   tabContainer: {
     flexDirection: 'row',
     backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.05)',

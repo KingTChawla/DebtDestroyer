@@ -42,9 +42,9 @@ export const MainTabNavigator: React.FC = () => {
           marginRight: 16,
           padding: 8,
           borderRadius: 20,
-          backgroundColor: isDark ? 'rgba(39, 94, 89, 0.2)' : 'rgba(39, 94, 89, 0.1)', // Forest Fade tint
+          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(39, 94, 89, 0.1)', // White tint for dark, Forest Fade tint for light
         }}>
-        <UserIcon size={24} color={colors.primary} />
+        <UserIcon size={24} color={isDark ? '#FFFFFF' : colors.primary} />
       </TouchableOpacity>
     );
   };
@@ -52,12 +52,12 @@ export const MainTabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: isDark ? '#FFFFFF' : colors.primary,
         tabBarInactiveTintColor: isDark
           ? colors.text.secondary.dark
           : colors.text.secondary.light,
         tabBarStyle: {
-          backgroundColor: isDark ? '#142850' : '#F9F3E6', // Use our custom backgrounds
+          backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6', // Match main screen backgrounds
           borderTopColor: isDark ? '#2A3B4A' : '#E5D5C1', // Complementary borders
           paddingHorizontal: 0,
           paddingBottom: 8,
@@ -82,7 +82,7 @@ export const MainTabNavigator: React.FC = () => {
           marginTop: 4,
         },
         headerStyle: {
-          backgroundColor: isDark ? '#142850' : '#F9F3E6', // Custom backgrounds
+          backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6', // Match main screen backgrounds
           borderBottomWidth: 0, // Remove border to blend better
           shadowColor: 'transparent',
           shadowOffset: { width: 0, height: 0 },

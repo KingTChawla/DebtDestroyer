@@ -1,9 +1,9 @@
 # Debt Destroyer - Complete Style Guide
 
-**Version:** 2.0
-**Last Updated:** 2025-11-09
+**Version:** 2.1
+**Last Updated:** 2025-11-11
 **Platform:** React Native (iOS + Android)
-**Status:** ✅ Updated with New Color System & Typography Implementation
+**Status:** ✅ Complete Design System with Glass-Morphism & Navigation Theming
 
 ---
 
@@ -82,9 +82,11 @@ We use a sophisticated color system with light/dark variants for each color.
 ```typescript
 background: {
   light: '#F9F3E6',  // soft, creamy yellow-white (like parchment or sunlight on ivory)
-  dark: '#142850',    // Obsidian Blue (deep navy with subtle teal undertone)
+  dark: '#1A1F2E',   // Deep navy-gray (professional, calming, maintains readability)
 }
 ```
+
+**Note:** Updated from `#142850` to `#1A1F2E` for better consistency across navigation and screens.
 
 ### 🎯 Semantic Color Mapping
 
@@ -482,6 +484,168 @@ radius: {
 - **Readability vignette** for text contrast
 - **Sophisticated polish layer** for depth
 
+### 🪟 Modular Glass-Morphism Card System
+
+**Status:** ✅ **FULLY IMPLEMENTED** across all screens (2025-11-11)
+
+#### Design Philosophy
+The modular card system creates visual consistency while maintaining a premium glass-morphism aesthetic. Cards seamlessly blend with screen backgrounds while providing subtle depth through translucent borders.
+
+#### Card Base Colors Pattern
+
+**Standard Pattern for All Screens:**
+```typescript
+const cardBaseColors = {
+  light: '#F9F3E6',  // Matches colors.background.light
+  dark: '#1A1F2E',   // Matches colors.background.dark
+};
+```
+
+**Usage:**
+```typescript
+<GradientCard
+  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+  useGradient={false}
+  style={styles.itemCard}>
+  {/* Card content */}
+</GradientCard>
+```
+
+#### GradientCard Props
+
+**`useGradient`** (boolean, default: true)
+- `true`: Renders 3-stop gradient background with polish layers
+- `false`: Renders solid background color (used for screen-matching cards)
+
+**`backgroundOpacity`** (number, 0-1, default: 1)
+- Controls transparency of background independently from text/borders
+- Maintains glass border and text visibility at any opacity level
+
+**`baseColor`** (string)
+- Base color for gradient or solid background
+- Use `cardBaseColors.light` or `cardBaseColors.dark` for screen-matching cards
+
+**`style`** (ViewStyle)
+- Additional styling (margins, etc.)
+- Don't set padding - GradientCard handles 16px internal padding
+
+#### Standard Card Styling
+
+**Individual Item Cards** (Debts, Expenses, Goals, Challenges):
+```typescript
+// Style definition
+itemCard: {
+  marginBottom: spacing.sm,  // 4px
+  padding: 0,  // GradientCard handles padding (16px)
+}
+
+// Usage - wrap content component
+<GradientCard
+  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+  useGradient={false}
+  style={styles.itemCard}>
+  <DebtCard debt={debt} />
+</GradientCard>
+```
+
+**Section Cards** (Settings, larger containers):
+```typescript
+card: {
+  marginHorizontal: spacing.screenPadding,  // 16px
+  marginBottom: spacing.md,  // 16px
+}
+```
+
+#### Component Composition Pattern
+
+**Content components** (DebtCard, GoalCard, ChallengeCard, etc.):
+- Do NOT include background colors, shadows, or border radius
+- Focus only on content layout and internal spacing
+- Rely on parent `GradientCard` wrapper for visual styling
+
+**Example - GoalCard:**
+```typescript
+// GoalCard.tsx - NO background styling
+const styles = StyleSheet.create({
+  card: {
+    // Background, shadows, and marginBottom removed
+    // GradientCard handles these
+  },
+  header: {
+    flexDirection: 'row',
+    marginBottom: spacing.md,
+  },
+  // ... content layout styles only
+});
+```
+
+**Usage in Screen:**
+```typescript
+// GoalsScreen.tsx
+{activeGoals.map(goal => (
+  <GradientCard
+    key={goal.id}
+    baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+    useGradient={false}
+    style={styles.itemCard}>
+    <GoalCard goal={goal} onPress={() => handlePress(goal.id)} />
+  </GradientCard>
+))}
+```
+
+#### Screen Implementation Examples
+
+**Dashboard - Other Debts:**
+```typescript
+{otherDebts.map(debt => (
+  <GradientCard
+    key={debt.id}
+    baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+    useGradient={false}
+    style={styles.otherDebtCard}>
+    <TouchableOpacity style={styles.otherDebtContent}>
+      {/* Debt content */}
+    </TouchableOpacity>
+  </GradientCard>
+))}
+```
+
+**Expenses - Individual Expense Cards:**
+```typescript
+{expenses.map(expense => (
+  <GradientCard
+    key={expense.id}
+    baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+    useGradient={false}
+    style={styles.expenseCard}>
+    <TouchableOpacity style={styles.expenseItem}>
+      {/* Expense content */}
+    </TouchableOpacity>
+  </GradientCard>
+))}
+```
+
+**Settings - Section Cards:**
+```typescript
+<GradientCard
+  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+  useGradient={false}
+  style={styles.card}>
+  <Text style={styles.cardText}>Appearance</Text>
+  <Text style={styles.cardSubtext}>Choose your preferred theme</Text>
+  {/* Theme toggle buttons */}
+</GradientCard>
+```
+
+#### Benefits of This System
+
+1. **Visual Consistency:** All screens use identical card styling
+2. **Theme Adaptation:** Cards automatically match background colors
+3. **Separation of Concerns:** Visual styling separated from content layout
+4. **Reusability:** Single pattern applied across entire app
+5. **Maintainability:** Changes to card styling happen in one place
+6. **Flexibility:** Props allow gradient/solid and opacity control
+
 ### 📝 Input Fields
 
 ```typescript
@@ -564,14 +728,171 @@ radius: {
 ### 🎨 Icon Colors
 
 **Light Mode:**
-- Active: `colors.primary` (Forest Fade)
+- Active: `colors.primary` (Forest Fade #275E59)
 - Inactive: `colors.text.secondary.light` (#666666)
 - On colored backgrounds: White (#FFFFFF)
 
 **Dark Mode:**
-- Active: `colors.primary` (Forest Fade)
+- Active: `#FFFFFF` (White) - **Updated 2025-11-11**
 - Inactive: `colors.text.secondary.dark` (#B8B8B8)
 - On colored backgrounds: White (#FFFFFF)
+
+**Important:** Navigation tab icons and header buttons use **white for active states in dark mode** instead of Forest Fade green, providing better contrast and visual clarity.
+
+### 🧭 Navigation Theming
+
+**Status:** ✅ **FULLY IMPLEMENTED** (2025-11-11)
+
+#### Tab Bar Styling
+
+**Background Colors:**
+```typescript
+tabBarStyle: {
+  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',  // Match screen backgrounds
+  borderTopColor: isDark ? '#2A3B4A' : '#E5D5C1',  // Complementary borders
+  // ... other styles
+}
+```
+
+**Icon Colors:**
+```typescript
+// Active tab icons
+tabBarActiveTintColor: isDark ? '#FFFFFF' : colors.primary,
+
+// Inactive tab icons
+tabBarInactiveTintColor: isDark
+  ? colors.text.secondary.dark
+  : colors.text.secondary.light,
+```
+
+#### Header Styling
+
+**Background & Text:**
+```typescript
+headerStyle: {
+  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',  // Match screen backgrounds
+  borderBottomWidth: 0,  // Seamless integration
+  elevation: 0,  // No shadow by default
+}
+
+headerTitleStyle: {
+  fontFamily: 'HelveticaNeue-Bold',
+  fontSize: 20,
+  color: isDark ? '#FFFFFF' : '#1A1A1A',
+}
+
+headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',  // Back button, etc.
+```
+
+#### Settings Button (Header Right)
+
+**Styling:**
+```typescript
+// Settings icon button
+<TouchableOpacity
+  style={{
+    marginRight: 16,
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: isDark
+      ? 'rgba(255, 255, 255, 0.1)'  // White tint for dark
+      : 'rgba(39, 94, 89, 0.1)',    // Forest Fade tint for light
+  }}>
+  <UserIcon
+    size={24}
+    color={isDark ? '#FFFFFF' : colors.primary}
+  />
+</TouchableOpacity>
+```
+
+#### Done Button (Settings Screen)
+
+**Styling:**
+```typescript
+<Text style={{
+  fontFamily: 'HelveticaNeue-Medium',
+  fontSize: 17,
+  color: isDark ? '#FFFFFF' : colors.primary,  // White for dark, Forest Fade for light
+}}>
+  Done
+</Text>
+```
+
+#### Icon Variant Rules
+
+**Navigation Tabs:**
+- **Active:** Solid variant (e.g., `HomeModernIcon` from solid)
+- **Inactive:** Outline variant (e.g., `HomeModernIconOutline` from outline)
+
+**Header Buttons:**
+- **All states:** Solid variant (e.g., `UserIcon` from solid)
+
+**Example:**
+```typescript
+import {
+  HomeModernIcon,
+  BanknotesIcon,
+  TrophyIcon,
+  UserIcon,
+} from 'react-native-heroicons/solid';
+
+import {
+  HomeModernIcon as HomeModernIconOutline,
+  BanknotesIcon as BanknotesIconOutline,
+  TrophyIcon as TrophyIconOutline,
+} from 'react-native-heroicons/outline';
+
+// Tab icon implementation
+tabBarIcon: ({focused, color}) =>
+  focused ? (
+    <HomeModernIcon size={24} color={color} />
+  ) : (
+    <HomeModernIconOutline size={24} color={color} />
+  ),
+```
+
+#### Settings Screen Theme Toggle
+
+**Button Background:**
+```typescript
+// Theme option buttons
+backgroundColor: isDark ? cardBaseColors.dark : cardBaseColors.light,
+```
+
+**Border Colors:**
+```typescript
+// Active border (selected theme)
+borderColor: theme === 'light'
+  ? colors.primary
+  : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'
+
+borderWidth: 2,  // Increased from 1 for better visibility
+```
+
+**Icon Colors:**
+```typescript
+// Active theme icon
+color: theme === 'light'
+  ? colors.primary
+  : (isDark ? colors.text.secondary.dark : colors.text.secondary.light)
+
+// Icon size
+size={24}  // Increased from 20 for consistency
+```
+
+**Theme Icons:**
+- **Light Mode:** `SunIcon` (solid)
+- **Dark Mode:** `MoonIcon` (solid)
+- **System Mode:** `ComputerDesktopIcon` (solid)
+
+#### Navigation Theming Best Practices
+
+1. **Match Screen Backgrounds:** Navigation bars should use exact same background colors as screens
+2. **Consistent Shadows:** Remove default shadows for seamless integration
+3. **Icon Variants:** Use solid for active, outline for inactive
+4. **Dark Mode Icons:** Always use white for active states in dark mode
+5. **Border Subtlety:** Use rgba colors for inactive borders that adapt to theme
+6. **Font Consistency:** Navigation text uses same typography system as screens
 
 ---
 
@@ -728,15 +1049,16 @@ easing: {
 ### 🌙 Color Adaptation
 
 **Automatically adapts:**
-- Background colors (Creamy light → Obsidian dark)
+- Background colors (Creamy light #F9F3E6 → Deep navy #1A1F2E)
 - Text colors (Dark → Light)
 - Border colors (Light → Dark)
-- Surface colors (White → Dark blue-gray)
+- Navigation bars (Match screen backgrounds exactly)
 
 **Manually adjusted:**
-- Card backgrounds (lighter in dark mode for contrast)
+- Card backgrounds (use cardBaseColors pattern to match screens)
+- Active icon colors (White in dark mode, Forest Fade in light mode)
 - Shadows (more subtle in dark mode)
-- Icon colors (theme-aware)
+- Theme toggle borders (rgba for subtle adaptation)
 
 ### 🌙 Dark Mode Implementation
 
@@ -745,12 +1067,25 @@ import { useTheme } from '../contexts';
 
 const { isDark } = useTheme();
 
+// Screen background
 <View style={{
-  backgroundColor: isDark ? '#142850' : '#F9F3E6',
+  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',
 }}>
   <Text style={{
     color: isDark ? '#FFFFFF' : '#1A1A1A',
   }}>
+
+// Card base colors pattern
+const cardBaseColors = {
+  light: '#F9F3E6',
+  dark: '#1A1F2E',
+};
+
+<GradientCard
+  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
+  useGradient={false}>
+  {/* Card content */}
+</GradientCard>
 ```
 
 ### 🎨 Theme Toggle
@@ -799,6 +1134,8 @@ Test all screens in both modes:
 - ✅ Theme-aware color adaptation
 - ✅ Sophisticated polish and vignette layers
 - ✅ Forest Fade and Sapphire Night cards implemented
+- ✅ Modular card system with cardBaseColors pattern (2025-11-11)
+- ✅ useGradient and backgroundOpacity props for flexibility
 
 **Theme System (100%)**
 - ✅ Global theme context implemented
@@ -812,6 +1149,15 @@ Test all screens in both modes:
 - ✅ ProgressBar, GoalCard, DebtCard, ChallengeCard
 - ✅ GradientCard component with advanced features
 - ✅ All components use proper typography and colors
+- ✅ Component composition pattern established (2025-11-11)
+- ✅ Content components refactored to work with GradientCard wrapper
+
+**Navigation System (100%)**
+- ✅ Tab navigation with proper theming (2025-11-11)
+- ✅ Header styling matches screen backgrounds
+- ✅ Dark mode icon colors (white for active states)
+- ✅ Settings button and Done button properly themed
+- ✅ Icon variants (solid/outline) correctly implemented
 
 ### 🚧 In Progress
 
@@ -889,7 +1235,8 @@ const DashboardCard = () => {
 - **Primary (Forest Fade):** `#275E59` → `#183E3A`
 - **Secondary (Sapphire Night):** `#0A4A8B` → `#042F5C`
 - **Accent (Velvet Rose):** `#B42352` → `#7E173A`
-- **Background:** `#F9F3E6` → `#142850`
+- **Background:** `#F9F3E6` → `#1A1F2E` (updated 2025-11-11)
+- **Card Base Colors:** Same as background colors for seamless integration
 
 ### 📏 Key Font Sizes
 - **Large Title:** 34pt
@@ -954,4 +1301,4 @@ src/contexts/
 
 **© 2025 Debt Destroyer. All rights reserved.**
 
-*Style Guide Version 2.0 - Updated with comprehensive color system and typography implementation*
+*Style Guide Version 2.1 - Updated 2025-11-11 with modular glass-morphism card system, navigation theming, and complete visual design consistency*

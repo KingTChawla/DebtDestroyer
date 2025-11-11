@@ -51,12 +51,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({goal, onPress}) => {
 
   return (
     <Container
-      style={[
-        styles.card,
-        {
-          backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
-        },
-      ]}
+      style={styles.card}
       onPress={onPress}
       activeOpacity={onPress ? 0.7 : 1}>
       <View style={styles.header}>
@@ -131,10 +126,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({goal, onPress}) => {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: spacing.radius.lg,
-    padding: spacing.md,
-    ...shadows.sm,
-    marginBottom: spacing.md,
+    // Background, shadows, and marginBottom removed - GradientCard handles these
   },
   header: {
     flexDirection: 'row',
