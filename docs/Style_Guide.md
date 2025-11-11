@@ -1,372 +1,151 @@
-# Debt Destroyer - Complete Style Guide
+# Debt Destroyer - Style Guide
 
-**Version:** 2.1
+**Version:** 2.2
 **Last Updated:** 2025-11-11
 **Platform:** React Native (iOS + Android)
-**Status:** ✅ Complete Design System with Glass-Morphism & Navigation Theming
+**Status:** ✅ Production Ready Design System
 
 ---
 
-## Table of Contents
+## LLM SUMMARY
 
-1. [Design Philosophy](#design-philosophy)
-2. [Color System](#color-system)
-3. [Typography System](#typography-system)
-4. [Spacing & Layout](#spacing--layout)
-5. [Components](#components)
-6. [Icons](#icons)
-7. [Shadows & Elevation](#shadows--elevation)
-8. [Animations & Transitions](#animations--transitions)
-9. [Accessibility](#accessibility)
-10. [Dark Mode](#dark-mode)
-11. [Implementation Status](#implementation-status)
+- React Native design system with 4-screen cognitive architecture (Dashboard, Goals, Expenses, Settings)
+- Professional 15-color palette with light/dark variants and theme-aware implementation
+- Complete Helvetica Neue typography system following iOS standards
+- Modular glass-morphism GradientCard system with screen-matching base colors
+- 8pt grid spacing system with consistent padding and border radius patterns
+- Comprehensive component library (Button, Card, Input, Badge, ProgressBar)
+- Navigation theming with dark mode support and proper icon variants
+- Accessibility-first approach with 4.5:1 contrast ratios and 44pt touch targets
+- Token-efficient patterns optimized for AI development session continuity
+
+---
+
+## File Summary
+
+Complete design system reference for Debt Destroyer React Native app, encompassing visual design patterns, component specifications, and implementation guidelines. Optimized for AI-assisted development with clear patterns and efficient reference sections.
 
 ---
 
 ## Design Philosophy
 
 ### Core Principles
-
-1. **Behavior > Math** - Focus on habit formation and emotional engagement over complex calculations
-2. **Cognitive Simplicity** - Each screen optimized for a specific user mindset (passive, active, action, control)
-3. **iOS-First Design** - Follow Apple's Human Interface Guidelines for consistency and familiarity
-4. **Gamification with Purpose** - Motivate through positive reinforcement, not punishment
-5. **Privacy by Design** - Clear visual hierarchy that respects sensitive financial data
+1. **Behavior > Math** - Focus on habit formation over complex calculations
+2. **Cognitive Simplicity** - Each screen optimized for specific user mindset
+3. **iOS-First Design** - Follow Apple Human Interface Guidelines
+4. **Gamification with Purpose** - Positive reinforcement only
+5. **Privacy by Design** - Clear hierarchy for sensitive financial data
 
 ### 4-Screen Architecture
-
-Each screen serves a distinct purpose:
-
 - **Dashboard** - Passive review mode (instant awareness)
-- **Expenses** - Action mode (low-friction logging)
 - **Goals** - Active play mode (gamified engagement)
+- **Expenses** - Action mode (low-friction logging)
 - **Settings** - Control mode (personalization)
 
 ---
 
 ## Color System
 
-### 🎨 Professional Color Palette
+### Professional Palette (15 Colors)
 
-We use a sophisticated color system with light/dark variants for each color.
+#### Primary Colors
+| Color | Light → Dark | Use Case |
+|-------|-------------|----------|
+| Forest Fade | `#275E59` → `#183E3A` | Primary brand, success states |
+| Sapphire Night | `#0A4A8B` → `#042F5C` | Secondary actions, priority elements |
+| Midnight Plum | `#6A25B0` → `#4A1583` | Premium features, highlights |
+| Cosmic Violet | `#5A0C9A` → `#3E086A` | Special actions, gamification |
+| Royal Indigo | `#45409B` → `#2E2770` | Professional elements, charts |
 
-#### Primary Color Palette
-| Color | Light Mode | Dark Mode | Use Case |
-|-------|------------|-----------|----------|
-| **Forest Fade** | `#275E59` | `#183E3A` | Primary brand color, success states |
-| **Sapphire Night** | `#0A4A8B` | `#042F5C` | Secondary actions, priority elements |
-| **Midnight Plum** | `#6A25B0` | `#4A1583` | Premium features, highlights |
-| **Cosmic Violet** | `#5A0C9A` | `#3E086A` | Special actions, gamification |
-| **Royal Indigo** | `#45409B` | `#2E2770` | Professional elements, charts |
+#### Accent Colors
+| Color | Light → Dark | Use Case |
+|-------|-------------|----------|
+| Velvet Rose | `#B42352` → `#7E173A` | Debt indicators, warnings |
+| Burnt Merlot | `#8C2654` → `#611538` | Urgent actions, accelerators |
+| Copper Ember | `#9B4C14` → `#6A340F` | Streaks, achievements, rewards |
+| Ocean Teal | `#0A7E85` → `#06535A` | Financial insights, growth |
+| Deep Azure | `#0A5BAA` → `#043C74` | Information, help states |
 
-#### Accent Color Palette
-| Color | Light Mode | Dark Mode | Use Case |
-|-------|------------|-----------|----------|
-| **Velvet Rose** | `#B42352` | `#7E173A` | Debt indicators, warnings |
-| **Burnt Merlot** | `#8C2654` | `#611538` | Urgent actions, accelerators |
-| **Copper Ember** | `#9B4C14` | `#6A340F` | Streaks, achievements, rewards |
-| **Ocean Teal** | `#0A7E85` | `#06535A` | Financial insights, growth |
-| **Deep Azure** | `#0A5BAA` | `#043C74` | Information, help states |
+#### Neutral Colors
+| Color | Light → Dark | Use Case |
+|-------|-------------|----------|
+| Emerald Shadow | `#0E7A72` → `#04514A` | Success states, completion |
+| Space Navy | `#172245` → `#0B132B` | Deep backgrounds, modals |
+| Marine Steel | `#346373` → `#234552` | Surface elements, cards |
+| Obsidian Blue | `#183A66` → `#102541` | Borders, dividers |
 
-#### Neutral Color Palette
-| Color | Light Mode | Dark Mode | Use Case |
-|-------|------------|-----------|----------|
-| **Emerald Shadow** | `#0E7A72` | `#04514A` | Success states, completion |
-| **Space Navy** | `#172245` | `#0B132B` | Deep backgrounds, modals |
-| **Marine Steel** | `#346373` | `#234552` | Surface elements, cards |
-| **Obsidian Blue** | `#183A66` | `#102541` | Borders, dividers |
-
-### 🌅 Background Colors
-
-**Custom backgrounds for optimal readability:**
+### Background Colors
 ```typescript
 background: {
-  light: '#F9F3E6',  // soft, creamy yellow-white (like parchment or sunlight on ivory)
-  dark: '#1A1F2E',   // Deep navy-gray (professional, calming, maintains readability)
+  light: '#F9F3E6',  // Creamy, warm, reduces eye strain
+  dark: '#1A1F2E',   // Professional navy-gray
 }
 ```
 
-**Note:** Updated from `#142850` to `#1A1F2E` for better consistency across navigation and screens.
-
-### 🎯 Semantic Color Mapping
-
+### Semantic Mapping
 ```typescript
-// Brand colors using our palette
-primary: '#275E59',      // Forest Fade light
-secondary: '#0A4A8B',    // Sapphire Night light
-accent: '#B42352',       // Velvet Rose light
+// Brand colors
+primary: '#275E59',      // Forest Fade
+secondary: '#0A4A8B',    // Sapphire Night
+accent: '#B42352',       // Velvet Rose
 
-// Semantic colors from palette
-success: '#0E7A72',      // Emerald Shadow light
-warning: '#9B4C14',      // Copper Ember light
-error: '#B42352',        // Velvet Rose light
-info: '#0A5BAA',         // Deep Azure light
+// Semantic colors
+success: '#0E7A72',      // Emerald Shadow
+warning: '#9B4C14',      // Copper Ember
+error: '#B42352',        // Velvet Rose
+info: '#0A5BAA',         // Deep Azure
 
-// Debt-specific colors
-debtRed: '#B42352',      // Velvet Rose - debt indicator
-payoffGreen: '#0E7A72',  // Emerald Shadow - success
-snowballBlue: '#0A4A8B', // Sapphire Night - snowball plan
+// Debt-specific
+debtRed: '#B42352',      // Velvet Rose
+payoffGreen: '#0E7A72',  // Emerald Shadow
+snowballBlue: '#0A4A8B', // Sapphire Night
 ```
 
-### 📱 Theme-Aware Implementation
-
+### Theme-Aware Usage
 ```typescript
-import { getColor, forestFade, sapphireNight } from '../theme';
-
-// Automatic theme-aware color selection
-const forestColor = getColor(forestFade, isDark); // #275E59 (light) or #183E3A (dark)
-const sapphireColor = getColor(sapphireNight, isDark); // #0A4A8B (light) or #042F5C (dark)
+import { getColor, forestFade } from '../theme';
+const forestColor = getColor(forestFade, isDark); // Auto light/dark selection
 ```
-
-### 🎨 Usage Guidelines
-
-**Forest Fade (#275E59)**
-- Primary brand color
-- Total Debt card gradient
-- Success messages
-- "Snowball" badges
-
-**Sapphire Night (#0A4A8B)**
-- Priority debt cards
-- Action buttons
-- Navigation highlights
-- Professional elements
-
-**Velvet Rose (#B42352)**
-- Debt balance indicators
-- "Accelerate Payment" button
-- Urgency states
-- Warning elements
-
-**Background Colors**
-- Light: `#F9F3E6` - Creamy, warm, reduces eye strain
-- Dark: `#142850` - Professional, calming, maintains readability
 
 ---
 
 ## Typography System
 
-### 📖 Font Family: Helvetica Neue
+### Font Family: Helvetica Neue ✅ **FULLY IMPLEMENTED**
+**Weights:** Light (300), Regular (400), Medium (500), Bold (700)
 
-**Status:** ✅ **FULLY IMPLEMENTED** across all screens and components
+### Typography Scale (iOS Standard)
+| Style | Size | Weight | Use Case |
+|-------|------|--------|----------|
+| Large Title | 34pt | Bold | Screen titles, navigation headers |
+| Title 1 | 28pt | Bold | Dashboard counters, section headers |
+| Title 2 | 22pt | Medium | "Priority Debt", section titles |
+| Title 3 | 20pt | Medium | Debt names, goal titles |
+| Headline | 17pt | Medium | Button labels, emphasized text |
+| Body | 17pt | Regular | Main reading text, descriptions |
+| Callout | 16pt | Regular | AI insights, highlighted info |
+| Subheadline | 15pt | Regular | Secondary labels, metadata |
+| Footnote | 13pt | Regular | APR percentages, timestamps |
+| Caption 1 | 12pt | Regular | Progress percentages, helper text |
+| Caption 2 | 11pt | Light | Tab bar labels, small metadata |
 
-**Installed Weights:**
-- Light (300) - `HelveticaNeue-Light`
-- Regular (400) - `HelveticaNeue`
-- Medium (500) - `HelveticaNeue-Medium`
-- Bold (700) - `HelveticaNeue-Bold`
-
-### 📏 Typography Scale (iOS Standard)
-
-#### Large Title (34pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Bold',
-  fontSize: 34,
-  lineHeight: 40,
-  letterSpacing: -0.34,
-  fontWeight: '700',
-}
-```
-**Use:** Main screen titles, navigation headers
-**Spacing:** 24pt above, 16pt below
-
-#### Title 1 (28pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Bold',
-  fontSize: 28,
-  lineHeight: 34,
-  letterSpacing: -0.28,
-  fontWeight: '700',
-}
-```
-**Use:** Dashboard "Total Debt Countdown", section headers
-**Spacing:** 20pt above, 12pt below
-
-#### Title 2 (22pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Medium',
-  fontSize: 22,
-  lineHeight: 28,
-  letterSpacing: -0.11,
-  fontWeight: '500',
-}
-```
-**Use:** "Priority Debt", "Other Debts", "Your Progress Analytics"
-**Spacing:** 16pt above, 10pt below
-
-#### Title 3 (20pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Medium',
-  fontSize: 20,
-  lineHeight: 26,
-  letterSpacing: -0.1,
-  fontWeight: '500',
-}
-```
-**Use:** Debt names, goal titles, card headers
-**Spacing:** 14pt above, 8pt below
-
-#### Headline (17pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Medium',
-  fontSize: 17,
-  lineHeight: 22,
-  letterSpacing: 0,
-  fontWeight: '500',
-}
-```
-**Use:** Button labels, emphasized text, tab labels
-**Spacing:** 8pt above, 6pt below
-
-#### Body (17pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue',
-  fontSize: 17,
-  lineHeight: 22,
-  letterSpacing: 0,
-  fontWeight: '400',
-}
-```
-**Use:** Main reading text, descriptions, instructions
-**Spacing:** 8pt between paragraphs
-
-#### Callout (16pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue',
-  fontSize: 16,
-  lineHeight: 22,
-  letterSpacing: 0,
-  fontWeight: '400',
-}
-```
-**Use:** AI insights, highlighted information
-
-#### Subheadline (15pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue',
-  fontSize: 15,
-  lineHeight: 20,
-  letterSpacing: 0,
-  fontWeight: '400',
-}
-```
-**Use:** Secondary labels, metadata (debt type, balance labels)
-
-#### Footnote (13pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue',
-  fontSize: 13,
-  lineHeight: 18,
-  letterSpacing: 0.043,
-  fontWeight: '400',
-}
-```
-**Use:** APR percentages, timestamps, hints
-
-#### Caption 1 (12pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue',
-  fontSize: 12,
-  lineHeight: 16,
-  letterSpacing: 0.043,
-  fontWeight: '400',
-}
-```
-**Use:** Progress percentages, helper text
-
-#### Caption 2 (11pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Light',
-  fontSize: 11,
-  lineHeight: 15,
-  letterSpacing: 0.085,
-  fontWeight: '300',
-}
-```
-**Use:** Tab bar labels, small metadata
-
-#### Button Text (17pt)
-```typescript
-{
-  fontFamily: 'HelveticaNeue-Medium',
-  fontSize: 17,
-  lineHeight: 22,
-  letterSpacing: 0.043,
-  fontWeight: '500',
-}
-```
-**Use:** All action buttons
-
-### 📝 Typography Implementation Status
-
-**✅ COMPLETED FILES:**
-
-**Navigation (3 files):**
-- `MainTabNavigator.tsx` - Tab labels, headers
-- `RootNavigator.tsx` - Stack headers
-- `OnboardingNavigator.tsx` - Onboarding headers
-
-**Screens (10 files):**
-- Dashboard, Goals, Expenses, Settings
-- Welcome, OnboardingIntro, OnboardingDebts
-- OnboardingIncome, OnboardingEmergencyFund, OnboardingComplete
-
-**Components (8 files):**
-- Button, Badge, Input, ProgressBar
-- DebtCard, ExpenseCard, GoalCard, ChallengeCard
-
-### 🎯 Typography Rules
-
-1. **Never skip heading levels** - Maintain hierarchy (Title 1 → Title 2 → Title 3)
-2. **Maximum 3 heading levels per screen** - Reduces cognitive load
-3. **Use Body for all paragraph text** - Consistency
+### Typography Rules
+1. **Never skip heading levels** - Maintain hierarchy
+2. **Maximum 3 heading levels per screen** - Reduce cognitive load
+3. **Use Body for all paragraphs** - Consistency
 4. **Minimum readable size: 11pt** - Accessibility
 5. **Line length: 40-60 characters** - Optimal readability
 
-### 📱 Screen-Specific Typography
-
-#### Dashboard Screen
-- Screen title: **Title 1**
-- Section headers: **Title 2**
-- Debt names: **Title 3**
-- Labels: **Subheadline**
-- Amounts: **Title 1** or **Title 2**
-- Progress text: **Caption 1**
-
-#### Goals & Challenges Screen
-- Screen title: **Title 1**
-- Goal/Challenge titles: **Title 2**
-- Progress labels: **Subheadline**
-- XP amounts: **Headline**
-- Descriptions: **Body** or **Callout**
-- Streak counter: **Headline**
-
-#### Settings Screen
-- Screen title: **Title 1**
-- Section headers: **Title 2**
-- Setting labels: **Body**
-- Descriptions: **Footnote**
-- Version/legal: **Caption 2**
+### Screen-Specific Usage
+**Dashboard:** Title 1 (counters) → Title 2 (sections) → Title 3 (debts)
+**Goals:** Title 1 (screen) → Title 2 (goals) → Headline (XP)
+**Settings:** Title 1 (screen) → Title 2 (sections) → Body (settings)
 
 ---
 
 ## Spacing & Layout
 
-### 📐 8pt Grid System
-
-All spacing uses multiples of 8:
-
+### 8pt Grid System
 ```typescript
 spacing: {
   xs: 2,      // Tight spacing (captions)
@@ -379,15 +158,9 @@ spacing: {
 }
 ```
 
-### 🖼️ Screen Padding
-
+### Layout Standards
 ```typescript
-screenPadding: 16  // Minimum horizontal padding on all screens
-```
-
-### 🔲 Border Radius
-
-```typescript
+screenPadding: 16,           // Minimum horizontal padding
 radius: {
   sm: 8,      // Small elements (badges)
   md: 12,     // Medium elements (cards)
@@ -396,31 +169,20 @@ radius: {
 }
 ```
 
-### 📱 Layout Guidelines
-
-**Containers:**
-- Horizontal padding: 16pt minimum
-- Vertical padding: 16pt minimum
-- Max content width: 90% of screen
-
-**Cards:**
-- Border radius: 12pt (standard), 20pt (featured)
-- Padding: 16pt (standard), 20pt (large)
-- Margin bottom: 12pt between cards
-
-**Lists:**
-- Item height: 44pt minimum (tap target)
-- Spacing between items: 8pt
-- Section spacing: 24pt
+### Container Guidelines
+- **Horizontal padding:** 16pt minimum
+- **Vertical padding:** 16pt minimum
+- **Max content width:** 90% of screen
+- **Card margin bottom:** 12pt between cards
+- **Tap target minimum:** 44pt × 44pt
 
 ---
 
 ## Components
 
-### 🔘 Buttons
-
-#### Primary Button
+### Button System
 ```typescript
+// Primary Button
 {
   backgroundColor: colors.primary, // Forest Fade
   paddingVertical: 12,
@@ -428,262 +190,82 @@ radius: {
   borderRadius: 9999,
   minHeight: 44,
 }
-// Text: Button style (Medium, 17pt)
-```
 
-#### Secondary Button
-```typescript
+// Secondary Button
 {
   backgroundColor: 'transparent',
   borderWidth: 2,
-  borderColor: colors.primary, // Forest Fade
+  borderColor: colors.primary,
   paddingVertical: 12,
   paddingHorizontal: 20,
   borderRadius: 9999,
   minHeight: 44,
 }
-```
 
-#### Icon Button (Accelerate)
-```typescript
+// Icon Button (Accelerate)
 {
-  width: 56,
-  height: 56,
+  width: 56, height: 56,
   borderRadius: 9999,
   backgroundColor: colors.warning, // Copper Ember
-  alignItems: 'center',
-  justifyContent: 'center',
+  alignItems: 'center', justifyContent: 'center',
 }
-// Icon size: 28pt
 ```
 
-### 🎴 Gradient Cards
-
-**Status:** ✅ **IMPLEMENTED** with premium glass-morphism effect
-
-#### Total Debt Card (Forest Fade)
-```typescript
-<GradientCard
-  baseColor={getColor(forestFade, isDark)} // #275E59 (light) or #183E3A (dark)
-  style={totalDebtCard}
->
-```
-
-#### Priority Debt Card (Sapphire Night)
-```typescript
-<GradientCard
-  baseColor={getColor(sapphireNight, isDark)} // #0A4A8B (light) or #042F5C (dark)
-  style={priorityDebtCard}
->
-```
-
-#### Gradient Card Features
-- **3-stop elegant gradient** with warm highlights
-- **Glass-morphism effect** with subtle borders
-- **Theme-aware colors** (light/dark variants)
-- **Readability vignette** for text contrast
-- **Sophisticated polish layer** for depth
-
-### 🪟 Modular Glass-Morphism Card System
-
-**Status:** ✅ **FULLY IMPLEMENTED** across all screens (2025-11-11)
+### Modular Glass-Morphism Card System ✅ **FULLY IMPLEMENTED**
 
 #### Design Philosophy
-The modular card system creates visual consistency while maintaining a premium glass-morphism aesthetic. Cards seamlessly blend with screen backgrounds while providing subtle depth through translucent borders.
+Creates visual consistency through seamless background integration and premium glass-morphism effects.
 
 #### Card Base Colors Pattern
-
-**Standard Pattern for All Screens:**
 ```typescript
 const cardBaseColors = {
-  light: '#F9F3E6',  // Matches colors.background.light
-  dark: '#1A1F2E',   // Matches colors.background.dark
+  light: '#F9F3E6',  // Match colors.background.light
+  dark: '#1A1F2E',   // Match colors.background.dark
 };
 ```
 
-**Usage:**
+#### GradientCard Implementation
 ```typescript
 <GradientCard
   baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-  useGradient={false}
+  useGradient={false}  // Solid background for screen-matching
   style={styles.itemCard}>
-  {/* Card content */}
+  {/* Content component - no background styling */}
 </GradientCard>
-```
-
-#### GradientCard Props
-
-**`useGradient`** (boolean, default: true)
-- `true`: Renders 3-stop gradient background with polish layers
-- `false`: Renders solid background color (used for screen-matching cards)
-
-**`backgroundOpacity`** (number, 0-1, default: 1)
-- Controls transparency of background independently from text/borders
-- Maintains glass border and text visibility at any opacity level
-
-**`baseColor`** (string)
-- Base color for gradient or solid background
-- Use `cardBaseColors.light` or `cardBaseColors.dark` for screen-matching cards
-
-**`style`** (ViewStyle)
-- Additional styling (margins, etc.)
-- Don't set padding - GradientCard handles 16px internal padding
-
-#### Standard Card Styling
-
-**Individual Item Cards** (Debts, Expenses, Goals, Challenges):
-```typescript
-// Style definition
-itemCard: {
-  marginBottom: spacing.sm,  // 4px
-  padding: 0,  // GradientCard handles padding (16px)
-}
-
-// Usage - wrap content component
-<GradientCard
-  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-  useGradient={false}
-  style={styles.itemCard}>
-  <DebtCard debt={debt} />
-</GradientCard>
-```
-
-**Section Cards** (Settings, larger containers):
-```typescript
-card: {
-  marginHorizontal: spacing.screenPadding,  // 16px
-  marginBottom: spacing.md,  // 16px
-}
 ```
 
 #### Component Composition Pattern
-
-**Content components** (DebtCard, GoalCard, ChallengeCard, etc.):
-- Do NOT include background colors, shadows, or border radius
+**Content components** (DebtCard, GoalCard, etc.) should:
+- NOT include background colors, shadows, or border radius
 - Focus only on content layout and internal spacing
 - Rely on parent `GradientCard` wrapper for visual styling
 
-**Example - GoalCard:**
-```typescript
-// GoalCard.tsx - NO background styling
-const styles = StyleSheet.create({
-  card: {
-    // Background, shadows, and marginBottom removed
-    // GradientCard handles these
-  },
-  header: {
-    flexDirection: 'row',
-    marginBottom: spacing.md,
-  },
-  // ... content layout styles only
-});
-```
-
-**Usage in Screen:**
-```typescript
-// GoalsScreen.tsx
-{activeGoals.map(goal => (
-  <GradientCard
-    key={goal.id}
-    baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-    useGradient={false}
-    style={styles.itemCard}>
-    <GoalCard goal={goal} onPress={() => handlePress(goal.id)} />
-  </GradientCard>
-))}
-```
-
-#### Screen Implementation Examples
-
-**Dashboard - Other Debts:**
-```typescript
-{otherDebts.map(debt => (
-  <GradientCard
-    key={debt.id}
-    baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-    useGradient={false}
-    style={styles.otherDebtCard}>
-    <TouchableOpacity style={styles.otherDebtContent}>
-      {/* Debt content */}
-    </TouchableOpacity>
-  </GradientCard>
-))}
-```
-
-**Expenses - Individual Expense Cards:**
-```typescript
-{expenses.map(expense => (
-  <GradientCard
-    key={expense.id}
-    baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-    useGradient={false}
-    style={styles.expenseCard}>
-    <TouchableOpacity style={styles.expenseItem}>
-      {/* Expense content */}
-    </TouchableOpacity>
-  </GradientCard>
-))}
-```
-
-**Settings - Section Cards:**
-```typescript
-<GradientCard
-  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-  useGradient={false}
-  style={styles.card}>
-  <Text style={styles.cardText}>Appearance</Text>
-  <Text style={styles.cardSubtext}>Choose your preferred theme</Text>
-  {/* Theme toggle buttons */}
-</GradientCard>
-```
-
-#### Benefits of This System
-
-1. **Visual Consistency:** All screens use identical card styling
-2. **Theme Adaptation:** Cards automatically match background colors
-3. **Separation of Concerns:** Visual styling separated from content layout
-4. **Reusability:** Single pattern applied across entire app
-5. **Maintainability:** Changes to card styling happen in one place
-6. **Flexibility:** Props allow gradient/solid and opacity control
-
-### 📝 Input Fields
-
+### Input Fields
 ```typescript
 {
-  fontFamily: 'HelveticaNeue',
-  fontSize: 17,
-  lineHeight: 22,
-  paddingVertical: 12,
-  paddingHorizontal: 16,
-  borderRadius: 8,
-  borderWidth: 1,
+  fontFamily: 'HelveticaNeue', fontSize: 17, lineHeight: 22,
+  paddingVertical: 12, paddingHorizontal: 16,
+  borderRadius: 8, borderWidth: 1,
   borderColor: colors.border.light / colors.border.dark,
   backgroundColor: colors.background.light / colors.background.dark,
   minHeight: 44,
 }
-// Placeholder color: #999999 (60% gray)
-// Focus border: colors.primary (Forest Fade)
+// Placeholder: #999999, Focus border: colors.primary
 ```
 
-### 📊 Progress Bars
-
+### Progress Bars
 ```typescript
 {
-  height: 8,
-  backgroundColor: 'rgba(255, 255, 255, 0.3)', // on colored backgrounds
-  borderRadius: 4,
-  overflow: 'hidden',
+  height: 8, borderRadius: 4, overflow: 'hidden',
+  backgroundColor: 'rgba(255, 255, 255, 0.3)', // on colored
 }
 // Fill: white (on colored) or colors.primary (on neutral)
 ```
 
-### 🏷️ Badges
-
+### Badges
 ```typescript
 {
-  paddingHorizontal: 8,
-  paddingVertical: 4,
-  borderRadius: 8,
+  paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8,
   backgroundColor: 'rgba(39, 94, 89, 0.2)', // Forest Fade badge
 }
 // Text: Caption 1 style, color: Forest Fade
@@ -693,156 +275,36 @@ const styles = StyleSheet.create({
 
 ## Icons
 
-### 🎨 Icon Library: Heroicons
+### Library: Heroicons
+- **Solid:** Active states, primary actions
+- **Outline:** Inactive states, secondary actions
 
-**Variants:**
-- Solid: Active states, primary actions
-- Outline: Inactive states, secondary actions
-
-**Size Standards:**
+### Size Standards
 - Navigation/Tabs: 24pt
 - Cards/Headers: 28pt
 - Buttons: 20-24pt
 - Inline: 16-20pt
 
-### 📍 Icon Map
-
-| Screen/Feature | Icon | Variant | Color |
-|----------------|------|---------|-------|
-| Dashboard Tab | HomeModernIcon | Solid (active) / Outline (inactive) | Forest Fade |
-| Expenses Tab | BanknotesIcon | Solid (active) / Outline (inactive) | Forest Fade |
-| Goals Tab | TrophyIcon | Solid (active) / Outline (inactive) | Forest Fade |
+### Icon Usage Map
+| Element | Icon | Variant | Color |
+|---------|------|---------|-------|
+| Dashboard Tab | HomeModernIcon | Solid/Outline | Forest Fade |
+| Goals Tab | TrophyIcon | Solid/Outline | Forest Fade |
+| Expenses Tab | BanknotesIcon | Solid/Outline | Forest Fade |
 | Settings | UserIcon | Solid | Forest Fade |
-| Credit Card | CreditCardIcon | Solid | White |
 | Accelerate | RocketLaunchIcon | Solid | White |
-| Chevron | ChevronRightIcon | Solid | White |
-| Emergency Fund | ShieldCheckIcon | Solid | White |
-| Debt Payoff | FireIcon | Solid | White |
-| Savings | BanknotesIcon | Solid | White |
-| Custom Goal | TrophyIcon | Solid | White |
-| XP/Reward | StarIcon | Solid | Forest Fade |
 | Completed | CheckCircleIcon | Solid | Forest Fade |
-| Failed | XCircleIcon | Solid | Velvet Rose |
 | Streak | FireIcon | Solid | Copper Ember |
 
-### 🎨 Icon Colors
+### Theme-Aware Colors
+**Light Mode:** Active: Forest Fade, Inactive: #666666, On colored: White
+**Dark Mode:** Active: White, Inactive: #B8B8B8, On colored: White
 
-**Light Mode:**
-- Active: `colors.primary` (Forest Fade #275E59)
-- Inactive: `colors.text.secondary.light` (#666666)
-- On colored backgrounds: White (#FFFFFF)
-
-**Dark Mode:**
-- Active: `#FFFFFF` (White) - **Updated 2025-11-11**
-- Inactive: `colors.text.secondary.dark` (#B8B8B8)
-- On colored backgrounds: White (#FFFFFF)
-
-**Important:** Navigation tab icons and header buttons use **white for active states in dark mode** instead of Forest Fade green, providing better contrast and visual clarity.
-
-### 🧭 Navigation Theming
-
-**Status:** ✅ **FULLY IMPLEMENTED** (2025-11-11)
-
-#### Tab Bar Styling
-
-**Background Colors:**
+### Navigation Implementation
 ```typescript
-tabBarStyle: {
-  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',  // Match screen backgrounds
-  borderTopColor: isDark ? '#2A3B4A' : '#E5D5C1',  // Complementary borders
-  // ... other styles
-}
-```
+import { HomeModernIcon } from 'react-native-heroicons/solid';
+import { HomeModernIcon as HomeModernIconOutline } from 'react-native-heroicons/outline';
 
-**Icon Colors:**
-```typescript
-// Active tab icons
-tabBarActiveTintColor: isDark ? '#FFFFFF' : colors.primary,
-
-// Inactive tab icons
-tabBarInactiveTintColor: isDark
-  ? colors.text.secondary.dark
-  : colors.text.secondary.light,
-```
-
-#### Header Styling
-
-**Background & Text:**
-```typescript
-headerStyle: {
-  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',  // Match screen backgrounds
-  borderBottomWidth: 0,  // Seamless integration
-  elevation: 0,  // No shadow by default
-}
-
-headerTitleStyle: {
-  fontFamily: 'HelveticaNeue-Bold',
-  fontSize: 20,
-  color: isDark ? '#FFFFFF' : '#1A1A1A',
-}
-
-headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',  // Back button, etc.
-```
-
-#### Settings Button (Header Right)
-
-**Styling:**
-```typescript
-// Settings icon button
-<TouchableOpacity
-  style={{
-    marginRight: 16,
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: isDark
-      ? 'rgba(255, 255, 255, 0.1)'  // White tint for dark
-      : 'rgba(39, 94, 89, 0.1)',    // Forest Fade tint for light
-  }}>
-  <UserIcon
-    size={24}
-    color={isDark ? '#FFFFFF' : colors.primary}
-  />
-</TouchableOpacity>
-```
-
-#### Done Button (Settings Screen)
-
-**Styling:**
-```typescript
-<Text style={{
-  fontFamily: 'HelveticaNeue-Medium',
-  fontSize: 17,
-  color: isDark ? '#FFFFFF' : colors.primary,  // White for dark, Forest Fade for light
-}}>
-  Done
-</Text>
-```
-
-#### Icon Variant Rules
-
-**Navigation Tabs:**
-- **Active:** Solid variant (e.g., `HomeModernIcon` from solid)
-- **Inactive:** Outline variant (e.g., `HomeModernIconOutline` from outline)
-
-**Header Buttons:**
-- **All states:** Solid variant (e.g., `UserIcon` from solid)
-
-**Example:**
-```typescript
-import {
-  HomeModernIcon,
-  BanknotesIcon,
-  TrophyIcon,
-  UserIcon,
-} from 'react-native-heroicons/solid';
-
-import {
-  HomeModernIcon as HomeModernIconOutline,
-  BanknotesIcon as BanknotesIconOutline,
-  TrophyIcon as TrophyIconOutline,
-} from 'react-native-heroicons/outline';
-
-// Tab icon implementation
 tabBarIcon: ({focused, color}) =>
   focused ? (
     <HomeModernIcon size={24} color={color} />
@@ -851,116 +313,60 @@ tabBarIcon: ({focused, color}) =>
   ),
 ```
 
-#### Settings Screen Theme Toggle
+---
 
-**Button Background:**
+## Navigation Theming ✅ **FULLY IMPLEMENTED**
+
+### Tab Bar Styling
 ```typescript
-// Theme option buttons
-backgroundColor: isDark ? cardBaseColors.dark : cardBaseColors.light,
+tabBarStyle: {
+  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',  // Match screens
+  borderTopColor: isDark ? '#2A3B4A' : '#E5D5C1',
+}
+tabBarActiveTintColor: isDark ? '#FFFFFF' : colors.primary,
+tabBarInactiveTintColor: isDark
+  ? colors.text.secondary.dark : colors.text.secondary.light,
 ```
 
-**Border Colors:**
+### Header Styling
 ```typescript
-// Active border (selected theme)
-borderColor: theme === 'light'
-  ? colors.primary
-  : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'
-
-borderWidth: 2,  // Increased from 1 for better visibility
+headerStyle: {
+  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',  // Match screens
+  borderBottomWidth: 0, elevation: 0,  // Seamless
+}
+headerTitleStyle: {
+  fontFamily: 'HelveticaNeue-Bold', fontSize: 20,
+  color: isDark ? '#FFFFFF' : '#1A1A1A',
+}
+headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',  // Back button
 ```
-
-**Icon Colors:**
-```typescript
-// Active theme icon
-color: theme === 'light'
-  ? colors.primary
-  : (isDark ? colors.text.secondary.dark : colors.text.secondary.light)
-
-// Icon size
-size={24}  // Increased from 20 for consistency
-```
-
-**Theme Icons:**
-- **Light Mode:** `SunIcon` (solid)
-- **Dark Mode:** `MoonIcon` (solid)
-- **System Mode:** `ComputerDesktopIcon` (solid)
-
-#### Navigation Theming Best Practices
-
-1. **Match Screen Backgrounds:** Navigation bars should use exact same background colors as screens
-2. **Consistent Shadows:** Remove default shadows for seamless integration
-3. **Icon Variants:** Use solid for active, outline for inactive
-4. **Dark Mode Icons:** Always use white for active states in dark mode
-5. **Border Subtlety:** Use rgba colors for inactive borders that adapt to theme
-6. **Font Consistency:** Navigation text uses same typography system as screens
 
 ---
 
 ## Shadows & Elevation
 
-### 🌑 Shadow Levels
-
-#### Level 1 (sm) - Subtle
+### Shadow Levels
 ```typescript
-{
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.05,
-  shadowRadius: 2,
-  elevation: 1,
-}
-```
-**Use:** Small badges, chip elements
+// Level 1 (sm) - Subtle: badges, chip elements
+{ shadowColor: '#000', shadowOffset: {w:0,h:1}, shadowOpacity:.05, shadowRadius:2, elevation:1 }
 
-#### Level 2 (md) - Standard
-```typescript
-{
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 4,
-  elevation: 2,
-}
-```
-**Use:** Standard cards, list items
+// Level 2 (md) - Standard: cards, list items
+{ shadowColor: '#000', shadowOffset: {w:0,h:2}, shadowOpacity:.1, shadowRadius:4, elevation:2 }
 
-#### Level 3 (lg) - Elevated
-```typescript
-{
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.15,
-  shadowRadius: 8,
-  elevation: 4,
-}
-```
-**Use:** Featured cards, floating buttons
+// Level 3 (lg) - Elevated: featured cards, floating buttons
+{ shadowColor: '#000', shadowOffset: {w:0,h:4}, shadowOpacity:.15, shadowRadius:8, elevation:4 }
 
-#### Level 4 (xl) - Floating
-```typescript
-{
-  shadowColor: '#000',
-  shadowOpacity: 0.16,
-  shadowRadius: 16,
-  shadowOffset: { width: 0, height: 10 },
-  elevation: 8,
-}
+// Level 4 (xl) - Floating: modals, popovers
+{ shadowColor: '#000', shadowOffset: {w:0,h:10}, shadowOpacity:.16, shadowRadius:16, elevation:8 }
 ```
-**Use:** Gradient cards, modals, popovers
 
 ---
 
 ## Animations & Transitions
 
-### ⏱️ Timing Functions
-
+### Timing Functions
 ```typescript
-timing: {
-  fast: 150,      // Quick feedback (button press)
-  normal: 250,    // Standard transitions
-  slow: 350,      // Complex animations
-}
-
+timing: { fast: 150, normal: 250, slow: 350 }
 easing: {
   standard: Easing.bezier(0.4, 0.0, 0.2, 1),
   accelerate: Easing.bezier(0.4, 0.0, 1, 1),
@@ -968,77 +374,32 @@ easing: {
 }
 ```
 
-### 🎬 Animation Guidelines
-
-**Buttons:**
-- Press: Scale 0.95, duration 150ms
-- Release: Scale 1.0, duration 150ms
-- Haptic feedback on press
-
-**Modals:**
-- Enter: Slide up + fade in, 350ms
-- Exit: Slide down + fade out, 250ms
-
-**Tab Navigation:**
-- Fade between screens, 250ms
-- No slide animations (iOS standard)
-
-**Progress Bars:**
-- Smooth fill animation, 500ms
-- Easing: decelerate
-
-**Gradient Cards:**
-- Subtle scale on press: 0.98 → 1.0, 150ms
-- Elegant opacity transitions: 200ms
-
-**Confetti/Celebrations:**
-- Trigger on: Goal completion, debt payoff, level up
-- Duration: 2000ms
-- Particle count: 50-100
+### Animation Guidelines
+- **Buttons:** Scale 0.95 on press (150ms) + haptic feedback
+- **Modals:** Slide up + fade in (350ms), slide down + fade out (250ms)
+- **Tab Navigation:** Fade between screens (250ms), no slide
+- **Progress Bars:** Smooth fill (500ms) with decelerate easing
+- **Cards:** Subtle scale 0.98→1.0 on press (150ms)
+- **Celebrations:** Trigger on goal completion/debt payoff (2000ms)
 
 ---
 
 ## Accessibility
 
-### ♿ Minimum Requirements
+### Requirements
+1. **Color Contrast:** Body text 4.5:1, Large text 3:1, UI elements 3:1
+2. **Touch Targets:** 44pt × 44pt minimum, 8pt spacing between targets
+3. **Dynamic Type:** Support iOS preferences, scale up to 200%
+4. **Screen Readers:** Meaningful labels, proper reading order
+5. **Motion:** Respect `prefers-reduced-motion`
 
-1. **Color Contrast:**
-   - Body text: 4.5:1 minimum
-   - Large text (18pt+): 3:1 minimum
-   - UI elements: 3:1 minimum
-
-2. **Touch Targets:**
-   - Minimum: 44pt × 44pt
-   - Spacing between targets: 8pt minimum
-
-3. **Dynamic Type:**
-   - Support iOS text size preferences
-   - Test at all accessibility sizes
-   - Allow text to scale up to 200%
-
-4. **Screen Readers:**
-   - All interactive elements labeled
-   - Meaningful labels (not "Button" or "Icon")
-   - Reading order follows visual hierarchy
-
-5. **Motion:**
-   - Respect `prefers-reduced-motion`
-   - Provide alternative feedback (haptics, color)
-
-### 🔊 ARIA Labels & Hints
-
+### ARIA Implementation
 ```typescript
-// Good
+// Good practice
 <TouchableOpacity
   accessible={true}
   accessibilityLabel="Accelerate payment for Priority Debt"
   accessibilityHint="Opens payment options to pay off debt faster"
->
-
-// Bad
-<TouchableOpacity
-  accessible={true}
-  accessibilityLabel="Button"
 >
 ```
 
@@ -1046,252 +407,52 @@ easing: {
 
 ## Dark Mode
 
-### 🌙 Color Adaptation
-
-**Automatically adapts:**
-- Background colors (Creamy light #F9F3E6 → Deep navy #1A1F2E)
-- Text colors (Dark → Light)
-- Border colors (Light → Dark)
-- Navigation bars (Match screen backgrounds exactly)
-
-**Manually adjusted:**
-- Card backgrounds (use cardBaseColors pattern to match screens)
-- Active icon colors (White in dark mode, Forest Fade in light mode)
-- Shadows (more subtle in dark mode)
-- Theme toggle borders (rgba for subtle adaptation)
-
-### 🌙 Dark Mode Implementation
-
+### Implementation Pattern
 ```typescript
 import { useTheme } from '../contexts';
-
 const { isDark } = useTheme();
 
 // Screen background
-<View style={{
-  backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6',
-}}>
-  <Text style={{
-    color: isDark ? '#FFFFFF' : '#1A1A1A',
-  }}>
+backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6'
 
 // Card base colors pattern
-const cardBaseColors = {
-  light: '#F9F3E6',
-  dark: '#1A1F2E',
-};
-
-<GradientCard
-  baseColor={isDark ? cardBaseColors.dark : cardBaseColors.light}
-  useGradient={false}>
-  {/* Card content */}
-</GradientCard>
+const cardBaseColors = { light: '#F9F3E6', dark: '#1A1F2E' };
 ```
 
-### 🎨 Theme Toggle
-
-**Status:** ✅ **IMPLEMENTED** in Settings screen
-
-Features:
+### Theme Toggle ✅ **IMPLEMENTED**
 - **Light Mode:** Manual light theme
 - **Dark Mode:** Manual dark theme
-- **System Mode:** Follows device settings
-- **Visual Indicators:** Icons and active states
+- **System Mode:** Follow device settings
 - **Instant switching:** No app restart required
-
-### 🧪 Dark Mode Testing
-
-Test all screens in both modes:
-1. **Dashboard** - Gradient cards remain vibrant, text readable
-2. **Goals** - Game elements should pop, XP visible
-3. **Expenses** - Numbers critical for readability
-4. **Settings** - Forms and text fields clear
-5. **Theme Toggle** - All three modes functional
 
 ---
 
 ## Implementation Status
 
-### ✅ Completed Features
+### ✅ Completed (100%)
+- **Typography System:** Helvetica Neue across 21 files
+- **Color System:** 15-color palette with theme-aware functions
+- **Gradient Cards:** Premium glass-morphism with modular system
+- **Theme System:** Global context with real-time switching
+- **Component Library:** All components use proper typography/colors
+- **Navigation System:** Complete theming with dark mode support
 
-**Typography System (100%)**
-- ✅ Helvetica Neue font family integrated
-- ✅ All 21 files updated with proper typography
-- ✅ Font weights correctly mapped
-- ✅ Letter spacing and line heights applied
-- ✅ iOS typography standards followed
-
-**Color System (100%)**
-- ✅ 15-color professional palette implemented
-- ✅ Light/dark variants for each color
-- ✅ Custom background colors (creamy/obsidian)
-- ✅ Theme-aware color selection functions
-- ✅ Color library with helper functions
-
-**Gradient Cards (100%)**
-- ✅ Premium glass-morphism effect
-- ✅ 3-stop elegant gradient system
-- ✅ Theme-aware color adaptation
-- ✅ Sophisticated polish and vignette layers
-- ✅ Forest Fade and Sapphire Night cards implemented
-- ✅ Modular card system with cardBaseColors pattern (2025-11-11)
-- ✅ useGradient and backgroundOpacity props for flexibility
-
-**Theme System (100%)**
-- ✅ Global theme context implemented
-- ✅ Settings screen with theme toggle
-- ✅ Light/Dark/System modes functional
-- ✅ Real-time theme switching
-- ✅ Persistent theme preferences (planned)
-
-**Component Library (100%)**
-- ✅ Button, Card, Input, Badge components
-- ✅ ProgressBar, GoalCard, DebtCard, ChallengeCard
-- ✅ GradientCard component with advanced features
-- ✅ All components use proper typography and colors
-- ✅ Component composition pattern established (2025-11-11)
-- ✅ Content components refactored to work with GradientCard wrapper
-
-**Navigation System (100%)**
-- ✅ Tab navigation with proper theming (2025-11-11)
-- ✅ Header styling matches screen backgrounds
-- ✅ Dark mode icon colors (white for active states)
-- ✅ Settings button and Done button properly themed
-- ✅ Icon variants (solid/outline) correctly implemented
-
-### 🚧 In Progress
-
-**State Management**
-- ⏳ Redux/Context store implementation
-- ⏳ Data persistence with AsyncStorage
-- ⏳ Theme persistence across app restarts
-
-**Advanced Features**
-- ⏳ AI-powered insights and nudges
-- ⏳ Voice/text expense logging
-- ⏳ Advanced analytics and charts
-
-### 📋 Next Steps
-
-1. **State Management** - Implement Redux Toolkit for global state
-2. **Data Persistence** - Add AsyncStorage for theme and user data
-3. **Form Validation** - Advanced input validation and error handling
-4. **Animations** - Micro-interactions and celebration animations
-5. **Analytics** - Progress tracking and data visualization
-
----
-
-## Component Library Reference
-
-### 💻 Usage Example
-
-```typescript
-import {
-  colors,
-  typography,
-  spacing,
-  shadows,
-  forestFade,
-  sapphireNight,
-  getColor
-} from '../theme';
-import { GradientCard } from '../components';
-import { useTheme } from '../contexts';
-
-const DashboardCard = () => {
-  const { isDark } = useTheme();
-
-  return (
-    <GradientCard
-      baseColor={getColor(forestFade, isDark)}
-      style={{
-        padding: spacing.lg,
-        ...shadows.lg,
-      }}
-    >
-      <Text style={{
-        ...typography.styles.title1,
-        color: '#FFFFFF',
-        marginBottom: spacing.md,
-      }}>
-        TOTAL DEBT COUNTDOWN
-      </Text>
-      <Text style={{
-        ...typography.styles.largeTitle,
-        color: '#FFFFFF',
-      }}>
-        $12,450
-      </Text>
-    </GradientCard>
-  );
-};
-```
-
----
-
-## Quick Reference
-
-### 🎨 Key Color Codes
-- **Primary (Forest Fade):** `#275E59` → `#183E3A`
-- **Secondary (Sapphire Night):** `#0A4A8B` → `#042F5C`
-- **Accent (Velvet Rose):** `#B42352` → `#7E173A`
-- **Background:** `#F9F3E6` → `#1A1F2E` (updated 2025-11-11)
-- **Card Base Colors:** Same as background colors for seamless integration
-
-### 📏 Key Font Sizes
-- **Large Title:** 34pt
-- **Title 1:** 28pt
-- **Title 2:** 22pt
-- **Title 3:** 20pt
-- **Body/Headline:** 17pt
-- **Footnote:** 13pt
-- **Caption:** 11-12pt
-
-### 📐 Key Spacing
-- **Base unit:** 8pt
-- **Screen padding:** 16pt
-- **Card padding:** 16-20pt
-- **Section spacing:** 24pt
-
-### 🔲 Key Border Radius
-- **Small:** 8pt
-- **Medium:** 12pt
-- **Large:** 20pt
-- **Full:** 9999pt
-
----
-
-## File Structure
-
-### 📁 Theme System
+### File Structure Reference
 ```
 src/theme/
 ├── index.ts              # Main theme exports
 ├── colors.ts             # Color definitions
-├── colorsLibrary.ts      # Professional color palette
-├── typography.ts         # Helvetica Neue typography
-├── spacing.ts            # 8pt grid system
+├── colorsLibrary.ts      # Professional palette
+├── typography.ts         # Helvetica Neue system
+├── spacing.ts            # 8pt grid
 └── shadows.ts            # Shadow levels
-```
 
-### 📁 Component Library
-```
 src/components/
 ├── index.ts              # Component exports
+├── GradientCard.tsx      # Premium glass-morphism cards
 ├── Button.tsx            # Button variants
-├── Card.tsx              # Card variants
-├── Input.tsx             # Input fields
-├── Badge.tsx             # Achievement badges
-├── ProgressBar.tsx       # Progress visualization
-├── GradientCard.tsx      # Premium gradient cards
-├── DebtCard.tsx          # Debt display cards
-├── GoalCard.tsx          # Goal tracking cards
-├── ExpenseCard.tsx       # Expense cards
-└── ChallengeCard.tsx     # Challenge cards
-```
+└── [Other components...]
 
-### 📁 Context System
-```
 src/contexts/
 ├── index.ts              # Context exports
 └── ThemeContext.tsx      # Global theme management
@@ -1299,6 +460,57 @@ src/contexts/
 
 ---
 
-**© 2025 Debt Destroyer. All rights reserved.**
+## Quick Reference
 
-*Style Guide Version 2.1 - Updated 2025-11-11 with modular glass-morphism card system, navigation theming, and complete visual design consistency*
+### Key Colors
+- **Primary (Forest Fade):** `#275E59` → `#183E3A`
+- **Secondary (Sapphire Night):** `#0A4A8B` → `#042F5C`
+- **Background:** `#F9F3E6` → `#1A1F2E`
+- **Card Base:** Same as background for seamless integration
+
+### Key Typography
+- **Large Title:** 34pt Bold
+- **Title 1:** 28pt Bold (counters)
+- **Title 2:** 22pt Medium (sections)
+- **Body:** 17pt Regular (reading)
+
+### Key Spacing
+- **Base unit:** 8pt
+- **Screen padding:** 16pt
+- **Card padding:** 16pt (handled by GradientCard)
+- **Section spacing:** 24pt
+
+### Component Patterns
+- **Cards:** Use GradientCard wrapper + content component
+- **Buttons:** 44pt minimum height, proper accessibility
+- **Icons:** Solid for active, outline for inactive
+
+---
+
+## Maintenance Notes
+
+### Extending the Style Guide
+1. **Add colors to palette** in `colorsLibrary.ts` before using
+2. **Follow GradientCard pattern** for new card types
+3. **Maintain 8pt grid** for all spacing decisions
+4. **Test accessibility** for new components
+5. **Update this document** when adding major features
+
+### Safe Modification Patterns
+- **Colors:** Extend palette, don't modify core brand colors
+- **Typography:** Add new styles, don't change existing scale
+- **Spacing:** Use multiples of 8pt, maintain consistency
+- **Components:** Follow established composition patterns
+- **Theming:** Test both light/dark modes for changes
+
+### Quality Assurance
+- **Cross-reference** with UI/UX framework specifications
+- **Validate** accessibility compliance for new components
+- **Test** dark mode compatibility for all changes
+- **Maintain** token efficiency for AI development sessions
+
+---
+
+**See:** [UI/UX Framework](./spec/07_ui_ux_framework.md) • [Architecture & Stack](./spec/02_architecture_and_stack.md) • [Build Phases](./spec/09_build_phases_and_roadmap.md)
+
+**© 2025 Debt Destroyer. All rights reserved.**
