@@ -8,6 +8,7 @@ export * from './WelcomeScreen';
 // Main app screens (4-screen architecture)
 export * from './DashboardScreen';
 export * from './GoalsScreen';
+export * from './GoalsChallengesScreen';
 export * from './ExpensesScreen';
 export * from './SettingsScreen';
 

@@ -14,7 +14,7 @@ export const colors = {
   // Background colors - using your custom backgrounds
   background: {
     light: '#F9F3E6', // soft, creamy yellow-white (like parchment or sunlight on ivory)
-    dark: '#142850',   // Obsidian Blue (deep navy with subtle teal undertone)
+    dark: '#1A1F2E',   // Professional navy-gray
   },
   surface: {
     light: '#FFFFFF', // Clean white for surfaces

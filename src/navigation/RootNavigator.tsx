@@ -28,7 +28,7 @@ export const RootNavigator: React.FC = () => {
           gestureEnabled: true,
           // Apply consistent styling when headers are shown
           headerStyle: {
-            backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6', // Match main screen backgrounds
+            backgroundColor: isDark ? colors.background.dark : colors.background.light,
             borderBottomWidth: 0, // Remove border to blend with background
             shadowColor: 'transparent',
             shadowOffset: { width: 0, height: 0 },
@@ -56,7 +56,7 @@ export const RootNavigator: React.FC = () => {
             title: 'Settings & Profile',
             presentation: 'card' as const,
             headerStyle: {
-              backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6', // Match main screen backgrounds
+              backgroundColor: isDark ? colors.background.dark : colors.background.light,
               borderBottomWidth: 0, // Remove border to blend with background
               shadowColor: 'transparent',
               shadowOffset: { width: 0, height: 0 },

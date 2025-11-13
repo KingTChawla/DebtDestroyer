@@ -187,47 +187,78 @@ export interface UserProgress {
   totalDebtsCompleted: number;
 }
 
-export type GoalType = 'emergency_fund' | 'debt_payoff' | 'savings' | 'custom';
-export type GoalStatus = 'active' | 'completed' | 'abandoned';
+// ============================================================================
+// GOALS TYPES (Journey/Quest System)
+// ============================================================================
+
+export type GoalState = 'future' | 'active' | 'achieved';
+export type GoalCategory = 'emergency' | 'savings' | 'debt' | 'lifestyle';
 
 export interface Goal {
   id: string;
   userId: string;
-  type: GoalType;
+  state: GoalState;
   title: string;
   description: string;
   targetAmount: number;
   currentAmount: number;
-  deadline?: Date;
-  status: GoalStatus;
+  icon: string;
+  iconColor: string;
+  category: GoalCategory;
+
+  // Active quest fields
+  timeLeftMonths?: number;
+  nextBadge?: string;
+
+  // Achieved quest fields
+  completedDate?: Date;
+  achievementBadge?: string;
+
+  // Metadata
   createdAt: Date;
-  completedAt?: Date;
+  updatedAt: Date;
 }
 
+export interface MilestoneData {
+  totalGoalsCompleted: number;
+  totalAmountSaved: number;
+  currentStreak: number;
+  badges: Badge[];
+}
+
+// ============================================================================
+// CHALLENGES TYPES
+// ============================================================================
+
 export type ChallengeType = 'daily' | 'weekly' | 'monthly';
-export type ChallengeStatus = 'active' | 'completed' | 'failed';
+export type ChallengeCategory = 'savings' | 'spending' | 'logging' | 'behavioral';
 
 export interface Challenge {
   id: string;
   type: ChallengeType;
-  name: string;
-  description: string;
-  xpReward: number;
+  category: ChallengeCategory;
+  title: string;
+  subtitle?: string;
   icon: string;
-  target: number;
-  rulesJson: any;
-}
-
-export interface UserChallenge {
-  id: string;
-  userId: string;
-  challengeId: string;
-  challenge: Challenge;
+  iconColor: string;
   progress: number;
   target: number;
-  status: ChallengeStatus;
-  startedAt: Date;
+  xpReward: number;
+  isCompleted: boolean;
   completedAt?: Date;
+  createdAt: Date;
+  expiresAt?: Date;
+}
+
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastCheckIn: Date;
+  milestones: {
+    days: number;
+    achieved: boolean;
+    achievedAt?: Date;
+  }[];
 }
 
 export interface Badge {
@@ -235,6 +266,7 @@ export interface Badge {
   name: string;
   description: string;
   icon: string;
+  category: 'streak' | 'challenge' | 'goal' | 'debt' | 'special';
   unlockedAt?: Date;
 }
 

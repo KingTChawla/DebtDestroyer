@@ -8,6 +8,7 @@ export * from './Card';
 export * from './Input';
 export * from './GradientCard';
 export * from './ScrollAwareHeader';
+export * from './SegmentedControl';
 
 // Progress & status components
 export * from './ProgressBar';
@@ -18,3 +19,12 @@ export * from './DebtCard';
 export * from './GoalCard';
 export * from './ExpenseCard';
 export * from './ChallengeCard';
+
+// Goals & Challenges components
+export * from './StreakBanner';
+export * from './DailyChallengeCard';
+export * from './ExtendedChallengeCard';
+export * from './MilestoneBanner';
+export * from './JourneyNode';
+export * from './QuestGoalCard';
+export * from './JourneyHeader';

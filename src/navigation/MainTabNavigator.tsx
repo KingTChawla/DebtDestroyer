@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {MainTabParamList} from '../types';
 import {
   DashboardScreen,
-  GoalsScreen,
+  GoalsChallengesScreen,
   ExpensesScreen,
 } from '../screens';
 import {colors, typography} from '../theme';
@@ -57,7 +57,7 @@ export const MainTabNavigator: React.FC = () => {
           ? colors.text.secondary.dark
           : colors.text.secondary.light,
         tabBarStyle: {
-          backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6', // Match main screen backgrounds
+          backgroundColor: isDark ? colors.background.dark : colors.background.light,
           borderTopColor: isDark ? '#2A3B4A' : '#E5D5C1', // Complementary borders
           paddingHorizontal: 0,
           paddingBottom: 8,
@@ -82,7 +82,7 @@ export const MainTabNavigator: React.FC = () => {
           marginTop: 4,
         },
         headerStyle: {
-          backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6', // Match main screen backgrounds
+          backgroundColor: isDark ? colors.background.dark : colors.background.light,
           borderBottomWidth: 0, // Remove border to blend better
           shadowColor: 'transparent',
           shadowOffset: { width: 0, height: 0 },
@@ -130,7 +130,7 @@ export const MainTabNavigator: React.FC = () => {
       />
       <Tab.Screen
         name="Goals"
-        component={GoalsScreen}
+        component={GoalsChallengesScreen}
         options={{
           tabBarLabel: 'Goals',
           headerTitle: 'Goals & Challenges',

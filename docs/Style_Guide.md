@@ -78,7 +78,7 @@ Complete design system reference for Debt Destroyer React Native app, encompassi
 ```typescript
 background: {
   light: '#F9F3E6',  // Creamy, warm, reduces eye strain
-  dark: '#1A1F2E',   // Professional navy-gray
+  dark: '#1A1F2E',   // Professional navy-gray (standard across all screens)
 }
 ```
 
@@ -219,8 +219,8 @@ Creates visual consistency through seamless background integration and premium g
 #### Card Base Colors Pattern
 ```typescript
 const cardBaseColors = {
-  light: '#F9F3E6',  // Match colors.background.light
-  dark: '#1A1F2E',   // Match colors.background.dark
+  light: colors.background.light,
+  dark: colors.background.dark,
 };
 ```
 
@@ -413,11 +413,41 @@ import { useTheme } from '../contexts';
 const { isDark } = useTheme();
 
 // Screen background
-backgroundColor: isDark ? '#1A1F2E' : '#F9F3E6'
+backgroundColor: isDark ? colors.background.dark : colors.background.light
 
 // Card base colors pattern
-const cardBaseColors = { light: '#F9F3E6', dark: '#1A1F2E' };
+const cardBaseColors = {
+  light: colors.background.light,
+  dark: colors.background.dark,
+};
 ```
+
+### Theme-Aware Styling Pattern ✅ **STANDARD**
+
+Use `getStyles(isDark)` function pattern for all screens and components:
+
+```typescript
+import { useTheme } from '../contexts';
+
+export const MyScreen: React.FC = () => {
+  const { isDark } = useTheme();
+  const styles = getStyles(isDark);
+
+  return <Text style={styles.title}>Hello</Text>;
+};
+
+const getStyles = (isDark: boolean) => StyleSheet.create({
+  title: {
+    color: isDark ? colors.text.primary.dark : colors.text.primary.light,
+  },
+});
+```
+
+**Rules:**
+- Use `useTheme()` hook (not `useColorScheme()`)
+- Call `getStyles(isDark)` inside component
+- Define `getStyles` function outside component
+- No inline color conditionals in JSX
 
 ### Theme Toggle ✅ **IMPLEMENTED**
 - **Light Mode:** Manual light theme

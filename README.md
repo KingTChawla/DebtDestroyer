@@ -1,49 +1,166 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Debt Destroyer
 
-# Getting Started
+**AI-Powered Debt Elimination App** - Help users eliminate debt using Dave Ramsey's Debt Snowball philosophy, enhanced with an AI Financial Coach and gamified UX inspired by Duolingo.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## 🎯 Project Overview
 
-## Step 1: Start the Metro Server
-
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Debt Destroyer is a React Native cross-platform app (iOS + Android) that provides a daily AI companion to guide users through financial awareness, spending habits, and debt payoff strategies in a chat-like, emotionally intelligent, and gamified experience.
 
 **Repository:** [https://github.com/KingTChawla/DebtDestroyer.git](https://github.com/KingTChawla/DebtDestroyer.git)
+
+## 🏗️ Architecture
+
+### 4-Screen Cognitive Framework
+- **Dashboard** - Passive review mode (financial snapshot, debt progress)
+- **Goals & Challenges** - Active play mode (XP, streaks, achievements)
+- **Expenses & Budgets** - Action mode (AI expense logging, budget tools)
+- **Settings & Profile** - Control mode (personalization, subscription)
+
+### Technology Stack
+- **Framework:** React Native 0.76.6 (CLI, bare workflow)
+- **Language:** TypeScript
+- **Navigation:** React Navigation v7
+- **State Management:** Zustand + React Query
+- **UI:** Custom component library with design tokens
+- **Backend:** NestJS (Node.js) with PostgreSQL
+- **AI:** OpenAI GPT-4o-mini with guardrails
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions for your operating system.
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# For iOS (macOS only)
+cd ios && pod install && cd ..
+```
+
+### Development
+
+#### Start Metro Bundler
+```bash
+npm start
+```
+
+#### Run on Android
+```bash
+npm run android
+
+# Or build APK
+./build-android.bat
+```
+
+#### Run on iOS (macOS only)
+```bash
+npm run ios
+```
+
+## 📁 Project Structure
+
+```
+DebtDestroyer/
+├── src/
+│   ├── screens/          # Full-screen components
+│   ├── components/       # Reusable UI components
+│   ├── navigation/       # Navigation configuration
+│   ├── theme/           # Design tokens & styling
+│   ├── types/           # TypeScript definitions
+│   ├── data/            # Mock data for development
+│   ├── services/        # API clients & utilities
+│   └── contexts/        # React contexts (theme, etc.)
+├── docs/
+│   ├── spec/            # Technical specifications
+│   ├── context/         # Development context files
+│   ├── devlogs/         # Development session logs
+│   └── Style_Guide.md   # Complete design system
+├── android/             # Android native code
+└── ios/                 # iOS native code (if applicable)
+```
+
+## 🎨 Design System
+
+The app uses a comprehensive design system with:
+- **15-color professional palette** with light/dark variants
+- **Helvetica Neue typography** following iOS standards
+- **8pt grid spacing system**
+- **Modular glass-morphism cards**
+- **Complete dark mode support**
+
+See `/docs/Style_Guide.md` for detailed specifications.
+
+## 📚 Documentation
+
+- **Specifications:** `/docs/spec/` - Modular technical specifications
+- **Context Files:** `/docs/context/` - Development session management
+- **Dev Logs:** `/docs/devlogs/` - Detailed session history
+- **Style Guide:** `/docs/Style_Guide.md` - Complete design system
+
+## 🔒 Security & Privacy
+
+- **Privacy-First Design:** User data isolation, no data selling
+- **Backend Gateway Pattern:** Mobile → Backend → External APIs
+- **Row-Level Security:** All database queries scoped by user_id
+- **Data Encryption:** AES-256 at rest, TLS 1.3 in transit
+
+## 🎮 Core Features
+
+### Intelligent Onboarding
+- AI-led conversational data gathering
+- Instant Financial Snapshot generation
+- Debt Destruction Roadmap
+
+### AI Financial Coach
+- Natural language expense logging
+- Personalized debt elimination advice
+- Configurable persona (Supportive, Tough Love, Neutral)
+
+### Gamified Motivation
+- XP system with level progression
+- Daily challenges and streak tracking
+- Achievement badges and celebrations
+- Confetti animations and haptic feedback
+
+### Debt Snowball Engine
+- Smallest-to-largest payoff ordering
+- Rollover calculations and projections
+- Emergency fund integration
+
+## 📈 Development Status
+
+**Current Phase:** Phase 1 - Core UX System (~60% complete)
+
+### Recent Updates (2025-11-13)
+- ✅ Goals & Challenges screen with 11 gamification components
+- ✅ Complete dark mode support across all screens
+- ✅ Theme system standardization (getStyles pattern)
+- ✅ Component library expansion
+
+### Next Priorities
+- Continue onboarding screen development
+- Build additional gamification components
+- Implement AI ConversationalInput component
+- Backend integration preparation
+
+## 🤝 Contributing
+
+This is a private development project. For questions or collaboration inquiries, please contact the repository owner.
+
+## 📄 License
+
+Proprietary - All rights reserved
+
+## 🔗 Links
+
+- **GitHub Repository:** [https://github.com/KingTChawla/DebtDestroyer.git](https://github.com/KingTChawla/DebtDestroyer.git)
+- **React Native Docs:** [https://reactnative.dev](https://reactnative.dev)
+- **Project Documentation:** See `/docs/` directory
+
+---
+
+**© 2025 Debt Destroyer. All rights reserved.**

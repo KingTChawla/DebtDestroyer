@@ -19,8 +19,8 @@ import {useTheme} from '../contexts';
 
 // Background colors for subtle gradient cards
 const cardBaseColors = {
-  light: '#F9F3E6', // Same as light background
-  dark: '#1A1F2E',  // Same as dark background
+  light: colors.background.light,
+  dark: colors.background.dark,
 };
 
 export const DashboardScreen: React.FC = () => {
@@ -233,7 +233,7 @@ export const DashboardScreen: React.FC = () => {
 const getStyles = (isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: isDark ? '#1A1F2E' : colors.background.light,
+    backgroundColor: isDark ? colors.background.dark : colors.background.light,
   },
   section: {
     paddingHorizontal: spacing.screenPadding,
