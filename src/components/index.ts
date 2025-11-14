@@ -9,6 +9,12 @@ export * from './Input';
 export * from './GradientCard';
 export * from './ScrollAwareHeader';
 export * from './SegmentedControl';
+export * from './FloatingActionButton';
+
+// AI Chat components
+export * from './ChatBubble';
+export * from './ChatInputBar';
+export * from './AIExpenseChatModal';
 
 // Progress & status components
 export * from './ProgressBar';

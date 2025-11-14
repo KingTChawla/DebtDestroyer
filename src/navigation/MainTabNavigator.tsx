@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabParamList} from '../types';
@@ -15,6 +15,7 @@ import {
 } from '../screens';
 import {colors, typography} from '../theme';
 import {useTheme} from '../contexts';
+import {FloatingActionButton, AIExpenseChatModal} from '../components';
 import {
   HomeModernIcon,
   TrophyIcon,
@@ -31,6 +32,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export const MainTabNavigator: React.FC = () => {
   const {isDark} = useTheme();
+  const [isChatModalVisible, setIsChatModalVisible] = React.useState(false);
 
   // Settings button component for header
   const SettingsButton = () => {
@@ -49,8 +51,19 @@ export const MainTabNavigator: React.FC = () => {
     );
   };
 
+  // Handle FAB press - open AI expense logging modal
+  const handleFABPress = () => {
+    setIsChatModalVisible(true);
+  };
+
+  // Handle modal close
+  const handleCloseChat = () => {
+    setIsChatModalVisible(false);
+  };
+
   return (
-    <Tab.Navigator
+    <View style={{flex: 1}}>
+      <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: isDark ? '#FFFFFF' : colors.primary,
         tabBarInactiveTintColor: isDark
@@ -143,5 +156,8 @@ export const MainTabNavigator: React.FC = () => {
         }}
       />
     </Tab.Navigator>
+    <FloatingActionButton onPress={handleFABPress} />
+    <AIExpenseChatModal visible={isChatModalVisible} onClose={handleCloseChat} />
+    </View>
   );
 };
