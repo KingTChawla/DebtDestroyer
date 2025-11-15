@@ -99,6 +99,17 @@
 - Timeline and resource requirements
 - Success metrics and validation criteria
 
+#### [10) Onboarding Flow](./10_onboarding_flow.md)
+**43-screen Gravl-inspired onboarding specification**
+- Welcome & motivation → user profiling → financial data collection
+- Multi-step debt entry flow (8-screen micro-flow per debt)
+- Emotional & behavioral assessment with psychology integration
+- AI persona customization (4 coaching styles)
+- Subscription paywall placement and conversion strategy
+- Snowball Power Score reveal with projected savings
+- Get Started challenges and activation tactics
+- Complete implementation checklist and testing strategy
+
 ---
 
 ## 🎯 Context & Session Management
@@ -220,6 +231,11 @@ Backend: Gamification APIs and data structures
 Start with: [09) Build Phases & Roadmap](./09_build_phases_and_roadmap.md)
 Current Status: Phase 1 (45% complete)
 Timeline: ~7 months to full product
+
+#### 🚀 **Onboarding Development**
+Start with: [10) Onboarding Flow](./10_onboarding_flow.md)
+UI Components: [07) UI/UX Framework](./07_ui_ux_framework.md)
+User Data: [03) Data Model](./03_data_model.md)
 
 ---
 

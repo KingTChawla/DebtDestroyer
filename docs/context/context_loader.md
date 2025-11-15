@@ -82,6 +82,7 @@ DebtDestroyer/
 - `/src/theme/index.ts` - Complete design system
 - `/docs/spec/01_product_overview.md` - Product requirements
 - `/docs/spec/07_ui_ux_framework.md` - UI/UX specifications
+- `/docs/spec/10_onboarding_flow.md` - 43-screen onboarding specification
 
 ### Development Constraints
 
@@ -126,6 +127,7 @@ npx tsc --noEmit
 - `/docs/spec/07_ui_ux_framework.md` - UI/UX design patterns
 - `/docs/spec/08_gamification_system.md` - Gamification requirements
 - `/docs/spec/09_build_phases_and_roadmap.md` - Development roadmap
+- `/docs/spec/10_onboarding_flow.md` - Onboarding flow specification (43 screens)
 
 ### Before Starting Work
 

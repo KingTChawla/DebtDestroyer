@@ -32,16 +32,22 @@
 
 ## Core Features
 
-### 1. Intelligent Onboarding
-- Conversational AI-led gathering of income, debts, expenses, subscriptions
-- Instant Financial Snapshot and Debt Destruction Roadmap generation
-- Emergency fund setup ($1,000 target) before Snowball activation
+### 1. Gravl-Inspired Onboarding (43 Screens)
+- **6-Phase Flow:** Welcome/Motivation → User Profiling → Financial Data Collection → Debt Entry → Personalization → Plan Reveal
+- **Multi-Step Debt Entry:** 8-screen micro-flow per debt (type, creditor, balance, APR, payment, due date, autopay)
+- **AI Persona Selection:** 4 coaching styles (calm & supportive, direct & disciplined, high-energy, humor)
+- **Behavioral Psychology:** Emotional impact assessment, confidence sliders, habit selection
+- **Value Demonstration:** Snowball Power Score with projected savings and payoff date before paywall
+- **Strategic Paywall:** Subscription offer after insights, with one-time upsell discount
+- **Activation Checklist:** Get Started challenges drive immediate engagement
+- **Target Metrics:** 65%+ completion rate, 15%+ paywall conversion, 8-12 min completion time
+- Full spec: `/docs/spec/10_onboarding_flow.md`
 
 ### 2. AI Financial Coach
 - Natural expense logging: "I spent $8 on lunch"
 - Categorization and budget insights
 - Personalized advice within strict debt elimination scope
-- Configurable persona: Supportive, Tough Love, Neutral
+- Configurable persona: Calm & Supportive, Direct & Disciplined, High-Energy, Humor & Lighthearted
 
 ### 3. Gamified Motivation
 - XP system: +10 for check-ins, +50 for payments, +500 for debt payoff
@@ -211,15 +217,16 @@ npx react-native run-android
 - `/src/navigation/` - Navigation structure
 - `/src/theme/` - Design system tokens
 - `/docs/spec/` - Detailed specification modules
+- `/docs/spec/10_onboarding_flow.md` - 43-screen onboarding specification
 - `/docs/Style_Guide.md` - Complete design system and component specifications
 
 ---
 
-## Last Update (2025-11-14)
-- **AI Expense Chat Modal:** Built complete conversational interface with FloatingActionButton, ChatBubble, ChatInputBar, and AIExpenseChatModal components (4 new components, ~600 lines)
-- **Advanced Keyboard Handling:** Implemented sophisticated keyboard management using Keyboard API listeners - modal dynamically repositions from 20% to 0% from top when keyboard opens
-- **Floating Action Button:** Bright green circular FAB on all main screens triggers AI chat modal overlay
-- **Dynamic Layout System:** Chat area height adjusts automatically based on keyboard state while header stays fixed at top
-- **Component Architecture:** Theme-aware components with getStyles(isDark) pattern, no external blur dependencies, optimized for performance
+## Last Update (2025-11-15)
+- **Onboarding Form Screens:** Built OnboardingFormScreen component with 5 input types (text, number, currency, age-picker, checklist), configured 7 screens (Basic Profile, Monthly Income, Essential/Lifestyle Expenses, Savings, Subscriptions, Emergency Fund Goal)
+- **Nested Property Architecture:** Implemented `storeSubKey` pattern enabling individual form fields to save to nested Zustand object properties (e.g., demographics.age) without overwriting entire objects
+- **Type-Safe Validation:** Separated validation logic by input type to properly handle string/number coercion, preventing runtime crashes
+- **Onboarding Progress:** 13 of 43 screens complete (30%) using only 3 smart components - OnboardingWelcomeScreen (2 screens), OnboardingQuestionScreen (4 of 18 configured), OnboardingFormScreen (7 of 8 configured)
+- **Config-Driven Architecture:** Achieving 4.3 screens per component average through flexible configuration system, proving scalability of design approach
 
 *This summary provides the essential context for understanding the Debt Destroyer project. For detailed specifications, see the individual modules in `/docs/spec/`.*

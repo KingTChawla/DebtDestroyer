@@ -21,6 +21,23 @@ export type MainTabParamList = {
 };
 
 export type OnboardingStackParamList = {
+  // Phase 1: Welcome (2 screens)
+  Welcome: undefined;
+  Motivation: undefined;
+  // Phase 2: User Profiling (6 screens implemented so far)
+  PrimaryGoal: undefined;
+  ExperienceLevel: undefined;
+  TrackingFrequency: undefined;
+  DebtConfidence: undefined;
+  BasicProfile: undefined;
+  // Phase 3: Financial Data (7 screens)
+  MonthlyIncome: undefined;
+  EssentialExpenses: undefined;
+  LifestyleExpenses: undefined;
+  SavingsReserves: undefined;
+  SubscriptionDiscovery: undefined;
+  EmergencyFundGoal: undefined;
+  // Existing onboarding screens (will be phased out)
   OnboardingIntro: undefined;
   OnboardingDebts: undefined;
   OnboardingIncome: undefined;
