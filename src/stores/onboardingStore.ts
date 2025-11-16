@@ -6,7 +6,7 @@
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Debt, ExpenseCategory} from '../types';
+import {Debt, ExpenseCategory, OnboardingDebt} from '../types';
 
 // ============================================================================
 // Types
@@ -21,9 +21,10 @@ export interface OnboardingDemographics {
 export interface OnboardingIncome {
   primary: number;
   secondary?: number;
-  frequency: 'weekly' | 'biweekly' | 'semimonthly' | 'monthly';
-  stability?: 'stable' | 'somewhat_unstable' | 'very_unstable';
+  frequency?: 'weekly' | 'biweekly' | 'semimonthly' | 'monthly';
 }
+
+export type IncomeStability = 'stable' | 'somewhat_unstable' | 'very_unstable';
 
 export interface OnboardingExpenses {
   essential: Record<string, number>;
@@ -55,6 +56,7 @@ export interface OnboardingStore {
   // ============================================================================
   // User Profile Data (Screens 3-10)
   // ============================================================================
+  userName: string | null; // User's first name
   primaryGoal: string | null;
   experienceLevel: 'beginner' | 'intermediate' | 'experienced' | null;
   trackingFrequency: 'rarely' | 'sometimes' | 'weekly' | 'daily' | null;
@@ -68,14 +70,17 @@ export interface OnboardingStore {
   // Financial Data (Screens 11-16)
   // ============================================================================
   income: OnboardingIncome;
+  incomeStability: IncomeStability | null;
+  monthlyExpenses: Record<string, number>; // Flattened expenses for form screens
   expenses: OnboardingExpenses;
   savings: OnboardingSavings;
-  subscriptions: OnboardingSubscription[];
+  subscriptions: string[]; // Array of subscription IDs
+  subscriptions_costs?: Record<string, number>; // Custom costs for subscriptions
 
   // ============================================================================
   // Debts (Screens 17-26)
   // ============================================================================
-  debts: Omit<Debt, 'id' | 'userId'>[];
+  debts: OnboardingDebt[];
 
   // ============================================================================
   // Assessment (Screens 27-29)
@@ -133,8 +138,8 @@ export interface OnboardingStore {
   setSavings: (data: Partial<OnboardingSavings>) => void;
 
   // Debt Management
-  addDebt: (debt: Omit<Debt, 'id' | 'userId'>) => void;
-  updateDebt: (index: number, debt: Partial<Omit<Debt, 'id' | 'userId'>>) => void;
+  addDebt: (debt: OnboardingDebt) => void;
+  updateDebt: (index: number, debt: Partial<OnboardingDebt>) => void;
   removeDebt: (index: number) => void;
   clearDebts: () => void;
 
@@ -168,7 +173,7 @@ export interface OnboardingDataExport {
     expenses: OnboardingExpenses;
     savings: OnboardingSavings;
     subscriptions: OnboardingSubscription[];
-    debts: Omit<Debt, 'id' | 'userId'>[];
+    debts: OnboardingDebt[];
   };
   assessment: {
     debtBurden: number | null;
@@ -198,6 +203,7 @@ const initialState = {
   completedSteps: [],
 
   // Profile
+  userName: null,
   primaryGoal: null,
   experienceLevel: null,
   trackingFrequency: null,
@@ -210,8 +216,9 @@ const initialState = {
   // Financial
   income: {
     primary: 0,
-    frequency: 'monthly' as const,
   },
+  incomeStability: null,
+  monthlyExpenses: {},
   expenses: {
     essential: {},
     lifestyle: {},
@@ -332,13 +339,13 @@ export const useOnboardingStore = create<OnboardingStore>()(
       // Debt Management
       // ============================================================================
 
-      addDebt: (debt: Omit<Debt, 'id' | 'userId'>) => {
+      addDebt: (debt: OnboardingDebt) => {
         set(state => ({
           debts: [...state.debts, debt],
         }));
       },
 
-      updateDebt: (index: number, debtUpdate: Partial<Omit<Debt, 'id' | 'userId'>>) => {
+      updateDebt: (index: number, debtUpdate: Partial<OnboardingDebt>) => {
         set(state => ({
           debts: state.debts.map((debt, i) =>
             i === index ? {...debt, ...debtUpdate} : debt,

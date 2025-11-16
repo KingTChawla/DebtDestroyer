@@ -474,9 +474,11 @@ Complete screen-by-screen specification for DebtDestroyer's onboarding experienc
   - News/magazines
 - "Add custom subscription" button
 - Running total at bottom
+- **IMPLEMENTATION ENHANCEMENT:** Editable cost per subscription (location-based pricing varies)
 
 **Data Captured:**
-- `subscriptions` (array of objects: name, cost, frequency)
+- `subscriptions` (array of subscription IDs)
+- `subscriptions_costs` (custom costs per subscription)
 - `total_subscription_cost` (calculated monthly equivalent)
 
 **AI Personalization Impact:**
@@ -512,7 +514,15 @@ Complete screen-by-screen specification for DebtDestroyer's onboarding experienc
 
 ### Screens 18-25 — Individual Debt Entry (Repeating Micro-Flow)
 
-Each debt follows this 8-screen micro-flow. User repeats until all debts entered.
+**IMPLEMENTATION NOTE:** This 8-screen flow was consolidated into a 4-screen flow during development for better UX. The consolidated flow combines multiple related inputs on single screens while maintaining all data collection.
+
+**Implemented as:**
+- Screen 18: Debt Type Selection
+- Screen 19: Creditor Name
+- Screen 20: Combined Debt Details (Balance + Minimum Payment + APR + Due Date + Autopay)
+- Screen 21: Debt Summary Review
+
+Each debt follows this 4-screen micro-flow. User repeats until all debts entered.
 
 ---
 
@@ -547,95 +557,58 @@ Each debt follows this 8-screen micro-flow. User repeats until all debts entered
 
 ---
 
-#### Screen 20 — Current Balance
+#### Screen 20 — Combined Debt Details (CONSOLIDATED SCREEN)
 
-**Field:** Currency input (required)
+**IMPLEMENTATION NOTE:** Screens 20-24 were combined into a single comprehensive form for better UX flow.
 
-**UI:**
+**Fields (All on one screen):**
+
+**1. Current Balance** (Currency input, required)
 - Label: "What's the current balance?"
 - Helper text: "Check your latest statement"
-- Large numeric input with $ prefix
-- Optional "Round to nearest $100" toggle
+- Validation: Must be > 0
 
-**Data Captured:** `current_balance` (decimal)
-
-**Validation:**
-- Must be > 0
-- Warning if > $100,000 (typo check)
-
----
-
-#### Screen 21 — Minimum Payment
-
-**Field:** Currency input (required)
-
-**UI:**
+**2. Minimum Payment** (Currency input, required)
 - Label: "What's the minimum monthly payment?"
 - Helper text: "Found on your statement"
-- Auto-suggest based on balance (e.g., 2% rule for credit cards)
+- Validation: Must be > 0
 
-**Data Captured:** `minimum_payment` (decimal)
+**3. Interest Rate / APR** (Percentage input, optional)
+- Label: "What's the interest rate (APR)?"
+- Helper text: "Usually shown on statements (optional)"
+- Numeric input with % suffix
+- Supports decimal input (e.g., 18.5%)
+
+**4. Due Date** (Numeric input, optional)
+- Label: "When is the payment due?"
+- Helper text: "Day of month (1-31)"
+- Input: 1-31 (day of month)
+
+**5. Autopay Status** (Button group, optional)
+- Question: "Is autopay enabled?"
+- Options: Yes / No buttons
+
+**Data Captured:**
+- `current_balance` (decimal)
+- `minimum_payment` (decimal)
+- `interest_rate` (decimal, nullable)
+- `due_date_day` (integer 1-31, nullable)
+- `autopay_status` (boolean, nullable)
 
 **Validation:**
-- Must be > 0
-- Warning if > 50% of balance (typo check)
-
----
-
-#### Screen 22 — Interest Rate (APR)
-
-**Field:** Percentage input (optional but encouraged)
-
-**UI:**
-- Label: "What's the interest rate (APR)?"
-- Helper text: "Usually shown on statements"
-- Numeric input with % suffix
-- "I don't know" option → Estimates based on debt type average
-
-**Data Captured:** `interest_rate` (decimal, nullable)
+- Balance and minimum payment required
+- APR, due date, and autopay are optional
+- Continue button enabled when required fields valid
 
 **AI Personalization Impact:**
-- Enables interest savings calculation
-- If unknown, uses category defaults (credit card: 18%, student: 5%, etc.)
+- Balance and payment used for snowball calculations
+- APR enables interest savings projections (uses defaults if not provided)
+- Due date enables payment reminder scheduling
+- Autopay status flags missed payment risk
 
 ---
 
-#### Screen 23 — Due Date
-
-**Field:** Date picker (day of month)
-
-**UI:**
-- Label: "When is the payment due?"
-- Picker: 1-31 (day of month)
-- Optional field
-
-**Data Captured:** `due_date_day` (integer 1-31, nullable)
-
-**AI Personalization Impact:**
-- Enables payment reminder scheduling
-- Helps optimize payment timing for cash flow
-
----
-
-#### Screen 24 — Auto-pay Setup
-
-**Question:** *Do you have auto-pay enabled for this debt?*
-
-**Options (Single-Select):**
-- Yes, minimum payment
-- Yes, fixed amount
-- Yes, full balance (credit cards)
-- No
-
-**Data Captured:** `autopay_status` (enum)
-
-**AI Personalization Impact:**
-- Flags missed payment risk for non-autopay debts
-- Suggests enabling autopay for minimum payments
-
----
-
-#### Screen 25 — Debt Summary Review
+#### Screen 21 — Debt Summary Review (formerly Screen 25)
 
 **Purpose:** Confirm entry and encourage additional debts
 
@@ -1634,6 +1607,95 @@ This onboarding flow is designed to:
 - Polish & optimization: +1 week
 
 **Total: ~9 weeks for complete onboarding flow**
+
+---
+
+## Implementation Status & Notes
+
+**Last Updated:** 2025-01-15
+
+### Completed Screens (40 of 43) ✅
+
+**Implementation Highlights:**
+- **Config-driven architecture**: 3 reusable components (OnboardingWelcomeScreen, OnboardingQuestionScreen, OnboardingFormScreen) handle 34+ screens
+- **TypeScript type safety**: Created OnboardingDebt type to handle field name differences from main Debt type
+- **Zustand state management**: All onboarding data persisted to AsyncStorage with proper typing
+- **UX optimizations**: Consolidated debt entry from 8 screens to 4 screens per debt
+
+### Key Implementation Changes from Spec:
+
+1. **Debt Entry Flow (Screens 18-25)**
+   - Consolidated Screens 20-24 into single "Debt Details" screen
+   - Reduces user fatigue while maintaining all data collection
+   - APR input supports decimal values (e.g., 18.5%)
+   - Autopay simplified to Yes/No toggle
+
+2. **Subscription Discovery (Screen 16)**
+   - Added editable cost per subscription
+   - Users can customize prices that vary by location/tier
+
+3. **Component Architecture**
+   - OnboardingWelcomeScreen: Handles Screens 1-2 with animation support
+   - OnboardingQuestionScreen: Handles all question-based screens with multiple input types (tiles, sliders, checklists)
+   - OnboardingFormScreen: Handles all form-based screens with various field types
+   - OnboardingDebtFlowScreen: Custom multi-step wizard for debt entry
+   - OnboardingInsightScreen: Dynamic snowball calculations and personalized insights
+   - OnboardingPaywallScreen: Subscription tier selection with 4 pricing options
+   - OnboardingAccountScreen: Email/Google/Apple authentication
+
+4. **Developer Experience**
+   - Dev shortcut button (DEV mode only) to jump to latest implemented screen
+   - All screens accessible via jump navigation for testing
+
+### Screens Deferred to Later Implementation:
+
+- **Screen 41**: Snowball Plan Reveal (existing screen already handles this)
+- **Screen 42**: Get Started Challenge (gamification phase)
+- **Screen 43**: Dashboard Introduction (tutorial tooltips)
+
+### Technical Implementation Details:
+
+**File Structure:**
+```
+src/
+├── screens/onboarding/
+│   ├── OnboardingWelcomeScreen.tsx
+│   ├── OnboardingQuestionScreen.tsx
+│   ├── OnboardingFormScreen.tsx
+│   ├── OnboardingDebtFlowScreen.tsx
+│   ├── OnboardingInsightScreen.tsx
+│   ├── OnboardingPaywallScreen.tsx
+│   ├── OnboardingAccountScreen.tsx
+│   └── index.ts
+├── config/
+│   └── onboardingScreens.ts (40+ screen configurations)
+├── stores/
+│   └── onboardingStore.ts (Zustand + AsyncStorage)
+├── components/onboarding/
+│   ├── OnboardingProgress.tsx
+│   ├── TileSelector.tsx
+│   ├── SliderInput.tsx
+│   ├── ChecklistSelector.tsx
+│   └── CurrencyInput.tsx
+└── types/
+    └── index.ts (OnboardingDebt, navigation types)
+```
+
+**Data Model:**
+- Created `OnboardingDebt` type with fields: `creditor`, `balance`, `minimumPayment`, `apr`, `dueDate`, `autopay`
+- Maps to main `Debt` type with field transformations on completion
+- All onboarding state typed and validated
+
+**Current Flow:**
+Welcome → Motivation → PrimaryGoal → ... → SnowballInsights → Paywall → Account → OnboardingComplete
+
+**Next Implementation Tasks:**
+1. Integrate actual payment provider (RevenueCat/Stripe)
+2. Implement Google/Apple Sign-In
+3. Build Screen 42 (Get Started Challenge) for gamification
+4. Add Screen 43 (Dashboard Introduction) with tutorial tooltips
+5. Backend API integration for snowball calculations
+6. Email verification flow for email signups
 
 ---
 

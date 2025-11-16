@@ -38,6 +38,7 @@ export interface OnboardingWelcomeScreenProps {
   config: WelcomeScreenConfig;
   onContinue: () => void;
   onSkip?: () => void;
+  onDevSkip?: () => void; // DEV: Jump to latest screen
 }
 
 // ============================================================================
@@ -48,6 +49,7 @@ export const OnboardingWelcomeScreen: React.FC<OnboardingWelcomeScreenProps> = (
   config,
   onContinue,
   onSkip,
+  onDevSkip,
 }) => {
   const {isDark} = useTheme();
   const styles = getStyles(isDark);
@@ -172,6 +174,18 @@ export const OnboardingWelcomeScreen: React.FC<OnboardingWelcomeScreenProps> = (
           disabled={!buttonEnabled}
           fullWidth
         />
+
+        {/* DEV: Jump to Latest Screen */}
+        {__DEV__ && onDevSkip && (
+          <Button
+            title="[DEV] Jump to Screen 39 - Account"
+            variant="secondary"
+            size="medium"
+            onPress={onDevSkip}
+            fullWidth
+            style={{marginTop: spacing.md}}
+          />
+        )}
 
         {/* Skip Link */}
         {config.showSkip && onSkip && (

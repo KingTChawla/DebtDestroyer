@@ -24,19 +24,40 @@ export type OnboardingStackParamList = {
   // Phase 1: Welcome (2 screens)
   Welcome: undefined;
   Motivation: undefined;
-  // Phase 2: User Profiling (6 screens implemented so far)
+  // Phase 2: User Profiling (10 screens)
   PrimaryGoal: undefined;
   ExperienceLevel: undefined;
   TrackingFrequency: undefined;
   DebtConfidence: undefined;
   BasicProfile: undefined;
+  FinancialIdentity: undefined;
+  SpendingBehavior: undefined;
+  ExpenseAwareness: undefined;
   // Phase 3: Financial Data (7 screens)
   MonthlyIncome: undefined;
+  IncomeStability: undefined;
   EssentialExpenses: undefined;
   LifestyleExpenses: undefined;
   SavingsReserves: undefined;
   SubscriptionDiscovery: undefined;
+  // Phase 4: Debt Entry (10 screens - handled by DebtFlow component)
+  DebtFlow: undefined;
+  // Phase 5: Assessment (Screens 27-30)
+  DebtBurden: undefined;
+  EmotionalImpact: undefined;
+  FinancialHabits: undefined;
+  EmergencyFundPriority: undefined;
+  // Phase 6: Personalization (Screens 31-34)
   EmergencyFundGoal: undefined;
+  AIPersona: undefined;
+  PlanIntensity: undefined;
+  BehaviorChallenges: undefined;
+  // Phase 7: Results & Insights (Screens 35-36)
+  SnowballInsights: undefined;
+  // Phase 8: Paywall (Screens 37-38)
+  Paywall: undefined;
+  // Phase 9: Account Creation (Screens 39-40)
+  Account: undefined;
   // Existing onboarding screens (will be phased out)
   OnboardingIntro: undefined;
   OnboardingDebts: undefined;
@@ -305,6 +326,17 @@ export interface AIInsight {
 // ============================================================================
 // ONBOARDING TYPES
 // ============================================================================
+
+export interface OnboardingDebt {
+  type: DebtType;
+  creditor: string; // Will become 'name' when converted to Debt
+  balance: number; // Will become 'currentBalance' and 'principal' when converted to Debt
+  minimumPayment: number; // Will become 'minPayment' when converted to Debt
+  apr: number; // Same in both
+  dueDate: number; // Will become 'dueDay' when converted to Debt
+  autopay?: boolean;
+  status: DebtStatus;
+}
 
 export interface OnboardingData {
   debts: Omit<Debt, 'id' | 'userId' | 'currentBalance' | 'status' | 'payoffOrder' | 'closedAt'>[];

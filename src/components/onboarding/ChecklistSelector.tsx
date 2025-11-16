@@ -4,7 +4,7 @@
  * Used in onboarding screens 16, 29, and 34
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,13 @@ import {
   StyleSheet,
   ViewStyle,
   TextStyle,
+  TextInput,
 } from 'react-native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {colors, typography, spacing} from '../../theme';
 import {CheckCircleIcon} from 'react-native-heroicons/solid';
 import {CheckCircleIcon as CheckCircleOutline} from 'react-native-heroicons/outline';
+import {PencilIcon} from 'react-native-heroicons/outline';
 
 // ============================================================================
 // Types
@@ -34,7 +36,9 @@ export interface ChecklistSelectorProps {
   options: ChecklistOption[];
   selectedIds: string[];
   onSelectionChange: (selectedIds: string[]) => void;
+  onCostChange?: (optionId: string, newCost: number) => void; // Allow editing costs
   showCost?: boolean; // Show cost for subscriptions
+  editableCost?: boolean; // Allow editing cost values
   showBadge?: boolean; // Show difficulty badge
   minSelections?: number;
   maxSelections?: number;
@@ -49,7 +53,9 @@ export const ChecklistSelector: React.FC<ChecklistSelectorProps> = ({
   options,
   selectedIds,
   onSelectionChange,
+  onCostChange,
   showCost = false,
+  editableCost = false,
   showBadge = false,
   minSelections,
   maxSelections,
@@ -57,6 +63,10 @@ export const ChecklistSelector: React.FC<ChecklistSelectorProps> = ({
 }) => {
   const {isDark} = useTheme();
   const styles = getStyles(isDark);
+
+  // Track which cost is being edited
+  const [editingCostId, setEditingCostId] = useState<string | null>(null);
+  const [editingCostValue, setEditingCostValue] = useState<string>('');
 
   const handlePress = (optionId: string) => {
     if (disabled) return;
@@ -84,6 +94,27 @@ export const ChecklistSelector: React.FC<ChecklistSelectorProps> = ({
 
   const formatCost = (cost: number): string => {
     return `$${cost.toFixed(2)}/mo`;
+  };
+
+  const handleCostEdit = (optionId: string, currentCost: number) => {
+    if (!editableCost || !onCostChange) return;
+    setEditingCostId(optionId);
+    setEditingCostValue(currentCost.toFixed(2));
+  };
+
+  const handleCostSave = (optionId: string) => {
+    if (!onCostChange) return;
+    const newCost = parseFloat(editingCostValue);
+    if (!isNaN(newCost) && newCost >= 0) {
+      onCostChange(optionId, newCost);
+    }
+    setEditingCostId(null);
+    setEditingCostValue('');
+  };
+
+  const handleCostCancel = () => {
+    setEditingCostId(null);
+    setEditingCostValue('');
   };
 
   const getBadgeColor = (badge: string): string => {
@@ -145,7 +176,37 @@ export const ChecklistSelector: React.FC<ChecklistSelectorProps> = ({
             {/* Cost or Badge */}
             {showCost && option.cost !== undefined && (
               <View style={styles.costContainer}>
-                <Text style={styles.costText}>{formatCost(option.cost)}</Text>
+                {editingCostId === option.id ? (
+                  <View style={styles.costEditContainer}>
+                    <Text style={styles.costEditCurrency}>$</Text>
+                    <TextInput
+                      style={styles.costInput}
+                      value={editingCostValue}
+                      onChangeText={setEditingCostValue}
+                      keyboardType="decimal-pad"
+                      autoFocus
+                      selectTextOnFocus
+                      onBlur={() => handleCostSave(option.id)}
+                      onSubmitEditing={() => handleCostSave(option.id)}
+                    />
+                    <Text style={styles.costEditSuffix}>/mo</Text>
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.costDisplay}
+                    onPress={() => handleCostEdit(option.id, option.cost!)}
+                    disabled={!editableCost}
+                    activeOpacity={editableCost ? 0.7 : 1}>
+                    <Text style={styles.costText}>{formatCost(option.cost)}</Text>
+                    {editableCost && (
+                      <PencilIcon
+                        size={14}
+                        color={colors.primary}
+                        style={styles.editIcon}
+                      />
+                    )}
+                  </TouchableOpacity>
+                )}
               </View>
             )}
 
@@ -247,12 +308,58 @@ const getStyles = (isDark: boolean) => {
 
     costContainer: {
       marginLeft: spacing.sm,
+      minWidth: 80,
+    } as ViewStyle,
+
+    costDisplay: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
     } as ViewStyle,
 
     costText: {
       ...typography.styles.caption1,
       color: colors.primary,
       fontFamily: typography.fontFamily.medium,
+    } as TextStyle,
+
+    editIcon: {
+      marginLeft: 2,
+      opacity: 0.6,
+    } as ViewStyle,
+
+    costEditContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: isDark ? colors.surface.dark : colors.surface.light,
+      borderRadius: spacing.radius.sm,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 2,
+    } as ViewStyle,
+
+    costEditCurrency: {
+      ...typography.styles.caption1,
+      color: colors.primary,
+      fontFamily: typography.fontFamily.medium,
+      marginRight: 2,
+    } as TextStyle,
+
+    costInput: {
+      ...typography.styles.caption1,
+      color: isDark ? colors.text.primary.dark : colors.text.primary.light,
+      fontFamily: typography.fontFamily.medium,
+      minWidth: 40,
+      padding: 0,
+      textAlign: 'right',
+    } as TextStyle,
+
+    costEditSuffix: {
+      ...typography.styles.caption1,
+      color: colors.primary,
+      fontFamily: typography.fontFamily.medium,
+      marginLeft: 2,
     } as TextStyle,
 
     badgeContainer: {

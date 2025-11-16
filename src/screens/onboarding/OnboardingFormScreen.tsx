@@ -99,6 +99,21 @@ export const OnboardingFormScreen: React.FC<OnboardingFormScreenProps> = ({
   const updateField = useOnboardingStore(state => state.updateField);
   const markStepComplete = useOnboardingStore(state => state.markStepComplete);
 
+  // Helper function to get default value based on field type
+  const getDefaultValue = (field: FormField) => {
+    switch (field.type) {
+      case 'currency':
+      case 'number':
+        return 0;
+      case 'checklist':
+        return field.checklistConfig?.multiSelect ? [] : null;
+      case 'text':
+      case 'age-picker':
+      default:
+        return '';
+    }
+  };
+
   // Initialize form values from store
   const [formValues, setFormValues] = useState<Record<string, any>>(() => {
     const initialValues: Record<string, any> = {};
@@ -116,20 +131,6 @@ export const OnboardingFormScreen: React.FC<OnboardingFormScreenProps> = ({
     });
     return initialValues;
   });
-
-  const getDefaultValue = (field: FormField) => {
-    switch (field.type) {
-      case 'currency':
-      case 'number':
-        return 0;
-      case 'checklist':
-        return field.checklistConfig?.multiSelect ? [] : null;
-      case 'text':
-      case 'age-picker':
-      default:
-        return '';
-    }
-  };
 
   const handleFieldChange = (fieldId: string, value: any) => {
     setFormValues(prev => ({...prev, [fieldId]: value}));
@@ -279,6 +280,10 @@ export const OnboardingFormScreen: React.FC<OnboardingFormScreenProps> = ({
 
       case 'checklist':
         if (!field.checklistConfig) return null;
+
+        // For checklists with editable costs, we need to track both selections and costs
+        const checklistValue = value || (field.checklistConfig.multiSelect ? [] : null);
+
         return (
           <View key={field.id} style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{field.label}</Text>
@@ -286,9 +291,9 @@ export const OnboardingFormScreen: React.FC<OnboardingFormScreenProps> = ({
               options={field.checklistConfig.items}
               selectedIds={
                 field.checklistConfig.multiSelect
-                  ? value || []
-                  : value
-                  ? [value]
+                  ? (Array.isArray(checklistValue) ? checklistValue : [])
+                  : checklistValue
+                  ? [checklistValue]
                   : []
               }
               onSelectionChange={selectedIds => {
@@ -297,7 +302,18 @@ export const OnboardingFormScreen: React.FC<OnboardingFormScreenProps> = ({
                   : selectedIds[0] || null;
                 handleFieldChange(field.id, newValue);
               }}
+              onCostChange={(optionId, newCost) => {
+                // Update the cost in the checklist config
+                const updatedItems = field.checklistConfig!.items.map(item =>
+                  item.id === optionId ? {...item, cost: newCost} : item
+                );
+                // Store the updated costs in a separate field
+                const costUpdates = formValues[`${field.id}_costs`] || {};
+                costUpdates[optionId] = newCost;
+                handleFieldChange(`${field.id}_costs`, costUpdates);
+              }}
               showCost={field.checklistConfig.showCost || false}
+              editableCost={true} // Enable cost editing for subscriptions
             />
           </View>
         );

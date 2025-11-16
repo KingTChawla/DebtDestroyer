@@ -223,10 +223,14 @@ npx react-native run-android
 ---
 
 ## Last Update (2025-11-15)
-- **Onboarding Form Screens:** Built OnboardingFormScreen component with 5 input types (text, number, currency, age-picker, checklist), configured 7 screens (Basic Profile, Monthly Income, Essential/Lifestyle Expenses, Savings, Subscriptions, Emergency Fund Goal)
-- **Nested Property Architecture:** Implemented `storeSubKey` pattern enabling individual form fields to save to nested Zustand object properties (e.g., demographics.age) without overwriting entire objects
-- **Type-Safe Validation:** Separated validation logic by input type to properly handle string/number coercion, preventing runtime crashes
-- **Onboarding Progress:** 13 of 43 screens complete (30%) using only 3 smart components - OnboardingWelcomeScreen (2 screens), OnboardingQuestionScreen (4 of 18 configured), OnboardingFormScreen (7 of 8 configured)
-- **Config-Driven Architecture:** Achieving 4.3 screens per component average through flexible configuration system, proving scalability of design approach
+- **Onboarding Flow Complete (93%):** Built 40 of 43 onboarding screens using config-driven architecture with 7 smart components (5.7 screens/component average)
+- **Debt Entry Wizard:** Built OnboardingDebtFlowScreen with 4-screen micro-flow per debt (consolidated from 8-screen spec for better UX) - Type, Creditor, Combined Details (Balance/APR/Payment/Due Date/Autopay), Review
+- **Snowball Insights:** Created OnboardingInsightScreen with real-time calculations for payoff timeline, interest savings (30% estimate), and acceleration metrics based on plan intensity (slow: 10%, standard: 25%, gazelle: 50%)
+- **Paywall Screen:** Built OnboardingPaywallScreen with 4 subscription tiers (Free 7-day trial → $9.99/mo, Monthly $9.99, Annual $79.99 BEST VALUE, Lifetime $199.99)
+- **Account Creation:** Implemented OnboardingAccountScreen with Email/Google/Apple authentication options and full password validation (8+ chars, uppercase, lowercase, number)
+- **OnboardingDebt Type System:** Created separate type with user-friendly field names (`creditor`, `balance`, `minimumPayment`) that maps to production Debt type (`name`, `currentBalance`, `minPayment`) for better UX
+- **TypeScript Error Fixes:** Resolved 12+ errors across 5 files - changed `colors.white` to `#FFFFFF`, `colors.text.tertiary` to `colors.text.secondary`, `fontFamily.semibold` to `fontWeight.semibold`
+- **UX Enhancements:** Added editable subscription costs in form screen, dev shortcut button to jump to latest screen, decimal APR input support with separate text state
+- **Architecture Validation:** Successfully proved config-driven approach - 40 screens built using only 7 components, complete navigation flow working, all theme-aware styling throughout
 
 *This summary provides the essential context for understanding the Debt Destroyer project. For detailed specifications, see the individual modules in `/docs/spec/`.*

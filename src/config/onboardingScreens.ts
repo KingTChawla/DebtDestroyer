@@ -154,6 +154,342 @@ export const questionScreens: QuestionScreenConfig[] = [
     progress: {current: 6, total: 43},
     storeKey: 'debtConfidence',
   },
+
+  // Screen 8: Financial Identity
+  {
+    id: 'financial_identity',
+    question: 'Which best describes your financial situation?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'drowning',
+        label: 'Drowning in debt',
+        description: 'Feeling overwhelmed and need immediate help',
+        icon: 'ExclamationTriangleIcon',
+      },
+      {
+        id: 'tight',
+        label: 'Getting by, but tight',
+        description: 'Making ends meet but barely',
+        icon: 'ScaleIcon',
+      },
+      {
+        id: 'stable',
+        label: 'Stable, but want better habits',
+        description: 'Doing okay but could improve',
+        icon: 'MinusIcon',
+      },
+      {
+        id: 'plan',
+        label: 'Doing okay, want a plan',
+        description: 'Looking for structure and optimization',
+        icon: 'MapIcon',
+      },
+      {
+        id: 'optimizing',
+        label: 'Doing well, want optimization',
+        description: 'Financially secure, seeking efficiency',
+        icon: 'ArrowTrendingUpIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'large',
+    progress: {current: 8, total: 43},
+    storeKey: 'financialIdentity',
+  },
+
+  // Screen 9: Spending Behavior
+  {
+    id: 'spending_behavior',
+    question: 'How would you describe your spending habits?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'overspender',
+        label: 'Overspender',
+        description: 'I spend more than I should',
+        icon: 'ShoppingBagIcon',
+      },
+      {
+        id: 'impulse',
+        label: 'Impulse spender',
+        description: 'I make unplanned purchases often',
+        icon: 'BoltIcon',
+      },
+      {
+        id: 'controlled',
+        label: 'Mostly controlled',
+        description: 'I usually stick to my budget',
+        icon: 'CheckCircleIcon',
+      },
+      {
+        id: 'disciplined',
+        label: 'Very disciplined',
+        description: 'I rarely make unnecessary purchases',
+        icon: 'ShieldCheckIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'medium',
+    progress: {current: 9, total: 43},
+    storeKey: 'spendingBehavior',
+  },
+
+  // Screen 10: Expense Awareness (Slider)
+  {
+    id: 'expense_awareness',
+    question: 'How confident are you that you know where your money goes each month?',
+    inputType: 'slider',
+    sliderConfig: {
+      min: 1,
+      max: 10,
+      step: 1,
+      minLabel: 'No idea',
+      maxLabel: 'Track every penny',
+      showValue: true,
+    },
+    progress: {current: 10, total: 43},
+    storeKey: 'expenseAwareness',
+  },
+
+  // Screen 12: Income Stability
+  {
+    id: 'income_stability',
+    question: 'Is your income stable?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'stable',
+        label: 'Stable',
+        description: 'Consistent paycheck every month',
+        icon: 'MinusIcon',
+      },
+      {
+        id: 'somewhat_unstable',
+        label: 'Somewhat unstable',
+        description: 'Income varies but predictable',
+        icon: 'ArrowsUpDownIcon',
+      },
+      {
+        id: 'very_unstable',
+        label: 'Very unstable',
+        description: 'Income fluctuates significantly',
+        icon: 'ChartBarIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'large',
+    progress: {current: 12, total: 43},
+    storeKey: 'incomeStability',
+  },
+
+  // Screen 27: Debt Burden (Slider)
+  {
+    id: 'debt_burden',
+    question: 'How overwhelming does your debt feel?',
+    inputType: 'slider',
+    sliderConfig: {
+      min: 1,
+      max: 10,
+      step: 1,
+      minLabel: 'Manageable, just needs a plan',
+      maxLabel: 'Crushing, keeps me up at night',
+      showValue: true,
+    },
+    progress: {current: 27, total: 43},
+    storeKey: 'debtBurden',
+  },
+
+  // Screen 28: Emotional Impact
+  {
+    id: 'emotional_impact',
+    question: 'How much stress is your debt causing you?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'low',
+        label: 'Low',
+        description: "It's there, but I'm okay",
+        icon: 'FaceSmileIcon',
+      },
+      {
+        id: 'medium',
+        label: 'Medium',
+        description: 'It bothers me regularly',
+        icon: 'ExclamationCircleIcon',
+      },
+      {
+        id: 'high',
+        label: 'High',
+        description: "It's a constant worry",
+        icon: 'ExclamationTriangleIcon',
+      },
+      {
+        id: 'extreme',
+        label: 'Extreme',
+        description: "It's affecting my health/relationships",
+        icon: 'FireIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'large',
+    progress: {current: 28, total: 43},
+    storeKey: 'emotionalImpact',
+  },
+
+  // Screen 29: Financial Habits (Multi-select checklist)
+  {
+    id: 'financial_habits',
+    question: 'Which of these apply to you? (Select all that apply)',
+    description: 'These are just to help personalize your plan',
+    inputType: 'tile-select',
+    options: [
+      {id: 'impulse_spending', label: 'Impulse spending', icon: 'BoltIcon'},
+      {id: 'no_budget', label: 'No budget or spending plan', icon: 'DocumentIcon'},
+      {id: 'not_tracking', label: 'Not tracking expenses', icon: 'EyeSlashIcon'},
+      {id: 'missed_payments', label: 'Missed payments in the past', icon: 'ClockIcon'},
+      {id: 'no_savings', label: 'No savings or emergency fund', icon: 'BanknotesIcon'},
+      {id: 'paycheck_to_paycheck', label: 'Living paycheck to paycheck', icon: 'CurrencyDollarIcon'},
+      {id: 'good_habits', label: 'Actually, I have good habits', icon: 'CheckCircleIcon'},
+    ],
+    multiSelect: true,
+    autoAdvance: false,
+    columns: 1,
+    progress: {current: 29, total: 43},
+    storeKey: 'financialHabits',
+  },
+
+  // Screen 30: Emergency Fund Priority
+  {
+    id: 'emergency_fund_priority',
+    question: 'Do you have $1,000 saved for emergencies?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'yes',
+        label: 'Yes, I have $1,000+ saved',
+        icon: 'CheckCircleIcon',
+      },
+      {
+        id: 'building',
+        label: "Not yet, but I'm working on it",
+        icon: 'ArrowTrendingUpIcon',
+      },
+      {
+        id: 'save_first',
+        label: 'No, and I want to save this first',
+        icon: 'ShieldCheckIcon',
+      },
+      {
+        id: 'skip',
+        label: 'Skip this for now',
+        icon: 'ArrowRightIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'large',
+    progress: {current: 30, total: 43},
+    storeKey: 'emergencyFundPriority',
+  },
+
+  // Screen 32: AI Persona
+  {
+    id: 'ai_persona',
+    question: 'How do you want your AI money coach to talk to you?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'supportive',
+        label: 'Calm & Supportive',
+        description: "You've got this. Let's take it one step at a time.",
+        icon: 'HeartIcon',
+      },
+      {
+        id: 'direct',
+        label: 'Direct & Disciplined',
+        description: 'Time to face the numbers. No more excuses.',
+        icon: 'ShieldCheckIcon',
+      },
+      {
+        id: 'energetic',
+        label: 'High-Energy Motivation',
+        description: "YES! You're crushing it! Let's GO!",
+        icon: 'BoltIcon',
+      },
+      {
+        id: 'humorous',
+        label: 'Humor & Lighthearted',
+        description: 'Debt? More like debt-be-gone, am I right?',
+        icon: 'FaceSmileIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'large',
+    progress: {current: 32, total: 43},
+    storeKey: 'aiPersona',
+  },
+
+  // Screen 33: Plan Intensity
+  {
+    id: 'plan_intensity',
+    question: 'How intense do you want your payoff plan to be?',
+    inputType: 'tile-select',
+    options: [
+      {
+        id: 'slow',
+        label: 'Slow & Steady',
+        description: 'Comfortable pace, sustainable lifestyle',
+        icon: 'MinusIcon',
+      },
+      {
+        id: 'standard',
+        label: 'Standard',
+        description: 'Balanced approach, noticeable progress',
+        icon: 'ChartBarIcon',
+      },
+      {
+        id: 'gazelle',
+        label: 'Gazelle Intensity',
+        description: 'All-in, maximum speed, Dave Ramsey style',
+        icon: 'RocketLaunchIcon',
+      },
+    ],
+    multiSelect: false,
+    autoAdvance: true,
+    tileSize: 'large',
+    progress: {current: 33, total: 43},
+    storeKey: 'planIntensity',
+  },
+
+  // Screen 34: Behavior Challenges (Multi-select checklist)
+  {
+    id: 'behavior_challenges',
+    question: 'Choose 1-3 challenges to start with',
+    description: 'Pick challenges that feel achievable right now',
+    inputType: 'tile-select',
+    options: [
+      {id: 'no_eating_out', label: 'No eating out for 3 days', icon: 'HomeIcon'},
+      {id: 'skip_coffee', label: 'Skip coffee shop for a week', icon: 'CupIcon'},
+      {id: 'no_amazon', label: 'No Amazon purchases for 5 days', icon: 'ShoppingBagIcon'},
+      {id: 'no_impulse', label: 'No impulse buys (24-hour rule)', icon: 'ClockIcon'},
+      {id: 'track_expenses', label: 'Track every expense for 7 days', icon: 'DocumentTextIcon'},
+      {id: 'review_subscriptions', label: 'Review all subscriptions', icon: 'ListBulletIcon'},
+      {id: 'cancel_subscriptions', label: 'Find 3 subscriptions to cancel', icon: 'XMarkIcon'},
+      {id: 'create_budget', label: 'Create your first budget', icon: 'CalculatorIcon'},
+      {id: 'enable_autopay', label: 'Enable autopay for all debts', icon: 'ArrowPathIcon'},
+    ],
+    multiSelect: true,
+    autoAdvance: false,
+    columns: 1,
+    progress: {current: 34, total: 43},
+    storeKey: 'selectedChallenges',
+  },
 ];
 
 // ============================================================================
