@@ -1,12 +1,12 @@
 # 03) Data Model
 
 **LLM SUMMARY:**
-- PostgreSQL with Row-Level Security (RLS) for user data isolation
-- Prisma ORM for type-safe database operations
-- Household model supports shared finances with granular visibility controls
-- Core entities: User, Debt, Account, Transaction, SnowballPlan, Gamification
-- All queries scoped by `user_id` from JWT token
-- Encrypted storage for sensitive fields (access_token, item_id)
+- Supabase Postgres with Row-Level Security (RLS) for user data isolation
+- Manual-entry only (no Plaid) - all financial data user-provided
+- AI-first design: All data accessible via natural language commands
+- Core entities: User, Debt, Income, Expenses, Goals, Gamification, AI Interactions
+- All queries scoped by `auth.uid()` via Supabase RLS
+- 15 core tables for comprehensive financial tracking
 - Enum types for consistent data validation
 
 ## Core Entities
@@ -42,41 +42,11 @@
 
 ## Financial Data Model
 
-### InstitutionConnection
+### Debt (Manual Entry)
 - `id` (UUID) - Primary key
-- `user_id` (UUID) - FK to User (owner of connection)
-- `provider` (Enum: plaid|stripe|manual) - Data source
-- `item_id` (String, encrypted) - Plaid item identifier
-- `access_token` (String, encrypted) - Encrypted access token
-- `status` (Enum: active|error|expired) - Connection health
-- `last_sync_at` (DateTime) - Last successful data sync
-- `error_details` (JSON, nullable) - Connection error information
-- `created_at` (DateTime) - Connection establishment date
-
-**Security Notes:**
-- `item_id` and `access_token` encrypted with AWS KMS
-- Connections are user-specific, never shared in households
-- Automatic retry logic for failed connections
-
-### Account
-- `id` (UUID) - Primary key
-- `connection_id` (UUID, nullable) - FK to InstitutionConnection
-- `type` (Enum: checking|savings|credit_card|loan|investment|other)
-- `name` (String) - Account display name
-- `mask` (String, nullable) - Account number mask (e.g., "1234")
-- `balance` (Decimal) - Current account balance
-- `currency` (String) - Account currency (can differ from user's)
-- `shared_visibility` (Enum: private|shared) - Household visibility
-- `status` (Enum: active|closed|error) - Account status
-- `institution_name` (String, nullable) - Bank/institution name
-- `last_updated` (DateTime) - Last balance update
-- `created_at` (DateTime) - Account creation date
-
-### Debt
-- `id` (UUID) - Primary key
-- `owner_scope` (Enum: user|household) - Debt ownership level
+- `user_id` (UUID) - FK to User
+- `owner_scope` (Enum: user|household) - Debt ownership level (future: households)
 - `owner_id` (UUID) - FK to User or Household based on scope
-- `account_id` (UUID, nullable) - FK to Account (if from linked bank)
 - `name` (String) - Debt name/description
 - `type` (Enum: credit_card|auto_loan|student_loan|personal_loan|mortgage|medical|other)
 - `principal` (Decimal) - Original debt amount
@@ -291,17 +261,45 @@ CREATE POLICY user_expense_insert ON expenses
 - **Backup Encryption:** Encrypted database backups with customer-managed keys
 
 **Encrypted Fields:**
-- InstitutionConnection.access_token
-- InstitutionConnection.item_id
-- Any PII fields (if collected in future)
-
-### Audit Trail
-
-All financial operations include audit logging:
-- User who performed the action
-- Timestamp of the action
-- Before/after values for critical data
-- IP address and device information
+- All financial amounts (debts, income, expenses)
+- Account balances
+- Any PII fields
 
 ---
-*See: [Architecture & Stack](02_architecture_and_stack.md) → [API Endpoints](04_api_endpoints.md) → [Security & Privacy](06_security_and_privacy.md)*
+
+## AI Capabilities & Data Access
+
+### AI-Accessible Data
+
+The AI Financial Coach has read/write access to user data for natural language commands:
+
+**Data Modification:**
+- Create/update/delete expense_logs ("Add $50 grocery expense")
+- Create/update debts ("Add a $3,000 credit card at 19% APR")
+- Create payment_events ("I paid $200 on my Chase card")
+- Update income ("My income is now $5,000/month")
+- Create/update goals ("Create a goal to save $10,000")
+- Manage subscriptions ("Cancel my gym membership")
+
+**Data Retrieval:**
+- Sum total debt, calculate debt-free date
+- Query expense logs by category/date range
+- Calculate budget (income - expenses)
+- Track goal progress percentages
+- Retrieve streak counts and XP totals
+
+**AI-Generated Insights:**
+- Pattern detection ("You spent 50% more on dining this month")
+- Recommendations ("Put $100 toward your smallest debt")
+- Motivation ("You've paid off 15% of total debt!")
+- Warnings ("Spending is 20% over budget")
+
+### AI Privacy & Security
+
+- **No PII to OpenAI:** User data sanitized before API calls
+- **Rate Limiting:** Free (10/day), Pro (100/day)
+- **Scope Limitation:** Debt elimination only, no investment advice
+- **RLS Enforcement:** AI queries respect Row-Level Security policies
+
+---
+*See: [Architecture & Stack](02_architecture_and_stack.md) → [AI & Ethics](05_ai_and_ethics_guardrails.md) → [Security & Privacy](06_security_and_privacy.md)*

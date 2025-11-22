@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 40,
+    fontFamily: typography.fontFamily.regular,
   },
   card: {
     width: '100%',

@@ -85,6 +85,7 @@ builds/
 .env.development
 .env.production
 .env*.local
+.env.example
 
 # Editor directories and files
 .vscode/

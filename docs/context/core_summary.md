@@ -12,8 +12,8 @@
 
 ### 3-Layer Backend Gateway Pattern
 1. **Mobile App (React Native):** 4-screen cognitive framework, never calls external APIs directly
-2. **Backend Gateway (NestJS):** JWT authentication, AI proxy, business logic, data isolation
-3. **External APIs (Proxied):** OpenAI (AI coach), Plaid (bank data), RevenueCat/Stripe (payments)
+2. **Backend Gateway (Supabase):** Auth, Row-Level Security, Edge Functions for AI/webhooks, Postgres database
+3. **External APIs (Proxied):** OpenAI (AI coach), RevenueCat/Stripe (payments)
 
 ### Key Architectural Principles
 - **Privacy First:** All database queries scoped by `user_id` from JWT, Row-Level Security enabled
@@ -72,43 +72,51 @@
 - **Updates:** CodePush for OTA updates
 
 ### Backend
-- **Framework:** NestJS (Node.js + TypeScript)
-- **Database:** PostgreSQL with Prisma ORM
-- **Cache:** Redis
-- **Auth:** JWT with refresh rotation
-- **AI:** OpenAI GPT-4o-mini with guardrails
-- **Infrastructure:** AWS (RDS, ElastiCache, Secrets Manager)
+- **Framework:** Supabase (Postgres 14+ with RLS)
+- **Database:** PostgreSQL with Row-Level Security
+- **Auth:** Supabase Auth (email, Google, Apple)
+- **Edge Functions:** Deno runtime for AI proxy and webhooks
+- **AI:** OpenAI GPT-4o-mini with guardrails (via Edge Function)
+- **Storage:** Supabase Storage for receipts/files
+- **Cost:** $25/month (Pro tier) vs $150-300/month (AWS)
 
 ### External Integrations
-- **Bank Data:** Plaid (Phase 10, MVP uses manual entry)
+- **Bank Data:** REMOVED - Manual entry only for habit-building focus
 - **Payments:** RevenueCat (mobile) + Stripe (web)
-- **Notifications:** OneSignal
-- **Analytics:** Custom implementation
+- **Notifications:** OneSignal (future)
+- **Analytics:** Custom implementation (future)
 
 ## Development Status & Roadmap
 
 ### Current Status (November 2025)
 - ✅ Development environment setup complete
-- ✅ Phase 1 in progress: Core UX system (45% complete)
-- ✅ Design system and basic component library built
-- 🔄 Adapting from 5-tab to 4-screen architecture
+- ✅ Phase 1: Core UX system (45% complete)
+- ✅ Phase 6: Supabase backend (80% complete)
+- ✅ Design system and component library built
+- ✅ 40 of 43 onboarding screens complete
+- ✅ Database schema deployed with 22 tables
+- ✅ Service layer complete for core entities
+- 🔄 Overall MVP: ~50% complete
 
 ### MVP Strategy
-- **Manual entry only** for debts, income, expenses
-- **Local-first** with AsyncStorage for MVP testing
-- **No bank integration** until Phase 10
+- **Manual entry only** for debts, income, expenses (NO Plaid)
+- **Local-first** with AsyncStorage → Supabase sync
+- **No bank integration** (removed from roadmap)
 - Validate product-market fit before complex integrations
 
-### 12-Phase Build Plan
-1. **Phase 1:** Core UX & 4-Screen Framework (4 weeks) - IN PROGRESS
-2. **Phase 2:** Dashboard & AI Insights (3 weeks) - MVP
-3. **Phase 3:** Goals & Challenges (3 weeks) - MVP
-4. **Phase 4:** Expenses & Budgets (3 weeks) - MVP
-5. **Phase 5:** Settings & Profile (3 weeks) - MVP
-6. **Phase 6-10:** Backend, Sync, AI, Payments, Bank Integration
-7. **Phase 11-12:** Companion Mode, Advanced Features
+### 10-Phase Build Plan (Updated 2025-11-22)
+1. **Phase 1:** Core UX & 4-Screen Framework (4 weeks) - 45% COMPLETE
+2. **Phase 2:** Dashboard & AI Insights (3 weeks)
+3. **Phase 3:** Goals & Challenges (3 weeks)
+4. **Phase 4:** Expenses & Budgets (3 weeks)
+5. **Phase 5:** Settings & Profile (3 weeks)
+6. **Phase 6:** Supabase Setup & Auth (2 weeks) - 80% COMPLETE
+7. **Phase 7:** Data Sync & Real-time (2 weeks)
+8. **Phase 8:** AI Financial Coach (3 weeks)
+9. **Phase 9:** Subscription & Payments (3 weeks)
+10. **Phase 10:** Advanced Features & Polish (3 weeks)
 
-**Total Timeline:** ~7 months to full product
+**Total Timeline:** 28 weeks (~7 months)
 
 ## Data Model Highlights
 
@@ -222,15 +230,16 @@ npx react-native run-android
 
 ---
 
-## Last Update (2025-11-15)
-- **Onboarding Flow Complete (93%):** Built 40 of 43 onboarding screens using config-driven architecture with 7 smart components (5.7 screens/component average)
-- **Debt Entry Wizard:** Built OnboardingDebtFlowScreen with 4-screen micro-flow per debt (consolidated from 8-screen spec for better UX) - Type, Creditor, Combined Details (Balance/APR/Payment/Due Date/Autopay), Review
-- **Snowball Insights:** Created OnboardingInsightScreen with real-time calculations for payoff timeline, interest savings (30% estimate), and acceleration metrics based on plan intensity (slow: 10%, standard: 25%, gazelle: 50%)
-- **Paywall Screen:** Built OnboardingPaywallScreen with 4 subscription tiers (Free 7-day trial → $9.99/mo, Monthly $9.99, Annual $79.99 BEST VALUE, Lifetime $199.99)
-- **Account Creation:** Implemented OnboardingAccountScreen with Email/Google/Apple authentication options and full password validation (8+ chars, uppercase, lowercase, number)
-- **OnboardingDebt Type System:** Created separate type with user-friendly field names (`creditor`, `balance`, `minimumPayment`) that maps to production Debt type (`name`, `currentBalance`, `minPayment`) for better UX
-- **TypeScript Error Fixes:** Resolved 12+ errors across 5 files - changed `colors.white` to `#FFFFFF`, `colors.text.tertiary` to `colors.text.secondary`, `fontFamily.semibold` to `fontWeight.semibold`
-- **UX Enhancements:** Added editable subscription costs in form screen, dev shortcut button to jump to latest screen, decimal APR input support with separate text state
-- **Architecture Validation:** Successfully proved config-driven approach - 40 screens built using only 7 components, complete navigation flow working, all theme-aware styling throughout
+## Last Update (2025-11-22)
+- **Supabase Backend Migration:** Migrated from NestJS+AWS to Supabase for 90% cost reduction ($25/mo vs $150-300/mo) and 2-week timeline savings
+- **Database Schema Deployed:** Created and deployed complete schema with 22 tables, full Row-Level Security policies, 22 ENUMs, indexes, and triggers
+- **Service Layer Complete:** Built 4 service modules (auth, debt, expense, goal) with full CRUD operations, type-safe TypeScript, automatic user_id injection
+- **Connection Verified:** Successfully tested Supabase connection, confirmed all tables created, RLS policies active, auth module working
+- **Manual Entry Strategy:** Removed Plaid integration entirely to focus on habit-building through intentional logging (privacy-first, cost savings)
+- **10-Phase Roadmap:** Simplified from 12 phases to 10 phases, reduced timeline from 30 weeks to 28 weeks
+- **Architecture Updated:** Updated all documentation (02_architecture_and_stack.md, 09_build_phases_and_roadmap.md, 03_data_model.md) to reflect Supabase
+- **Font Consistency:** Added fontFamily to 7 emoji/icon styles across 6 components for typography consistency
+- **Environment Configuration:** Set up .env with Supabase credentials, babel.config for react-native-dotenv, TypeScript types for env variables
+- **Phase 6 Progress:** Supabase backend 80% complete (database schema ✅, service layer ✅, authentication screens pending)
 
 *This summary provides the essential context for understanding the Debt Destroyer project. For detailed specifications, see the individual modules in `/docs/spec/`.*

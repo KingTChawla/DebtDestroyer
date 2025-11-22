@@ -1,13 +1,16 @@
 # 02) Architecture & Tech Stack
 
+**Version:** 2.0 - Supabase Architecture (Updated 2025-11-22)
+
 **LLM SUMMARY:**
-- 3-layer architecture: Mobile (React Native) → Backend Gateway (NestJS) → External APIs
-- Privacy-first with backend proxy pattern (no direct external API calls from mobile)
-- Postgres + Prisma ORM with Row-Level Security for data isolation
-- AWS infrastructure: RDS, ElastiCache (Redis), Secrets Manager, S3, ECR
-- NestJS backend with JWT auth, rate limiting, and service-oriented design
-- React Native CLI (bare workflow) with TypeScript, OTA updates via CodePush
-- External integrations: OpenAI (AI coach), Plaid (bank connections), RevenueCat/Stripe (payments)
+- 3-layer architecture: Mobile (React Native) → Supabase Backend → External APIs
+- **Manual-entry only** (no Plaid) for habit-building focus
+- Supabase Postgres + Row-Level Security for data isolation
+- Supabase Auth for email + OAuth (Google/Apple)
+- Supabase Edge Functions for business logic (AI proxy, webhooks)
+- React Native CLI (bare workflow) with TypeScript
+- External integrations: OpenAI (AI coach), RevenueCat/Stripe (payments)
+- **Cost-effective:** $25/month vs $150-300/month for AWS
 
 ## Development Environment Status
 
@@ -26,142 +29,220 @@
 
 **iOS Builds:** Will use cloud build service (Expo EAS / Bitrise / Codemagic) when needed.
 
+**Supabase Setup:** Pending Phase 6
+
+---
+
+## Key Architecture Changes
+
+| Component | Original (NestJS + AWS) | Revised (Supabase) |
+|-----------|-------------------------|---------------------|
+| **Backend** | NestJS custom server | Supabase managed platform |
+| **Database** | AWS RDS + Prisma ORM | Supabase Postgres (direct access) |
+| **Auth** | Custom JWT implementation | Supabase Auth (built-in) |
+| **Storage** | AWS S3 | Supabase Storage |
+| **Cache** | AWS ElastiCache (Redis) | ❌ Not needed for MVP |
+| **Bank Integration** | Plaid (Phase 10) | **❌ Removed entirely** |
+| **Monthly Cost** | ~$150-300 | **$25 (Pro tier)** |
+
+---
+
 ## High-Level Architecture (3-Layer Pattern)
 
-**Critical Principle:** Mobile app NEVER calls external APIs directly. All external integrations go through backend gateway.
+**Critical Principle:** Mobile app NEVER calls external APIs directly. All external integrations go through Supabase Edge Functions.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        MOBILE APP (React Native)                │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│  │  Dashboard   │  │ Goals/Chall. │  │  Expenses    │          │
-│  │   Screen     │  │    Screen    │  │   Screen     │          │
-│  └──────────────┘  └──────────────┘  └──────────────┘          │
-│                                                                  │
-│  • No direct API calls to OpenAI, Plaid, Stripe, etc.          │
-│  • Only communicates with Backend Gateway                       │
-│  • JWT authentication on every request                          │
-└─────────────────────────────────────────────────────────────────┘
-                              ▼ (TLS 1.3 + JWT)
-┌─────────────────────────────────────────────────────────────────┐
-│                   BACKEND GATEWAY (NestJS)                      │
-│  ┌────────────────────────────────────────────────────────┐    │
-│  │              AUTHENTICATION & AUTHORIZATION             │    │
-│  │  • JWT validation on all requests                      │    │
-│  │  • User ID extraction from token                       │    │
-│  │  • Row-Level Security enforcement                      │    │
-│  └────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────┐    │
-│  │                   BUSINESS LOGIC LAYER                  │    │
-│  │  ├─ AI Service (OpenAI proxy with prompt guardrails)   │    │
-│  │  ├─ Plaid Service (token exchange, webhook processing) │    │
-│  │  ├─ Snowball Engine (debt calculation logic)           │    │
-│  │  ├─ Gamification Service (XP, streaks, challenges)     │    │
-│  │  ├─ Payment Service (RevenueCat/Stripe webhook proxy)  │    │
-│  │  └─ Notification Service (OneSignal/FCM proxy)         │    │
-│  └────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────┐    │
-│  │                   DATA ISOLATION LAYER                  │    │
-│  │  • All queries scoped by user_id from JWT              │    │
-│  │  • Postgres RLS policies enforced                      │    │
-│  │  • Household permissions checked before access         │    │
-│  └────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  Persistence: Postgres + Prisma ORM                             │
-│  Cache: Redis (user sessions, rate limits)                      │
-│  Secrets: AWS Secrets Manager + KMS encryption                  │
-└─────────────────────────────────────────────────────────────────┘
-                              ▼ (Server-to-Server)
-┌─────────────────────────────────────────────────────────────────┐
-│                      EXTERNAL APIS (Proxied)                    │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│  │   OpenAI     │  │    Plaid     │  │ RevenueCat/  │          │
-│  │     API      │  │     API      │  │   Stripe     │          │
-│  └──────────────┘  └──────────────┘  └──────────────┘          │
-│                                                                  │
-│  • Backend makes ALL external API calls                         │
-│  • API keys stored in Secrets Manager (never in frontend)       │
-│  • Rate limiting enforced at backend layer                      │
-│  • User data NEVER sent to external APIs without sanitization   │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│               MOBILE APP (React Native)                      │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │  Dashboard   │  │ Goals/Chall. │  │  Expenses    │       │
+│  │   Screen     │  │    Screen    │  │   Screen     │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
+│                                                               │
+│  Phase 1-5: AsyncStorage (local-only)                       │
+│  Phase 6+:  Supabase Client (@supabase/supabase-js)         │
+│                                                               │
+│  • No direct API calls to OpenAI, Stripe, etc.              │
+│  • Only communicates with Supabase                           │
+│  • JWT authentication from Supabase Auth                     │
+└──────────────────────────────────────────────────────────────┘
+                         ▼ (TLS 1.3 + JWT)
+┌──────────────────────────────────────────────────────────────┐
+│              SUPABASE BACKEND PLATFORM                       │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │        SUPABASE AUTH (Built-in)                    │     │
+│  │  • Email/password + Google/Apple OAuth             │     │
+│  │  • JWT token generation & refresh                  │     │
+│  │  • User session management                         │     │
+│  └────────────────────────────────────────────────────┘     │
+│                                                               │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │     SUPABASE POSTGRES DATABASE                     │     │
+│  │  • Row-Level Security (RLS) policies               │     │
+│  │  • Automatic user_id scoping via auth.uid()        │     │
+│  │  • Real-time subscriptions (optional)              │     │
+│  └────────────────────────────────────────────────────┘     │
+│                                                               │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │    SUPABASE EDGE FUNCTIONS (Deno Runtime)          │     │
+│  │  ├─ ai-chat: OpenAI proxy with guardrails          │     │
+│  │  ├─ snowball-calc: Debt payoff projections         │     │
+│  │  ├─ payment-webhook: RevenueCat/Stripe webhooks    │     │
+│  │  └─ receipt-ocr: AWS Textract (optional)           │     │
+│  └────────────────────────────────────────────────────┘     │
+│                                                               │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │        SUPABASE STORAGE (S3-compatible)            │     │
+│  │  • Receipt images                                  │     │
+│  │  • Data exports (JSON/CSV)                         │     │
+│  └────────────────────────────────────────────────────┘     │
+└──────────────────────────────────────────────────────────────┘
+                         ▼ (Server-to-Server)
+┌──────────────────────────────────────────────────────────────┐
+│         EXTERNAL APIS (Proxied via Edge Functions)           │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │   OpenAI     │  │  RevenueCat  │  │    Stripe    │       │
+│  │   GPT-4      │  │Subscriptions │  │   Payments   │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
+│                                                               │
+│  • Edge Functions make ALL external API calls               │
+│  • API keys stored in Supabase Vault                         │
+│  • Rate limiting enforced at Edge Function layer             │
+│  • User data sanitized before external API calls             │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ## Key Architectural Decisions
 
-1. **Backend Gateway Pattern:** Mobile app → Backend → External APIs (NEVER direct)
-2. **Data Isolation:** All queries scoped by `user_id` from authenticated JWT token
-3. **AI Proxy:** Backend sanitizes prompts and enforces guardrails before calling OpenAI
-4. **Secrets Management:** All API keys in AWS Secrets Manager, rotated regularly
-5. **Privacy by Design:** User data encrypted at rest and in transit
+### 1. No Bank Integration (Plaid Removed)
+**Rationale:** Debt Destroyer is a **habit-builder app**, not a bank aggregator.
+
+**Benefits:**
+- ✅ Focus on intentional manual entry for awareness
+- ✅ Eliminates Plaid costs ($1-2/user/month)
+- ✅ No complex OAuth flows or webhook handling
+- ✅ Faster MVP development
+- ✅ Users engage more deeply through active logging
+
+### 2. Supabase Backend (Instead of NestJS + AWS)
+**Rationale:** Faster MVP, lower cost, less DevOps overhead.
+
+**Benefits:**
+- ✅ Built-in auth with OAuth (Google/Apple)
+- ✅ Postgres with Row-Level Security (RLS)
+- ✅ Edge Functions for custom business logic (Deno runtime)
+- ✅ Real-time subscriptions out-of-the-box
+- ✅ **Cost:** $25/month vs $150-300/month for AWS
+- ✅ **Setup:** 1 day vs 1-2 weeks
+
+### 3. Mobile-First, Backend-Later
+**Rationale:** Validate UX before infrastructure investment.
+
+**Phases 1-5 (MVP):** Build all 4 screens with AsyncStorage (local-only)
+**Phase 6+:** Add Supabase authentication and sync
+
+### 4. Data Isolation via Row-Level Security (RLS)
+**Rationale:** Privacy-first design with automatic user scoping.
+
+Example RLS Policy:
+```sql
+CREATE POLICY "Users can view own debts"
+ON public.debts FOR SELECT
+USING (auth.uid() = user_id);
+```
+
+### 5. AI Proxy via Edge Functions
+**Rationale:** Secure OpenAI integration with guardrails.
+
+- API keys never exposed to mobile app
+- Prompt sanitization before OpenAI calls
+- Rate limiting per subscription tier
+- PII removal from user inputs
 
 ## Tech Stack Details
 
 ### 4.1 Mobile (React Native CLI - Bare Workflow)
 
-- **Framework:** React Native (TypeScript) - Bare workflow (no Expo managed)
-- **OTA Updates:** CodePush (Microsoft App Center) for over-the-air updates
-- **Navigation:** React Navigation v6 (Stack + Tab navigators)
-- **State Management:** Zustand (lightweight) + React Query (server state)
-- **UI Components:** Custom components following Atomic Design principles
-- **Animations:** React Native Reanimated 3 + Lottie
-- **Secure Storage:** React Native Keychain for JWT tokens
-- **Push Notifications:** React Native Push Notification + OneSignal
-- **Voice Input:** React Native Voice + Expo Speech (for AI chat)
-- **Biometrics:** React Native Biometrics for secure login
+**Framework & Core:**
+- **React Native:** 0.76.6 (CLI, bare workflow - no Expo managed)
+- **TypeScript:** Strict mode enabled
+- **Navigation:** React Navigation v7 (Stack + Tab navigators)
 
-### 4.2 Backend (NestJS)
+**State Management:**
+- **Zustand:** Lightweight local state (UI state, settings)
+- **React Query:** Server state caching and sync (Phase 6+)
+- **AsyncStorage:** Local persistence (Phases 1-5)
+- **@supabase/supabase-js:** Supabase client (Phase 6+)
 
-- **Framework:** NestJS (Node.js + TypeScript)
-- **Authentication:** JWT with refresh token rotation
-- **Database:** PostgreSQL 14+ with Prisma ORM
-- **Caching:** Redis (session storage, rate limits)
-- **File Storage:** AWS S3 for receipts, exports
-- **Background Jobs:** Bull Queue + Redis
-- **Logging:** Winston + structured JSON logs
-- **Health Checks:** `/health` endpoint with DB/Redis status
-- **API Rate Limiting:** Express-rate-limit + Redis store
+**UI & Animations:**
+- **Custom Components:** Atomic Design principles
+- **Reanimated 3:** High-performance animations
+- **react-native-confetti-cannon:** Milestone celebrations
+- **react-native-chart-kit:** Charts and visualizations
 
-### 4.3 External APIs (Proxied)
+**Security:**
+- **react-native-keychain:** Secure JWT token storage
+- **No API keys in app:** All external calls via Supabase
 
-**OpenAI API**
+### 4.2 Backend (Supabase)
+
+**Supabase Services:**
+
+**Auth:**
+- Email/password with email verification
+- Google OAuth and Apple Sign-In
+- JWT tokens (automatic generation and refresh)
+- 7-day sessions with auto-refresh
+
+**Database:**
+- PostgreSQL 14+ (Supabase hosted)
+- Direct SQL queries via Supabase client
+- Row-Level Security (RLS) on all tables
+- Auto-generated REST API for CRUD
+
+**Edge Functions (Deno Runtime):**
+- `ai-chat` - OpenAI proxy with guardrails
+- `snowball-calculate` - Debt payoff projections
+- `payment-webhook` - RevenueCat/Stripe webhooks
+- `receipt-ocr` - AWS Textract integration (optional)
+
+**Storage:**
+- S3-compatible file storage
+- Receipt images and data exports
+- RLS policies for user-specific file access
+
+**Realtime (Optional):**
+- Postgres change subscriptions
+- Live sync across devices
+
+### 4.3 External APIs (Proxied via Edge Functions)
+
+**OpenAI API** (Phase 8)
 - GPT-4 for AI financial coaching
-- Usage tracking and cost controls
-- Prompt guardrails enforced in backend
+- Usage tracking and cost controls (Free: 10/day, Pro: 100/day)
+- Prompt guardrails enforced in Edge Functions
 
-**Plaid API**
-- Bank account linking and transaction data
-- Webhook processing for transaction updates
-- Token exchange and refresh token management
+**RevenueCat + Stripe** (Phase 9)
+- RevenueCat for mobile subscriptions (iOS/Android)
+- Stripe for web payments (future)
+- Webhook handlers via Supabase Edge Functions
 
-**RevenueCat + Stripe**
-- Subscription management and payments
-- RevenueCat for mobile subscription logic
-- Stripe webhook proxy for payment events
+**AWS Textract** (Phase 10 - Optional)
+- Receipt OCR for expense extraction
+- Pay-per-use integration via Edge Function
 
-### 4.4 AWS Infrastructure
+### 4.4 Supabase Infrastructure
 
-**Compute**
-- EKS (Kubernetes) for backend deployment
-- Auto-scaling based on CPU/memory metrics
-- Blue-green deployments via GitOps
+**Hosting:**
+- Region: US East or closest to users
+- Tier: Free (development) → Pro ($25/month for production)
+- Automatic backups with 7-day retention
+- Automatic horizontal scaling
 
-**Database**
-- RDS PostgreSQL with Multi-AZ
-- Automated daily backups + point-in-time recovery
-- Read replicas for reporting/analytics
-
-**Cache & Storage**
-- ElastiCache Redis cluster
-- S3 for file storage with lifecycle policies
-- CloudFront CDN for static assets
-
-**Security & Monitoring**
-- Secrets Manager for API key rotation
-- CloudWatch for metrics and logging
-- X-Ray for distributed tracing
-- WAF for API protection
+**Cost Comparison:**
+- **Supabase Pro:** $25/month
+- **Original AWS Stack:** $150-300/month
+- **Savings:** ~$125-275/month
 
 ### 4.5 Development & CI/CD
 
@@ -172,31 +253,65 @@
 
 **Testing**
 - Jest + React Native Testing Library for mobile
-- Jest + Supertest for backend API testing
-- E2E testing with Detox (mobile) + Cypress (backend)
+- Unit tests for snowball calculations and XP logic
+- Component tests for UI elements
 
 **CI/CD Pipeline**
 - GitHub Actions for automated builds
 - Mobile: Build → Test → Deploy to TestFlight/Play Store Internal
-- Backend: Build → Test → Security Scan → Deploy to EKS
-- Infrastructure: Terraform with Atlantis for PR-based deployments
+- Supabase: CLI-based Edge Function deployments
+- Database: Version-controlled SQL migrations
 
 ## Environment Configuration
 
-**Development**
-- Local Postgres + Docker Compose for backend
+**Development (Phases 1-5)**
 - React Native Metro bundler with hot reload
-- Localstack for AWS service mocking
+- AsyncStorage for local-only persistence
+- No backend dependency
+
+**Development (Phase 6+)**
+- Supabase hosted database (development project)
+- Edge Functions via Supabase CLI
+- Local testing with Supabase local dev (optional)
 
 **Staging**
-- Full AWS environment (scaled-down version)
-- Separate Plaid/OpenAI API keys for testing
-- Automated data seeding for consistent test data
+- Separate Supabase project for staging
+- Staging API keys for OpenAI/RevenueCat
+- Automated data seeding
 
 **Production**
-- High-availability AWS setup across multiple AZs
-- Database backups with 30-day retention
-- Application performance monitoring (APM) via DataDog
+- Supabase Pro tier ($25/month)
+- Automatic backups with 7-day retention
+- Monitoring via Supabase Dashboard + Sentry
+
+## Development Workflow
+
+**Phase 1-5 (Local-only):**
+```bash
+# Start React Native development
+npx react-native start
+npx react-native run-android
+# No backend needed - uses AsyncStorage
+```
+
+**Phase 6+ (Supabase Integration):**
+```bash
+# Install Supabase CLI
+npm install -g supabase
+
+# Link to Supabase project
+supabase link --project-ref <project-id>
+
+# Run database migrations
+supabase db push
+
+# Deploy Edge Functions
+supabase functions deploy ai-chat
+
+# Start mobile app
+npx react-native start
+npx react-native run-android
+```
 
 ---
-*See: [Product Overview](01_product_overview.md) → [Data Model](03_data_model.md) → [Security Architecture](06_security_and_privacy.md)*
+*See: [Product Overview](01_product_overview.md) → [Data Model](03_data_model.md) → [Revised Phase Plan](../REVISED_PHASE_PLAN_SUPABASE.md)*

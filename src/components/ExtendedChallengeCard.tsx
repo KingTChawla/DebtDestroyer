@@ -131,6 +131,7 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
   },
   iconText: {
     fontSize: 28,
+    fontFamily: typography.fontFamily.regular,
   },
   textContent: {
     flex: 1,

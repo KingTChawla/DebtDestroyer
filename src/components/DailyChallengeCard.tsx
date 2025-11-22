@@ -110,6 +110,7 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
   },
   iconText: {
     fontSize: 32,
+    fontFamily: typography.fontFamily.regular,
   },
   title: {
     fontSize: typography.fontSize.headline,

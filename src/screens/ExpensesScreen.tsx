@@ -347,6 +347,7 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
   },
   iconEmoji: {
     fontSize: 24,
+    fontFamily: typography.fontFamily.regular,
   },
   expenseDetails: {
     flex: 1,

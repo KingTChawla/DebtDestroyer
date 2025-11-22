@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 24,
+    fontFamily: typography.fontFamily.regular,
   },
   progressSection: {
     marginBottom: spacing.sm,
@@ -389,6 +390,7 @@ const styles = StyleSheet.create({
   },
   badgeIconText: {
     fontSize: 14,
+    fontFamily: typography.fontFamily.regular,
   },
   achievementBadge: {
     width: 28,

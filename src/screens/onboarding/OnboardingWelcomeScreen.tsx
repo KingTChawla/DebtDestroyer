@@ -220,6 +220,7 @@ const getStyles = (isDark: boolean) => {
 
     illustrationEmoji: {
       fontSize: 120,
+      fontFamily: typography.fontFamily.regular,
       textAlign: 'center',
     } as TextStyle,
 
