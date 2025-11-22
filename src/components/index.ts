@@ -11,6 +11,9 @@ export * from './ScrollAwareHeader';
 export * from './SegmentedControl';
 export * from './FloatingActionButton';
 
+// Authentication components
+export * from './auth';
+
 // AI Chat components
 export * from './ChatBubble';
 export * from './ChatInputBar';

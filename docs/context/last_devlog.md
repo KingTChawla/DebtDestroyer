@@ -1,5 +1,77 @@
 # Last Development Session
 
+## [2025-11-22] — Authentication Component Architecture
+
+**Overview:** Created comprehensive reusable authentication system with AuthForm component supporting both login and signup modes. Refactored existing OnboardingAccountScreen from 650+ lines to ~230 lines through component reuse. Implemented modern authentication UX patterns with social auth prioritization and progressive form validation.
+
+**Changes Made:**
+
+- **Schema Analysis:** Verified Supabase migration file for proper user data association with user_id foreign keys and RLS policies
+- **AuthForm Component:** Created `src/components/auth/AuthForm.tsx` (~750 lines) with comprehensive functionality:
+  - Support for both login and signup modes through props
+  - Social authentication (Google/Apple) integration with callback props
+  - Progressive form validation with conditional error displays
+  - Built-in theme support and loading states
+  - Comprehensive TypeScript interfaces for type safety
+- **OnboardingAccountScreen Refactoring:** Reduced from 650+ lines to ~230 lines by leveraging AuthForm component while maintaining all existing functionality
+- **LoginScreen Creation:** Built clean standalone login screen with vertically stacked layout following design system
+- **Layout Improvements:**
+  - Prioritized social authentication (Google/Apple) at the top
+  - Implemented horizontal social button layout
+  - Added conditional password requirements display (only shows after failed validation)
+  - Removed unnecessary UI elements ("continue with" text)
+- **Form Validation Fix:** Resolved button enablement issue by implementing lenient button enabling with strict submission validation
+- **Component Exports:** Created auth component index and updated main components index
+
+**Architecture / Design Notes:**
+
+- **Reusable Component Pattern:** Single AuthForm component serves multiple authentication needs across the application
+- **Modern Authentication UX:** Social auth prioritized over email, with progressive validation disclosure
+- **Two-Tier Validation:** Separate logic for button enabling (lenient) vs form submission (strict)
+- **Theme Integration:** Full dark/light mode support following project's getStyles(isDark) pattern
+- **TypeScript Safety:** Comprehensive prop interfaces with proper type checking
+- **Component Composition:** Clean separation of concerns with callback props for auth methods
+
+**Key Interface:**
+```typescript
+export interface AuthFormProps {
+  mode?: 'login' | 'signup';
+  onSubmit: (email: string, password: string, confirmPassword?: string) => void;
+  onForgotPassword?: () => void;
+  onCreateAccount?: () => void;
+  onGoogleSignIn?: () => void;
+  onAppleSignIn?: () => void;
+  onSkip?: () => void;
+  isLoading?: boolean;
+  error?: string;
+  showSocialAuth?: boolean;
+  showSkipOption?: boolean;
+  animationEnabled?: boolean;
+  initialValues?: { email?: string; password?: string; };
+}
+```
+
+**Next Steps:**
+
+1. Connect AuthForm component to Supabase Auth service
+2. Implement actual authentication logic in auth.service.ts
+3. Integrate real Google/Apple Sign-In with Supabase
+4. Add email verification flow
+5. Connect onboarding auth flow to Supabase
+6. Test complete authentication flows
+7. Add error handling for network issues
+8. Implement session persistence across app restarts
+
+**Current Status:**
+- AuthForm component complete and tested
+- OnboardingAccountScreen refactored and functional
+- LoginScreen created and ready for use
+- Form validation logic working correctly
+- Component architecture established
+- Ready for Supabase Auth integration
+
+---
+
 ## [2025-11-22] — Supabase Backend Integration Setup
 
 **Overview:** Completed full Supabase backend setup with database schema, authentication, and service layer. Migrated from NestJS+AWS architecture to Supabase for 90% cost reduction. Created comprehensive implementation guide and service layer for debts, expenses, and goals.

@@ -231,15 +231,28 @@ npx react-native run-android
 ---
 
 ## Last Update (2025-11-22)
-- **Supabase Backend Migration:** Migrated from NestJS+AWS to Supabase for 90% cost reduction ($25/mo vs $150-300/mo) and 2-week timeline savings
-- **Database Schema Deployed:** Created and deployed complete schema with 22 tables, full Row-Level Security policies, 22 ENUMs, indexes, and triggers
-- **Service Layer Complete:** Built 4 service modules (auth, debt, expense, goal) with full CRUD operations, type-safe TypeScript, automatic user_id injection
+
+### Authentication Component Architecture
+- **Reusable AuthForm Component:** Created comprehensive authentication component (`src/components/auth/AuthForm.tsx`, ~750 lines) supporting both login and signup modes
+- **Social Auth Integration:** Implemented Google/Apple sign-in callback props with prioritized social authentication UX
+- **Progressive Validation:** Two-tier validation system with lenient button enabling and strict submission validation, conditional password requirements display
+- **Component Refactoring:** Reduced OnboardingAccountScreen from 650+ lines to ~230 lines through AuthForm component reuse while maintaining all functionality
+- **LoginScreen Created:** Built clean standalone login screen with vertically stacked layout following design system
+- **Modern UX Patterns:** Social auth prioritized at top, horizontal button layout, removed unnecessary UI elements, improved form validation logic
+- **TypeScript Safety:** Comprehensive prop interfaces with proper type checking and component composition patterns
+- **Theme Integration:** Full dark/light mode support following project's getStyles(isDark) pattern
+
+### Supabase Backend Migration
+- **Cost Reduction:** Migrated from NestJS+AWS to Supabase for 90% cost reduction ($25/mo vs $150-300/mo) and 2-week timeline savings
+- **Database Schema:** Created and deployed complete schema with 22 tables, full Row-Level Security policies, 22 ENUMs, indexes, and triggers
+- **Service Layer:** Built 4 service modules (auth, debt, expense, goal) with full CRUD operations, type-safe TypeScript, automatic user_id injection
 - **Connection Verified:** Successfully tested Supabase connection, confirmed all tables created, RLS policies active, auth module working
 - **Manual Entry Strategy:** Removed Plaid integration entirely to focus on habit-building through intentional logging (privacy-first, cost savings)
-- **10-Phase Roadmap:** Simplified from 12 phases to 10 phases, reduced timeline from 30 weeks to 28 weeks
-- **Architecture Updated:** Updated all documentation (02_architecture_and_stack.md, 09_build_phases_and_roadmap.md, 03_data_model.md) to reflect Supabase
+- **Roadmap Simplification:** Reduced from 12 phases to 10 phases, timeline from 30 weeks to 28 weeks
+
+### Development Environment
 - **Font Consistency:** Added fontFamily to 7 emoji/icon styles across 6 components for typography consistency
 - **Environment Configuration:** Set up .env with Supabase credentials, babel.config for react-native-dotenv, TypeScript types for env variables
-- **Phase 6 Progress:** Supabase backend 80% complete (database schema ✅, service layer ✅, authentication screens pending)
+- **Phase 6 Progress:** Supabase backend 80% complete (database schema ✅, service layer ✅, authentication UI ✅, integration pending)
 
 *This summary provides the essential context for understanding the Debt Destroyer project. For detailed specifications, see the individual modules in `/docs/spec/`.*
